@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Panel | BLACKLORD TECH INC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="index.html">
+      <div class="brand-mark">♛</div>
+      <div>
+        <div class="brand-name">BLACKLORD</div>
+        <div class="brand-sub">TECH INC.</div>
+      </div>
+    </a>
+    <nav class="nav">
+      <a href="dashboard.html"><span class="nav-icon"><i class="fas fa-chart-line"></i></span>Dashboard</a>
+      <a href="index.html"><span class="nav-icon"><i class="fas fa-home"></i></span>Main Site</a>
+      <a href="support.html"><span class="nav-icon"><i class="fas fa-headset"></i></span>Support Center</a>
+      <a href="status.html"><span class="nav-icon"><i class="fas fa-heartbeat"></i></span>System Status</a>
+      <a href="affiliate.html"><span class="nav-icon"><i class="fas fa-users"></i></span>Affiliate</a>
+      <a class="active" href="admin.html"><span class="nav-icon"><i class="fas fa-user-shield"></i></span>Admin</a>
+    </nav>
+    <div class="sidebar-footer">
+      <strong>Restricted Access</strong>
+      Authorized personnel only.
+    </div>
+  </aside>
+
+  <main class="content">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">System control</div>
+        <h1 class="title">Admin Panel</h1>
+        <p class="subtitle">Manage global site settings, API credentials, and platform infrastructure.</p>
+      </div>
+      <div class="user-box" id="adminLabelBox" style="display:none;">
+        <span id="adminLabel">Admin Access</span>
+        <button class="btn outline" style="padding:0.3rem 0.6rem; font-size:0.65rem; margin-left:0.5rem;" onclick="logout()">Logout</button>
+      </div>
+    </header>
+
+    <!-- LOGIN SECTION -->
+    <section id="loginSection" class="card" style="max-width:400px; margin: 2rem auto;">
+      <h2 style="color:var(--gold); font-family:'Playfair Display',serif; font-style:italic; margin-bottom:1rem;">Admin Authentication</h2>
+      <div class="field">
+        <label for="adminPassword">Master Password</label>
+        <input type="password" id="adminPassword" placeholder="Enter password" />
+      </div>
+      <button class="btn gold" style="margin-top:1.5rem; width:100%" onclick="adminLogin()">Authenticate</button>
+      <div id="loginMsg" class="notice"></div>
+    </section>
+
+    <!-- DASHBOARD SECTION -->
+    <div id="dashboardSection" style="display:none;">
+      <div class="grid grid-2">
+        <!-- PTERODACTYL CREDENTIALS -->
+        <section class="card">
+          <h2 style="color:var(--gold); font-family:'Playfair Display',serif; font-style:italic; margin-bottom:1.5rem;">Pterodactyl Infrastructure</h2>
+          <div class="grid" style="gap:1rem">
+            <div class="field">
+              <label>Panel URL</label>
+              <input type="text" id="panelDomain" placeholder="https://panel.example.com" />
+            </div>
+            <div class="field">
+              <label>Application API Key <span class="stat-note">(used for server creation)</span></label>
+              <input type="password" id="panelApikey" placeholder="ptla_..." autocomplete="new-password" />
+            </div>
+            <div class="field field-wide" style="padding:0.85rem 1rem;border:1px solid rgba(34,197,94,0.25);border-radius:0.75rem;background:rgba(34,197,94,0.05);">
+              <strong style="display:block;color:var(--green);margin-bottom:0.35rem;"><i class="fas fa-plug"></i> Website pairing connection</strong>
+              <span class="stat-note">Update these values when you move the bot to another Pterodactyl panel. The website stores them in the protected database settings.</span>
+            </div>
+            <div class="field">
+              <label>Client Panel URL</label>
+              <input type="url" id="pteroPanelUrl" placeholder="https://panel.example.com" autocomplete="off" />
+            </div>
+            <div class="field">
+              <label>Pterodactyl Client API Key</label>
+              <input type="password" id="pteroClientApiKey" placeholder="ptlc_..." autocomplete="new-password" />
+            </div>
+            <div class="field">
+              <label>Server Identifier</label>
+              <input type="text" id="pteroServerIdentifier" placeholder="8-character server ID" autocomplete="off" />
+            </div>
+            <div class="field">
+              <label>Bot Pairing Secret</label>
+              <input type="password" id="pteroBotPairingSecret" placeholder="BOT_PAIRING_SECRET" autocomplete="new-password" />
+            </div>
+            <div class="field">
+              <label>Pairing Webhook Secret</label>
+              <input type="password" id="pteroWebhookSecret" placeholder="PAIRING_WEBHOOK_SECRET" autocomplete="new-password" />
+            </div>
+            <div id="pteroConnectionMsg" class="notice" style="margin-top:0.25rem;"></div>
+            <div style="display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center;">
+              <button class="btn outline" type="button" onclick="testPterodactylConnection()"><i class="fas fa-heartbeat"></i> Test Pterodactyl Connection</button>
+              <span class="stat-note">Save the settings, then restart the bot after changing its matching `.env` values.</span>
+            </div>
+            <div class="grid grid-3" style="gap:0.5rem">
+              <div class="field"><label>Egg ID</label><input type="number" id="panelEgg" /></div>
+              <div class="field"><label>Nest ID</label><input type="number" id="panelNest" /></div>
+              <div class="field"><label>Allocation Node ID</label><input type="number" id="panelNodeId" placeholder="1" /></div>
+              <div class="field"><label>Deployment Location ID</label><input type="number" id="panelLocationId" placeholder="1" /></div>
+              <div class="field"><label>Legacy Node/Location ID</label><input type="number" id="panelLoc" placeholder="1" /></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PAYMENT GATEWAYS -->
+        <section class="card">
+          <h2 style="color:var(--green); font-family:'Playfair Display',serif; font-style:italic; margin-bottom:0.5rem;">Paystack &amp; M-Pesa Payments</h2>
+          <p class="stat-note" style="margin-bottom:1.25rem;">Available methods are Paystack, M-Pesa C2B Till, and M-Pesa STK Push through the Safaricom Daraja API.</p>
+          <div class="grid" style="gap:1rem">
+            <div class="field"><label>Paystack Secret Key</label><input type="password" id="paystackSecret" placeholder="sk_live_..." autocomplete="off" /></div>
+            <div class="field"><label>Paystack Public Key (optional)</label><input type="text" id="paystackPublicKey" placeholder="pk_live_..." autocomplete="off" /></div>
+            <div class="field"><label>M-Pesa C2B Till Number</label><input type="text" id="mpesaC2bTillNumber" placeholder="Your Buy Goods Till" inputmode="numeric" /></div>
+            <div class="field"><label>KES per SD</label><input type="number" id="mpesaKesPerSd" min="1" step="0.01" value="5" /></div>
+            <div class="field field-wide"><label>C2B payment instructions</label><textarea id="mpesaC2bInstructions" rows="3" placeholder="Instructions shown to customers after they choose C2B."></textarea></div>
+            <div class="field"><label>Daraja environment</label><select id="mpesaStkEnv"><option value="sandbox">Sandbox</option><option value="production">Production</option></select></div>
+            <div class="field"><label>Daraja Consumer Key</label><input type="text" id="mpesaConsumerKey" autocomplete="off" /></div>
+            <div class="field"><label>Daraja Consumer Secret</label><input type="password" id="mpesaConsumerSecret" autocomplete="off" /></div>
+            <div class="field"><label>STK Shortcode / Till</label><input type="text" id="mpesaStkShortcode" inputmode="numeric" placeholder="174379 or your Till" /></div>
+            <div class="field"><label>STK Passkey</label><input type="password" id="mpesaStkPasskey" autocomplete="off" /></div>
+            <div class="field"><label>STK Transaction Type</label><select id="mpesaStkTransactionType"><option value="CustomerBuyGoodsOnline">Customer Buy Goods (Till)</option><option value="CustomerPayBillOnline">Customer PayBill</option></select></div>
+            <div class="field"><label>Account reference</label><input type="text" id="mpesaStkAccountReference" maxlength="20" value="BLACKLORD" /></div>
+            <div class="field field-wide"><label>STK callback URL (optional)</label><input type="url" id="mpesaStkCallbackUrl" placeholder="https://your-domain.com/api/mpesa/stk/callback" /></div>
+          </div>
+          <div class="notice show" style="margin-top:1rem;">Register C2B callbacks with your provider: <code>/api/c2b/validation</code> and <code>/api/c2b/confirmation</code>.<br>Register the STK callback URL with Daraja: <code>/api/mpesa/stk/callback</code>.<br>Paystack webhook: <code>/api/paystack/webhook</code>.</div>
+        </section>
+      </div>
+
+      <!-- VOUCHER MANAGEMENT -->
+      <section class="card" style="margin-top:2rem; border-color:rgba(250,204,21,0.35);">
+        <h2 style="color:var(--gold); font-family:'Playfair Display',serif; font-style:italic; margin-bottom:0.5rem;"><i class="fas fa-ticket"></i> Voucher Management</h2>
+        <p class="stat-note" style="margin-bottom:1.25rem;">Create balance vouchers for users. Each voucher can be redeemed once.</p>
+        <div class="form-grid">
+          <div class="field"><label for="voucherAmount">Amount (SD)</label><input id="voucherAmount" type="number" min="1" step="0.01" placeholder="e.g. 100" /></div>
+          <div class="field"><label for="voucherCode">Custom code (optional)</label><input id="voucherCode" maxlength="48" placeholder="BL-100-SUPPORT" /></div>
+          <div class="field"><label for="voucherExpiresAt">Expires (optional)</label><input id="voucherExpiresAt" type="datetime-local" /></div>
+          <div style="display:flex;align-items:end"><button class="btn gold" type="button" onclick="createVoucher()"><i class="fas fa-plus-circle"></i> Generate Voucher</button></div>
+        </div>
+        <div id="voucherAdminMsg" class="notice"></div>
+        <div id="voucherList" class="list" style="margin-top:1rem"><div class="empty">No vouchers loaded.</div></div>
+      </section>
+
+      <!-- GROWTH FEATURES -->
+      <section class="card" style="margin-top:2rem;">
+        <h2 style="color:var(--gold); font-family:'Playfair Display',serif; font-style:italic; margin-bottom:1.5rem;">Growth & Community</h2>
+        <div class="grid grid-2">
+          <div class="field">
+            <label>Global Broadcast Message</label>
+            <input id="broadcastMessage" placeholder="Announcement text..." />
+            <select id="broadcastKind" style="margin-top:0.5rem;">
+              <option value="info">Information</option>
+              <option value="success">Success</option>
+              <option value="warning">Warning</option>
+              <option value="maintenance">Maintenance</option>
+            </select>
+            <button class="btn gold" style="margin-top:0.5rem;" onclick="createBroadcast()">Publish</button>
+          </div>
+          <div class="field">
+            <label>Generate Gift Card (SD)</label>
+            <input id="giftCardAmount" type="number" placeholder="Amount in SD" />
+            <button class="btn green" style="margin-top:0.5rem;" onclick="createGiftCard()">Generate</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- COUPON MANAGEMENT -->
+      <section class="card" style="margin-top:2rem; border-color:rgba(34,197,94,0.35);">
+        <h2 style="color:var(--green); font-family:'Playfair Display',serif; font-style:italic; margin-bottom:0.5rem;"><i class="fas fa-tags"></i> Coupon Campaigns</h2>
+        <p class="stat-note" style="margin-bottom:1.25rem;">Create limited-use discounts for Blacklord Pro plan upgrades.</p>
+        <div class="form-grid"><div class="field"><label for="couponCode">Coupon code</label><input id="couponCode" maxlength="48" placeholder="WELCOME20" /></div><div class="field"><label for="couponDiscount">Discount (%)</label><input id="couponDiscount" type="number" min="1" max="100" value="20" /></div><div class="field"><label for="couponMaxRedemptions">Maximum redemptions</label><input id="couponMaxRedemptions" type="number" min="1" value="100" /></div><div class="field"><label for="couponExpiresAt">Expires (optional)</label><input id="couponExpiresAt" type="datetime-local" /></div></div>
+        <div class="section-actions"><button class="btn green" type="button" onclick="createCoupon()"><i class="fas fa-plus"></i> Create Coupon</button></div><div id="couponAdminMsg" class="notice"></div><div id="couponList" class="list"><div class="empty">No coupons loaded.</div></div>
+      </section>
+
+      <!-- DEVELOPER REVIEW -->
+      <section class="card" style="margin-top:2rem; border-color:rgba(250,204,21,0.35);">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap"><div><h2 style="color:var(--gold); font-family:'Playfair Display',serif; font-style:italic; margin-bottom:0.5rem;"><i class="fas fa-user-check"></i> Developer Submissions</h2><p class="stat-note">Review plugin submissions before publishing them to the marketplace.</p></div><button class="btn outline small-btn" type="button" onclick="loadDeveloperSubmissionsAdmin()"><i class="fas fa-rotate"></i> Refresh</button></div>
+        <div id="developerAdminMsg" class="notice"></div><div id="developerAdminList" class="list"><div class="empty">No submissions loaded.</div></div>
+      </section>
+
+      <div style="margin-top:2rem; display:flex; justify-content:center;">
+        <button class="btn gold" style="padding:1rem 3rem; font-size:1.1rem;" onclick="saveSettings()"><i class="fas fa-save"></i> Save Global Configuration</button>
+      </div>
+      <div id="settingsMsg" class="notice" style="text-align:center;"></div>
+    </div>
+
+    <div class="footer-note" style="margin-top: 5rem; color: #71717a; font-size: 0.8rem; text-align: center;">
+      BLACKLORD TECH INC. · Admin actions are logged and audited.
+    </div>
+  </main>
+</div>
+
+<script>
+let adminToken = sessionStorage.getItem('blacklord_admin_token') || '';
+const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[c]));
+
+function adminHeaders(extra = {}) {
+  return { ...extra, Authorization: `Bearer ${adminToken}` };
+}
+
+async function adminFetch(path, options = {}) {
+  const headers = adminHeaders({ 'Content-Type': 'application/json', ...(options.headers || {}) });
+  const response = await fetch(path, { ...options, headers });
+  if (response.status === 401) { sessionStorage.removeItem('blacklord_admin_token'); adminToken = ''; throw new Error('Admin session expired. Please authenticate again.'); }
+  return response;
+}
+
+async function adminLogin() {
+  const pass = document.getElementById('adminPassword').value;
+  try {
+    const res = await fetch('/api/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pass }) });
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Invalid master password.');
+    adminToken = data.token;
+    sessionStorage.setItem('blacklord_admin_token', adminToken);
+    document.getElementById('loginSection').style.display = 'none';
+    document.getElementById('dashboardSection').style.display = 'block';
+    document.getElementById('adminLabelBox').style.display = 'flex';
+    loadSettings();
+    loadVouchers();
+    loadCoupons();
+    loadDeveloperSubmissionsAdmin();
+  } catch (e) {
+    const msg = document.getElementById('loginMsg');
+    msg.textContent = e.message;
+    msg.className = 'notice show error';
+  }
+}
+function logout() { sessionStorage.removeItem('blacklord_admin_token'); adminToken = ''; location.reload(); }
+
+function showVoucherAdminMessage(text, type = 'error') {
+  const msg = document.getElementById('voucherAdminMsg');
+  msg.textContent = text;
+  msg.className = 'notice show ' + type;
+}
+
+function formatVoucherDate(value) {
+  return value ? new Date(value).toLocaleString() : 'No expiry';
+}
+
+async function createVoucher() {
+  const amount = Number(document.getElementById('voucherAmount').value);
+  const code = document.getElementById('voucherCode').value.trim().toUpperCase();
+  const rawExpiry = document.getElementById('voucherExpiresAt').value;
+  const expiresAt = rawExpiry ? new Date(rawExpiry).toISOString() : null;
+  if (!Number.isFinite(amount) || amount <= 0) { showVoucherAdminMessage('Enter a valid amount greater than 0 SD.'); return; }
+  showVoucherAdminMessage('Generating voucher...', 'success');
+  try {
+    const res = await adminFetch('/api/admin/vouchers', { method: 'POST', body: JSON.stringify({ amount, code, expiresAt, createdBy: 'admin' }) });
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Voucher creation failed.');
+    document.getElementById('voucherAmount').value = '';
+    document.getElementById('voucherCode').value = '';
+    document.getElementById('voucherExpiresAt').value = '';
+    showVoucherAdminMessage(`Voucher created: ${data.code}`, 'success');
+    await loadVouchers();
+  } catch (e) {
+    showVoucherAdminMessage(e.message);
+  }
+}
+
+async function loadVouchers() {
+  if (!adminToken) return;
+  try {
+    const res = await adminFetch('/api/admin/vouchers');
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Unable to load vouchers.');
+    const list = document.getElementById('voucherList');
+    list.innerHTML = data.vouchers.length ? data.vouchers.map(v => `
+      <div class="list-item">
+        <div><strong style="display:block;color:#fff;font-family:monospace;">${escapeHtml(v.code)}</strong><small style="color:var(--muted);">${Number(v.amount || 0).toFixed(2)} SD · ${v.is_used ? 'Used' : 'Ready'} · ${formatVoucherDate(v.expires_at)}</small></div>
+        ${v.is_used ? '<span class="pill offline">Used</span>' : `<button class="btn outline" type="button" style="padding:0.4rem 0.75rem;font-size:0.75rem;" onclick="deleteVoucher('${encodeURIComponent(v.code)}')">Delete</button>`}
+      </div>
+    `).join('') : '<div class="empty">No vouchers created yet.</div>';
+  } catch (e) {
+    document.getElementById('voucherList').innerHTML = '<div class="empty">Unable to load vouchers.</div>';
+  }
+}
+
+async function deleteVoucher(encodedCode) {
+  const code = decodeURIComponent(encodedCode);
+  if (!confirm(`Delete unused voucher ${code}?`)) return;
+  try {
+    const res = await adminFetch('/api/admin/vouchers', { method: 'DELETE', body: JSON.stringify({ code }) });
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Unable to delete voucher.');
+    showVoucherAdminMessage('Voucher deleted.', 'success');
+    loadVouchers();
+  } catch (e) {
+    showVoucherAdminMessage(e.message);
+  }
+}
+
+async function loadSettings() {
+  try {
+      const res = await adminFetch('/api/admin/settings');
+    const data = await res.json();
+    if (data.success) {
+      const s = data.settings;
+      document.getElementById('panelDomain').value = s.PANEL_DOMAIN || s.panelDomain || '';
+      document.getElementById('panelApikey').value = s.PANEL_APIKEY || s.panelApikey || '';
+      document.getElementById('pteroPanelUrl').value = s.PTERODACTYL_PANEL_URL || '';
+      document.getElementById('pteroClientApiKey').value = s.PTERODACTYL_CLIENT_API_KEY || '';
+      document.getElementById('pteroServerIdentifier').value = s.PTERODACTYL_SERVER_IDENTIFIER || '';
+      document.getElementById('pteroBotPairingSecret').value = s.BOT_PAIRING_SECRET || '';
+      document.getElementById('pteroWebhookSecret').value = s.PAIRING_WEBHOOK_SECRET || '';
+      document.getElementById('panelEgg').value = s.PANEL_EGG || s.panelEgg || '';
+      document.getElementById('panelNest').value = s.PANEL_NEST || s.panelNest || '';
+      document.getElementById('panelNodeId').value = s.PANEL_NODE_ID || s.panelNodeId || s.PANEL_LOC || s.panelLoc || '';
+      document.getElementById('panelLocationId').value = s.PANEL_LOCATION_ID || s.panelLocationId || s.PANEL_LOC || s.panelLoc || '';
+      document.getElementById('panelLoc').value = s.PANEL_LOC || s.panelLoc || '';
+      document.getElementById('paystackSecret').value = s.PAYSTACK_SECRET || s.paystackSecret || '';
+      document.getElementById('paystackPublicKey').value = s.PAYSTACK_PUBLIC_KEY || s.paystackPublicKey || '';
+      document.getElementById('mpesaC2bTillNumber').value = s.MPESA_C2B_TILL_NUMBER || s.mpesaC2bTillNumber || '';
+      document.getElementById('mpesaKesPerSd').value = s.MPESA_KES_PER_SD || s.mpesaKesPerSd || '5';
+      document.getElementById('mpesaC2bInstructions').value = s.MPESA_C2B_INSTRUCTIONS || s.mpesaC2bInstructions || '';
+      document.getElementById('mpesaStkEnv').value = s.MPESA_STK_ENV || s.mpesaStkEnv || 'sandbox';
+      document.getElementById('mpesaConsumerKey').value = s.MPESA_CONSUMER_KEY || s.mpesaConsumerKey || '';
+      document.getElementById('mpesaConsumerSecret').value = s.MPESA_CONSUMER_SECRET || s.mpesaConsumerSecret || '';
+      document.getElementById('mpesaStkShortcode').value = s.MPESA_STK_SHORTCODE || s.mpesaStkShortcode || '';
+      document.getElementById('mpesaStkPasskey').value = s.MPESA_STK_PASSKEY || s.mpesaStkPasskey || '';
+      document.getElementById('mpesaStkTransactionType').value = s.MPESA_STK_TRANSACTION_TYPE || s.mpesaStkTransactionType || 'CustomerBuyGoodsOnline';
+      document.getElementById('mpesaStkAccountReference').value = s.MPESA_STK_ACCOUNT_REFERENCE || s.mpesaStkAccountReference || 'BLACKLORD';
+      document.getElementById('mpesaStkCallbackUrl').value = s.MPESA_STK_CALLBACK_URL || s.mpesaStkCallbackUrl || '';
+    }
+  } catch (e) {}
+}
+
+async function testPterodactylConnection() {
+  const msg = document.getElementById('pteroConnectionMsg');
+  msg.textContent = 'Testing panel connection...';
+  msg.className = 'notice show';
+  try {
+    const res = await adminFetch('/api/admin/pterodactyl-test', { method: 'POST', body: JSON.stringify({}) });
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Pterodactyl connection failed.');
+    msg.textContent = `Connected successfully. Server status: ${data.status || 'unknown'}.`;
+    msg.className = 'notice show success';
+  } catch (e) {
+    msg.textContent = e.message;
+    msg.className = 'notice show error';
+  }
+}
+
+async function saveSettings() {
+  const settings = {
+    PANEL_DOMAIN: document.getElementById('panelDomain').value,
+    PANEL_APIKEY: document.getElementById('panelApikey').value,
+    PTERODACTYL_PANEL_URL: document.getElementById('pteroPanelUrl').value.trim(),
+    PTERODACTYL_CLIENT_API_KEY: document.getElementById('pteroClientApiKey').value.trim(),
+    PTERODACTYL_SERVER_IDENTIFIER: document.getElementById('pteroServerIdentifier').value.trim(),
+    BOT_PAIRING_SECRET: document.getElementById('pteroBotPairingSecret').value,
+    PAIRING_WEBHOOK_SECRET: document.getElementById('pteroWebhookSecret').value,
+    PANEL_EGG: document.getElementById('panelEgg').value,
+    PANEL_NEST: document.getElementById('panelNest').value,
+    PANEL_NODE_ID: document.getElementById('panelNodeId').value,
+    PANEL_LOCATION_ID: document.getElementById('panelLocationId').value,
+    PANEL_LOC: document.getElementById('panelLoc').value,
+    PAYSTACK_SECRET: document.getElementById('paystackSecret').value,
+    PAYSTACK_PUBLIC_KEY: document.getElementById('paystackPublicKey').value,
+    MPESA_C2B_TILL_NUMBER: document.getElementById('mpesaC2bTillNumber').value,
+    MPESA_KES_PER_SD: document.getElementById('mpesaKesPerSd').value,
+    MPESA_C2B_INSTRUCTIONS: document.getElementById('mpesaC2bInstructions').value,
+    MPESA_STK_ENV: document.getElementById('mpesaStkEnv').value,
+    MPESA_CONSUMER_KEY: document.getElementById('mpesaConsumerKey').value,
+    MPESA_CONSUMER_SECRET: document.getElementById('mpesaConsumerSecret').value,
+    MPESA_STK_SHORTCODE: document.getElementById('mpesaStkShortcode').value,
+    MPESA_STK_PASSKEY: document.getElementById('mpesaStkPasskey').value,
+    MPESA_STK_TRANSACTION_TYPE: document.getElementById('mpesaStkTransactionType').value,
+    MPESA_STK_ACCOUNT_REFERENCE: document.getElementById('mpesaStkAccountReference').value,
+    MPESA_STK_CALLBACK_URL: document.getElementById('mpesaStkCallbackUrl').value,
+  };
+
+  
+  try {
+    const res = await adminFetch('/api/admin/settings', {
+      method: 'POST',
+      body: JSON.stringify(settings)
+    });
+    const data = await res.json();
+    const msg = document.getElementById('settingsMsg');
+    if (data.success) {
+      msg.textContent = 'Settings saved successfully.';
+      msg.className = 'notice show success';
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (e) {
+    const msg = document.getElementById('settingsMsg');
+    msg.textContent = e.message;
+    msg.className = 'notice show error';
+  }
+}
+
+function showCouponAdminMessage(text, type = 'error') {
+  const msg = document.getElementById('couponAdminMsg');
+  msg.textContent = text; msg.className = 'notice show ' + type;
+}
+
+async function createCoupon() {
+  const code = document.getElementById('couponCode').value.trim().toUpperCase();
+  const discountPercent = Number(document.getElementById('couponDiscount').value);
+  const maxRedemptions = Number(document.getElementById('couponMaxRedemptions').value);
+  const rawExpiry = document.getElementById('couponExpiresAt').value;
+  const expiresAt = rawExpiry ? new Date(rawExpiry).toISOString() : null;
+  if (!code || !Number.isFinite(discountPercent) || !Number.isInteger(maxRedemptions)) { showCouponAdminMessage('Complete the coupon fields with valid values.'); return; }
+  try {
+    const res = await adminFetch('/api/admin/coupons', { method: 'POST', body: JSON.stringify({ code, discountPercent, maxRedemptions, expiresAt, createdBy: 'admin' }) });
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Coupon creation failed.');
+    document.getElementById('couponCode').value = ''; document.getElementById('couponExpiresAt').value = '';
+    showCouponAdminMessage(`Coupon ${data.coupon.code} created.`, 'success'); loadCoupons();
+  } catch (error) { showCouponAdminMessage(error.message); }
+}
+
+async function loadCoupons() {
+  if (!adminToken) return;
+  try {
+    const res = await adminFetch('/api/admin/coupons'); const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Unable to load coupons.');
+    document.getElementById('couponList').innerHTML = data.coupons?.length ? data.coupons.map(item => `<div class="list-item"><div><strong style="font-family:monospace">${escapeHtml(item.code)}</strong><small>${Number(item.discount_percent)}% off · ${Number(item.redeemed_count)}/${Number(item.max_redemptions)} used · ${item.expires_at ? new Date(item.expires_at).toLocaleString() : 'No expiry'}</small></div><div class="ticket-row-actions"><span class="pill ${item.active ? 'online' : 'offline'}">${item.active ? 'Active' : 'Paused'}</span>${item.active ? `<button class="btn danger tiny-btn" type="button" onclick="deactivateCoupon('${encodeURIComponent(item.code)}')">Deactivate</button>` : ''}</div></div>`).join('') : '<div class="empty">No coupons created yet.</div>';
+  } catch (error) { document.getElementById('couponList').innerHTML = `<div class="empty">${escapeHtml(error.message)}</div>`; }
+}
+
+async function deactivateCoupon(encodedCode) {
+  const code = decodeURIComponent(encodedCode);
+  if (!confirm(`Deactivate coupon ${code}?`)) return;
+  try {
+    const res = await adminFetch('/api/admin/coupons', { method: 'DELETE', body: JSON.stringify({ code }) }); const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Unable to deactivate coupon.');
+    showCouponAdminMessage('Coupon deactivated.', 'success'); loadCoupons();
+  } catch (error) { showCouponAdminMessage(error.message); }
+}
+
+function showDeveloperAdminMessage(text, type = 'error') {
+  const msg = document.getElementById('developerAdminMsg'); msg.textContent = text; msg.className = 'notice show ' + type;
+}
+
+async function loadDeveloperSubmissionsAdmin() {
+  if (!adminToken) return;
+  try {
+    const res = await adminFetch('/api/admin/developer-submissions'); const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Unable to load developer submissions.');
+    document.getElementById('developerAdminList').innerHTML = data.submissions?.length ? data.submissions.map(item => `<div class="list-item" style="align-items:flex-start"><div style="max-width:70%"><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.phone)} · ${escapeHtml(item.package_url || '')} · ${item.created_at ? new Date(item.created_at).toLocaleString() : '—'}</small><p style="margin:0.5rem 0;color:var(--muted);font-size:0.8rem">${escapeHtml(item.description || '')}</p>${item.reviewer_note ? `<small>Reviewer: ${escapeHtml(item.reviewer_note)}</small>` : ''}</div><div class="ticket-row-actions"><span class="pill ${item.status === 'approved' ? 'online' : 'offline'}">${escapeHtml(item.status)}</span>${item.status === 'pending' ? `<button class="btn green tiny-btn" type="button" onclick="reviewDeveloperSubmission(${Number(item.id)}, 'approved')">Approve</button><button class="btn danger tiny-btn" type="button" onclick="reviewDeveloperSubmission(${Number(item.id)}, 'rejected')">Reject</button>` : ''}</div></div>`).join('') : '<div class="empty">No developer submissions yet.</div>';
+  } catch (error) { document.getElementById('developerAdminList').innerHTML = `<div class="empty">${escapeHtml(error.message)}</div>`; }
+}
+
+async function reviewDeveloperSubmission(id, status) {
+  const reviewerNote = prompt(status === 'approved' ? 'Optional approval note:' : 'Reason for rejection:') || '';
+  try {
+    const res = await adminFetch('/api/admin/developer-submissions', { method: 'POST', body: JSON.stringify({ id, status, reviewerNote }) }); const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Unable to update submission.');
+    showDeveloperAdminMessage(`Submission ${status}.`, 'success'); loadDeveloperSubmissionsAdmin();
+  } catch (error) { showDeveloperAdminMessage(error.message); }
+}
+
+async function createBroadcast() {
+  const message = document.getElementById('broadcastMessage').value;
+  const kind = document.getElementById('broadcastKind').value;
+  if (!message) return;
+  try {
+    const res = await adminFetch('/api/admin/broadcasts', { method: 'POST', body: JSON.stringify({ message, kind, active: true }) });
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Broadcast failed.');
+    alert('Broadcast published!');
+  } catch (e) { alert(e.message); }
+}
+
+async function createGiftCard() {
+  const amount = document.getElementById('giftCardAmount').value;
+  if (!amount) return;
+  try {
+    const res = await adminFetch('/api/admin/gift-cards', { method: 'POST', body: JSON.stringify({ amountSD: amount, createdBy: 'admin' }) });
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Gift card creation failed.');
+    alert('Gift Card Created: ' + data.giftCard.code);
+  } catch (e) { alert(e.message); }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,3347 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content" />
+    <title>BLACKLORD TECH INC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ─── All existing styles remain unchanged ─── */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --background: #09090b;
+            --foreground: #fafafa;
+            --primary: #facc15;
+            --primary-foreground: #422006;
+            --border: #27272a;
+            --radius: 0.5rem;
+        }
+        .bot-select-btn {
+            padding: 0.6rem;
+            background: rgba(39,39,42,0.8);
+            border: 1px solid rgba(250,204,21,0.2);
+            border-radius: 0.4rem;
+            color: #a1a1aa;
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            text-align: center;
+        }
+        .bot-select-btn.active {
+            background: rgba(250,204,21,0.15);
+            border-color: #facc15;
+            color: #facc15;
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: #000;
+            color: var(--foreground);
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: url('https://i.ibb.co/bM9ZpckK/ERFAN-MD.jpg') no-repeat center center / cover;
+            opacity: 0.2;
+            z-index: 0;
+            pointer-events: none;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: rgba(9, 9, 11, 0.75);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .user-container {
+            position: relative;
+            z-index: 10;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 1.5rem 1rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        /* ─── Header ─── */
+        .user-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(250, 204, 21, 0.15);
+            margin-bottom: 1.5rem;
+        }
+        .user-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .user-logo-icon {
+            height: 2.5rem;
+            width: 2.5rem;
+            border-radius: 0.5rem;
+            background: linear-gradient(135deg, rgba(250, 204, 21, 0.2), rgba(250, 204, 21, 0.05));
+            border: 1px solid rgba(250, 204, 21, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #facc15;
+            font-size: 1.2rem;
+            box-shadow: 0 0 20px rgba(250, 204, 21, 0.1);
+        }
+        .menu-toggle {
+            appearance: none;
+            border: 0;
+            padding: 0;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.18s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.18s ease;
+        }
+        .menu-toggle::after {
+            content: 'MENU';
+            position: absolute;
+            left: 50%;
+            bottom: -1.35rem;
+            transform: translateX(-50%);
+            color: #facc15;
+            font: 600 0.42rem/1 'Inter', sans-serif;
+            letter-spacing: 0.14em;
+            opacity: 0;
+            transition: opacity 0.18s ease;
+            pointer-events: none;
+        }
+        .menu-toggle:hover::after, .menu-toggle:focus-visible::after { opacity: 1; }
+        .menu-hamburger {
+            position: absolute;
+            right: -0.35rem;
+            bottom: -0.35rem;
+            width: 1.1rem;
+            height: 1.1rem;
+            padding: 0.22rem 0.18rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.12rem;
+            border: 1px solid rgba(250,204,21,0.65);
+            border-radius: 0.35rem;
+            background: #18181b;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.45);
+            z-index: 2;
+        }
+        .menu-hamburger span { display:block; width:100%; height:1px; border-radius:1px; background:#facc15; }
+        .menu-toggle[aria-expanded='true'] .menu-hamburger { background:#facc15; }
+        .menu-toggle[aria-expanded='true'] .menu-hamburger span { background:#422006; }
+        .menu-toggle:hover { transform: translateY(-1px) scale(1.03); box-shadow: 0 0 28px rgba(250, 204, 21, 0.22); }
+        .menu-toggle:active { transform: scale(0.97); }
+        .menu-toggle:focus-visible { outline: 2px solid #facc15; outline-offset: 3px; }
+        .menu-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 90;
+            background: rgba(0,0,0,0.62);
+            backdrop-filter: blur(3px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.22s ease, visibility 0.22s ease;
+        }
+        .menu-backdrop.open { opacity: 1; visibility: visible; }
+        .quick-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+            width: min(82vw, 320px);
+            padding: 1.25rem 1rem;
+            background: linear-gradient(160deg, rgba(21,21,24,0.98), rgba(7,7,9,0.98));
+            border-right: 1px solid rgba(250, 204, 21, 0.25);
+            box-shadow: 24px 0 60px rgba(0,0,0,0.45);
+            transform: translateX(-105%);
+            transition: transform 0.28s cubic-bezier(0.23, 1, 0.32, 1);
+            visibility: hidden;
+            overflow-y: auto;
+        }
+        .quick-menu.open { transform: translateX(0); visibility: visible; }
+        .quick-menu-header { display:flex; align-items:center; justify-content:space-between; padding:0.25rem 0.35rem 1rem; border-bottom:1px solid rgba(250,204,21,0.16); }
+        .quick-menu-title { color:#facc15; font-family:'Playfair Display',serif; font-style:italic; font-size:1.15rem; }
+        .quick-menu-close { background:transparent; border:1px solid rgba(161,161,170,0.28); color:#a1a1aa; width:2rem; height:2rem; border-radius:50%; cursor:pointer; transition:all 0.18s ease; }
+        .quick-menu-close:hover { color:#facc15; border-color:rgba(250,204,21,0.55); transform:rotate(90deg); }
+        .quick-menu-links { display:grid; gap:0.65rem; margin-top:1.15rem; }
+        .quick-menu-link { display:flex; align-items:center; gap:0.85rem; width:100%; padding:0.9rem 0.85rem; border-radius:0.85rem; border:1px solid rgba(39,39,42,0.85); background:rgba(39,39,42,0.34); color:#e4e4e7; text-decoration:none; cursor:pointer; font-size:0.9rem; transition:all 0.18s ease; }
+        .quick-menu-link i { width:1.15rem; text-align:center; color:#facc15; }
+        .quick-menu-link:hover { color:#fff; border-color:rgba(250,204,21,0.42); background:rgba(250,204,21,0.1); transform:translateX(3px); }
+        .quick-menu-link .menu-arrow { margin-left:auto; color:#71717a; font-size:0.75rem; }
+        body.menu-open { overflow: hidden; }
+        @media (prefers-reduced-motion: reduce) { .quick-menu, .menu-backdrop, .quick-menu-link, .menu-toggle { transition:none; } }
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+        }
+        .brand-name {
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        .brand-sub {
+            font-size: 0.5rem;
+            color: #a1a1aa;
+            letter-spacing: 0.1em;
+            font-weight: 400;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        .brand-sub span { color: #facc15; font-weight: 600; }
+        .notification-wrapper { position: relative; }
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            color: #a1a1aa;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+        }
+        .notification-bell:hover { color: #facc15; }
+        .notification-bell .badge {
+            position: absolute;
+            top: -6px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            font-size: 0.5rem;
+            padding: 0.05rem 0.35rem;
+            border-radius: 9999px;
+            font-weight: 600;
+        }
+        .notification-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #18181b;
+            border: 1px solid rgba(39, 39, 42, 0.5);
+            border-radius: 0.75rem;
+            padding: 0.8rem;
+            min-width: 280px;
+            max-width: 90vw;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        .notification-dropdown.active { display: block; }
+        .notification-item {
+            padding: 0.4rem 0;
+            border-bottom: 1px solid rgba(39,39,42,0.3);
+            display: flex;
+            gap: 0.6rem;
+            align-items: flex-start;
+        }
+        .notification-item:last-child { border-bottom: none; }
+        .notification-item .icon { color: #facc15; font-size: 0.8rem; margin-top: 0.05rem; }
+        .notification-item .content .title { font-size: 0.75rem; color: #fafafa; }
+        .notification-item .content .time { font-size: 0.55rem; color: #71717a; }
+        .share-btn {
+            padding: 0.2rem 0.6rem;
+            background: rgba(250, 204, 21, 0.08);
+            border: 1px solid rgba(250, 204, 21, 0.2);
+            border-radius: 2rem;
+            color: #facc15;
+            font-size: 0.7rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: all 0.2s;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            text-decoration: none;
+        }
+        .share-btn:hover { background: rgba(250,204,21,0.15); transform: scale(1.05); }
+        /* ─── Hero ─── */
+        .hero-section {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .hero-section .badge {
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(250, 204, 21, 0.3);
+            color: #facc15;
+            font-size: 0.6rem;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        .hero-section h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            line-height: 1.2;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        .hero-section p {
+            margin-top: 0.5rem;
+            color: #c8c8d0;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        .hero-actions {
+            display: flex;
+            justify-content: center;
+            gap: 0.7rem;
+            flex-wrap: wrap;
+            margin-top: 1.15rem;
+        }
+        .hero-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+            min-width: 145px;
+            padding: 0.75rem 1.1rem;
+            border-radius: 0.65rem;
+            border: 1px solid rgba(250,204,21,0.35);
+            font-size: 0.78rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+        .hero-action.primary { background: #facc15; color: #422006; }
+        .hero-action.secondary { background: rgba(24,24,27,0.75); color: #facc15; }
+        .hero-action:hover { transform: translateY(-2px); filter: brightness(1.08); }
+        .welcome-note {
+            margin: 1rem auto 0;
+            max-width: 640px;
+            color: #a1a1aa;
+            font-size: 0.72rem;
+            line-height: 1.55;
+        }
+        .hero-section .key-note {
+            margin-top: 0.5rem;
+            background: rgba(250, 204, 21, 0.08);
+            border: 1px solid rgba(250, 204, 21, 0.15);
+            border-radius: 0.5rem;
+            padding: 0.4rem 0.8rem;
+            display: inline-block;
+            font-size: 0.7rem;
+            color: #facc15;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        /* ─── Quick Stats ─── */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.6rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-mini {
+            background: rgba(24, 24, 27, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(39, 39, 42, 0.3);
+            border-radius: 0.75rem;
+            padding: 0.8rem;
+            text-align: center;
+        }
+        .stat-mini .number {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #facc15;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        .stat-mini .label {
+            font-size: 0.6rem;
+            color: #a1a1aa;
+            margin-top: 0.1rem;
+        }
+        /* ─── Generator Card ─── */
+        .generator-card {
+            background: rgba(24, 24, 27, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(250, 204, 21, 0.15);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        .generator-card .form-group { margin-bottom: 1rem; }
+        .generator-card label {
+            display: block;
+            color: #d4d4d8;
+            font-size: 0.8rem;
+            margin-bottom: 0.3rem;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        .input-wrapper { position: relative; }
+        .input-wrapper i {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #71717a;
+            font-size: 0.9rem;
+        }
+        .generator-card input {
+            width: 100%;
+            padding: 0.7rem 1rem 0.7rem 2.5rem;
+            background: rgba(39, 39, 42, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        .generator-card input:focus { outline: none; border-color: #facc15; }
+        .generator-card input::placeholder { color: #71717a; }
+        .input-hint { font-size: 0.6rem; color: #71717a; margin-top: 0.2rem; }
+        .radio-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.6rem;
+        }
+        .radio-item {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.1rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+            padding: 0.6rem 0.5rem;
+            transition: all 0.2s;
+            background: rgba(0,0,0,0.2);
+        }
+        .radio-item.active {
+            border-color: rgba(250, 204, 21, 0.5);
+            background-color: rgba(250, 204, 21, 0.08);
+        }
+        .radio-item i { color: #facc15; font-size: 0.9rem; }
+        .radio-item .type-name {
+            font-size: 0.75rem;
+            font-weight: 600;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        .radio-item .type-desc { font-size: 0.55rem; color: #a1a1aa; }
+        .generate-btn {
+            width: 100%;
+            padding: 0.9rem;
+            background: #facc15;
+            color: #422006;
+            border: none;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            transition: all 0.2s;
+            margin-top: 0.3rem;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        .generate-btn:hover { opacity: 0.9; transform: scale(1.01); }
+        .generate-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .result-card {
+            margin-top: 1rem;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(250, 204, 21, 0.2);
+            background: rgba(39, 39, 42, 0.5);
+            padding: 1rem;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+        }
+        .result-header span {
+            font-size: 0.65rem;
+            color: #a1a1aa;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        .copy-btn, .send-bot-btn {
+            padding: 0.2rem 0.7rem;
+            background: rgba(250, 204, 21, 0.1);
+            border: 1px solid rgba(250, 204, 21, 0.2);
+            color: #facc15;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.2s;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .copy-btn:hover, .send-bot-btn:hover { background: rgba(250,204,21,0.2); }
+        .send-bot-btn {
+            background: rgba(0, 136, 204, 0.1);
+            border-color: rgba(0, 136, 204, 0.3);
+            color: #0088cc;
+        }
+        .send-bot-btn:hover { background: rgba(0,136,204,0.2); }
+        .key-display {
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            margin: 0.5rem 0;
+            font-family: 'Playfair Display', serif;
+            min-height: 2.5rem;
+            font-variant-numeric: tabular-nums;
+        }
+        .key-display .cursor-blink {
+            display: inline-block;
+            width: 2px;
+            height: 1.2rem;
+            background: #facc15;
+            margin-left: 2px;
+            animation: blink 0.8s step-end infinite;
+            vertical-align: text-bottom;
+        }
+        @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+        .result-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.6rem;
+            color: #a1a1aa;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+        }
+        .panel-result {
+            color: #d4d4d8;
+            font-size: 0.78rem;
+            line-height: 1.5;
+        }
+        .panel-result .panel-result-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.65rem;
+        }
+        .panel-result .success { color: #86efac; font-weight: 800; }
+        .panel-result .progress { color: #facc15; font-weight: 800; }
+        .panel-result .error { color: #fca5a5; font-weight: 800; }
+        .panel-result .status-copy { display:block; margin-top:0.25rem; color:#a1a1aa; font-size:0.7rem; }
+        .panel-result .credential-notice {
+            margin-bottom: 0.7rem;
+            padding: 0.65rem 0.75rem;
+            border-left: 3px solid #facc15;
+            border-radius: 0.45rem;
+            background: rgba(250,204,21,0.07);
+            color: #d4d4d8;
+            font-size: 0.7rem;
+        }
+        .panel-result .credential-card {
+            margin-top: 0.7rem;
+            padding: 0.75rem;
+            border: 1px solid rgba(34,197,94,0.28);
+            border-radius: 0.65rem;
+            background: rgba(34,197,94,0.045);
+        }
+        .panel-result .credential-card-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            color: #fafafa;
+            font-weight: 800;
+            margin-bottom: 0.55rem;
+        }
+        .panel-result .credential-grid { display: grid; gap: 0.4rem; }
+        .panel-result .credential-row {
+            display: grid;
+            grid-template-columns: minmax(5rem, 0.55fr) minmax(0, 1.45fr);
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.42rem 0.5rem;
+            border-radius: 0.4rem;
+            background: rgba(0,0,0,0.18);
+        }
+        .panel-result .credential-label {
+            color: #a1a1aa;
+            font-size: 0.66rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .panel-result .credential-value { min-width: 0; color: #facc15; overflow-wrap: anywhere; font-size: 0.76rem; }
+        .panel-result .credential-value.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.02em; }
+        .panel-result .credential-actions { display: flex; gap: 0.45rem; flex-wrap: wrap; margin-top: 0.6rem; }
+        .panel-result .credential-copy-btn,
+        .panel-result .panel-login-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            padding: 0.38rem 0.6rem;
+            border: 1px solid rgba(250,204,21,0.28);
+            border-radius: 0.4rem;
+            background: rgba(250,204,21,0.08);
+            color: #facc15;
+            cursor: pointer;
+            font: 600 0.68rem 'Playfair Display', serif;
+            font-style: italic;
+            text-decoration: none;
+        }
+        .panel-result .credential-copy-btn:hover,
+        .panel-result .panel-login-link:hover { background: rgba(250,204,21,0.16); }
+        .panel-result .panel-open-btn {
+            background: #facc15;
+            border-color: #facc15;
+            color: #422006;
+            font-weight: 800;
+        }
+        .panel-result .panel-open-btn:hover { background: #fde047; }
+        @media (max-width: 480px) { .panel-result .credential-row { grid-template-columns: 1fr; gap: 0.12rem; } }
+        /* ─── Validation ─── */
+        .validation-card {
+            background: rgba(24, 24, 27, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(39, 39, 42, 0.3);
+            border-radius: 1rem;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        .validation-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 0.9rem;
+            color: #facc15;
+            margin-bottom: 0.5rem;
+        }
+        .validation-card .input-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .validation-card input {
+            flex: 1;
+            min-width: 150px;
+            padding: 0.6rem 1rem;
+            background: rgba(39, 39, 42, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            color: white;
+            font-size: 0.9rem;
+        }
+        .validation-card input:focus { outline: none; border-color: #facc15; }
+        .validation-card .validate-btn {
+            padding: 0.6rem 1.2rem;
+            background: #facc15;
+            color: #422006;
+            border: none;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        .validation-card .validate-btn:hover { opacity: 0.9; }
+        .validation-result {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: #d4d4d8;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        .validation-result .valid { color: #22c55e; }
+        .validation-result .invalid { color: #ef4444; }
+        /* ─── Connect Bot ─── */
+        .connect-bot-section {
+            background: rgba(24, 24, 27, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(250, 204, 21, 0.15);
+            border-radius: 1rem;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .connect-bot-section:hover {
+            border-color: rgba(250, 204, 21, 0.3);
+            transform: translateY(-2px);
+        }
+        .connect-bot-section p {
+            color: #a1a1aa;
+            font-size: 0.7rem;
+            margin-bottom: 0.8rem;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        .connect-bot-section p i { color: #facc15; }
+        .connect-bot-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: linear-gradient(135deg, rgba(250, 204, 21, 0.08), rgba(250, 204, 21, 0.02));
+            border: 2px solid rgba(250, 204, 21, 0.3);
+            border-radius: 0.75rem;
+            color: #facc15;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            transition: all 0.3s;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            text-decoration: none;
+        }
+        .connect-bot-btn:hover {
+            background: rgba(250, 204, 21, 0.15);
+            border-color: #facc15;
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(250, 204, 21, 0.1);
+        }
+        .connect-bot-btn i { font-size: 1.2rem; }
+        .connect-bot-btn .pulse { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+        .telegram-icon { color: #0088cc; }
+        
+        .result-connect-btn {
+            width: 100%;
+            padding: 0.9rem;
+            background: #facc15;
+            color: #422006;
+            border: none;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            transition: all 0.2s;
+            margin: 1rem 0;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(250, 204, 21, 0.2);
+        }
+        .result-connect-btn:hover { 
+            opacity: 0.9; 
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px rgba(250, 204, 21, 0.3);
+        }
+        .result-connect-btn i { font-size: 1.2rem; }
+
+        /* ─── Scroll Hint ─── */
+        .scroll-hint {
+            text-align: center;
+            color: #71717a;
+            font-size: 0.6rem;
+            margin: 0.3rem 0 0.2rem 0;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            animation: bob 2s ease-in-out infinite;
+        }
+        .scroll-hint i { color: #facc15; margin: 0 0.2rem; }
+        @keyframes bob { 0%,100%{transform:translateY(0);} 50%{transform:translateY(4px);} }
+        /* ─── Services Grid (Bots & Panels) ─── */
+        .services-section {
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            scroll-margin-top: 1rem;
+        }
+        .services-section .section-title {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+            color: #fafafa;
+        }
+        .services-section .section-sub {
+            text-align: center;
+            color: #a1a1aa;
+            font-size: 0.7rem;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            margin-bottom: 1.2rem;
+        }
+        .services-section .section-sub i { color: #facc15; }
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.82rem;
+        }
+        /* Quick Menu Specific Styles from Screenshot */
+        .quick-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 1.2rem;
+        }
+        .quick-item {
+            background: #111113;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 0.8rem;
+            padding: 1.6rem 1rem;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            width: 100%;
+        }
+        .quick-item:hover {
+            background: #18181b;
+            border-color: rgba(250, 204, 21, 0.3);
+            transform: translateY(-2px);
+        }
+        .quick-item i {
+            font-size: 1.8rem;
+            color: #facc15;
+            margin-bottom: 0.8rem;
+        }
+        .quick-item i.status-icon { color: #10b981; } /* Green for Status */
+        .quick-item span {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: #a1a1aa;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .quick-item.active-border { border-color: rgba(250, 204, 21, 0.4); }
+
+        .service-card {
+            position: relative;
+            overflow: hidden;
+            min-height: 154px;
+            padding: 0.95rem;
+            background: linear-gradient(145deg, rgba(29,29,32,0.96), rgba(17,17,19,0.96));
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+        }
+        .service-card::after {
+            content: '';
+            position: absolute;
+            width: 6rem;
+            height: 6rem;
+            right: -3rem;
+            bottom: -3rem;
+            border-radius: 50%;
+            background: rgba(250,204,21,0.08);
+            pointer-events: none;
+        }
+        .service-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(250,204,21,0.7);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.28);
+        }
+        .service-card .status-badge {
+            position: absolute;
+            top: 0.68rem;
+            right: 0.72rem;
+            font-size: 0.65rem;
+            color: #86efac;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            z-index: 1;
+        }
+        .service-card .status-badge .dot {
+            width: 0.45rem;
+            height: 0.45rem;
+            border-radius: 50%;
+            background: #22c55e;
+            display: inline-block;
+            box-shadow: 0 0 0.55rem rgba(34,197,94,0.8);
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse-dot { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+        .service-card .icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 0.8rem;
+            background: linear-gradient(145deg, rgba(250,204,21,0.18), rgba(250,204,21,0.04));
+            border: 1px solid rgba(250,204,21,0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #facc15;
+            font-size: 1.15rem;
+            margin-bottom: 0.75rem;
+            flex-shrink: 0;
+            box-shadow: inset 0 0 16px rgba(250,204,21,0.06);
+        }
+        .service-card .bot-icon {
+            font-size: 0.7rem;
+            font-weight: 900;
+            letter-spacing: 0.04em;
+        }
+        .service-card .name {
+            display: block;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fafafa;
+            line-height: 1.2;
+            overflow-wrap: anywhere;
+        }
+        .service-card .company {
+            display: block;
+            font-size: 0.8rem;
+            color: #facc15;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            margin-top: 0.18rem;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic;
+        }
+        .service-card .desc {
+            display: block;
+            font-size: 0.72rem;
+            color: #c4c4c9;
+            line-height: 1.45;
+            margin-top: 0.55rem;
+            flex: 1;
+        }
+        .service-card .price-tag {
+            display: block;
+            position: relative;
+            z-index: 1;
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #facc15;
+            margin-top: 0.85rem;
+            padding: 0.42rem 0.65rem;
+            border-radius: 0.5rem;
+            background: rgba(250,204,21,0.1);
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic;
+        }
+        .service-card .action-btn {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            margin-top: auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            font-size: 0.78rem;
+            color: #facc15;
+            text-decoration: none;
+            border: 1px solid rgba(250,204,21,0.38);
+            background: rgba(250,204,21,0.06);
+            padding: 0.62rem 0.75rem;
+            border-radius: 0.65rem;
+            transition: all 0.2s;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic;
+        }
+        .service-card .action-btn:hover { background: rgba(250,204,21,0.16); border-color: #facc15; }
+        .service-card .action-btn i { font-size: 0.75rem; }
+        /* ─── Panel specific ─── */
+        .service-card.panel .price-tag {
+            font-size: 1.35rem;
+            background: rgba(250,204,21,0.1);
+            padding: 0.42rem 0.65rem;
+            border-radius: 0.5rem;
+            display: block;
+        }
+        /* ─── Testimonials, FAQ, Thanks ─── */
+        .testimonials-section {
+            background: rgba(24, 24, 27, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(39, 39, 42, 0.3);
+            border-radius: 1rem;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        .testimonials-section h3 {
+            text-align: center;
+            color: #facc15;
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+        }
+        .testimonial-item {
+            background: rgba(0,0,0,0.2);
+            border-radius: 0.75rem;
+            padding: 0.8rem;
+            border-left: 2px solid #facc15;
+        }
+        .testimonial-item .quote {
+            font-size: 0.7rem;
+            color: #d4d4d8;
+            font-style: italic;
+            line-height: 1.4;
+        }
+        .testimonial-item .author {
+            margin-top: 0.3rem;
+            font-size: 0.6rem;
+            color: #facc15;
+            font-weight: 600;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        .faq-section {
+            background: rgba(24, 24, 27, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(39, 39, 42, 0.3);
+            border-radius: 1rem;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        .faq-section h3 {
+            text-align: center;
+            color: #facc15;
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        .faq-item {
+            border-bottom: 1px solid rgba(39,39,42,0.3);
+            padding: 0.4rem 0;
+        }
+        .faq-item:last-child { border-bottom: none; }
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            color: #fafafa;
+            font-size: 0.8rem;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            padding: 0.2rem 0;
+        }
+        .faq-question i { color: #facc15; transition: transform 0.3s; }
+        .faq-question.open i { transform: rotate(180deg); }
+        .faq-answer {
+            display: none;
+            font-size: 0.7rem;
+            color: #b0b0b8;
+            padding: 0.2rem 0 0.4rem 0;
+            line-height: 1.4;
+        }
+        .faq-answer.open { display: block; }
+        .thanks-section {
+            background: rgba(24, 24, 27, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(250, 204, 21, 0.15);
+            border-radius: 1rem;
+            padding: 1.5rem 1.2rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .thanks-section h3 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.1rem;
+            color: #facc15;
+            margin-bottom: 0.5rem;
+        }
+        .thanks-section p {
+            font-size: 0.75rem;
+            color: #b0b0b8;
+            line-height: 1.6;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        .thanks-section .highlight { color: #facc15; font-weight: 600; }
+        .how-it-works {
+            background: rgba(24, 24, 27, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(39, 39, 42, 0.3);
+            border-radius: 1rem;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        .how-it-works h3 {
+            text-align: center;
+            color: #facc15;
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+        .step { text-align: center; }
+        .step .num {
+            color: #facc15;
+            font-size: 1.2rem;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        .step .text {
+            font-size: 0.55rem;
+            color: #b0b0b8;
+            line-height: 1.3;
+            margin-top: 0.1rem;
+        }
+        .footer {
+            text-align: center;
+            color: #71717a;
+            font-size: 0.65rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(39,39,42,0.2);
+            margin-top: auto;
+        }
+        .footer .brand-name-footer {
+            color: #facc15;
+            font-weight: 600;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        .footer .unlimited {
+            color: #facc15;
+            font-weight: 600;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        .live-toast {
+            position: fixed;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(24, 24, 27, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(250, 204, 21, 0.2);
+            border-radius: 2rem;
+            padding: 0.4rem 1.2rem;
+            color: #d4d4d8;
+            font-size: 0.65rem;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            z-index: 200;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+            white-space: nowrap;
+            max-width: 90%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .live-toast.show { opacity: 1; }
+        .live-toast i { color: #facc15; margin-right: 0.3rem; }
+        /* ─── Expanded Landing Experience ─── */
+        .landing-section { margin: 1.1rem 0; scroll-margin-top: 1rem; }
+        .landing-section-heading { text-align:center; margin-bottom:0.9rem; }
+        .landing-section-heading .eyebrow { color:#facc15; text-transform:uppercase; letter-spacing:0.16em; font-size:0.52rem; font-weight:800; }
+        .landing-section-heading h2 { margin-top:0.25rem; color:#fafafa; font:600 1.25rem/1.2 'Playfair Display',serif; font-style:italic; }
+        .landing-section-heading p { color:#a1a1aa; font-size:0.68rem; line-height:1.5; margin:0.35rem auto 0; max-width:34rem; }
+        .trust-panel, .infra-strip, .feature-panel, .pricing-panel, .market-panel, .developer-panel, .newsletter-panel, .activity-panel, .leaderboard-panel, .affiliate-panel { background:linear-gradient(145deg,rgba(24,24,27,0.76),rgba(9,9,11,0.66)); backdrop-filter:blur(13px); border:1px solid rgba(250,204,21,0.16); border-radius:1rem; box-shadow:0 14px 40px rgba(0,0,0,0.24); }
+        .trust-panel { padding:1rem; }
+        .trust-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:0.55rem; }
+        .trust-stat { padding:0.8rem 0.55rem; border-radius:0.75rem; background:rgba(0,0,0,0.22); border:1px solid rgba(255,255,255,0.05); text-align:center; }
+        .trust-stat .value { color:#facc15; font:700 1.22rem/1 'Playfair Display',serif; font-style:italic; }
+        .trust-stat .label { color:#a1a1aa; font-size:0.54rem; margin-top:0.3rem; line-height:1.25; }
+        .trust-status { display:flex; align-items:center; justify-content:center; gap:0.4rem; margin-top:0.8rem; color:#a7f3d0; font-size:0.62rem; }
+        .trust-status .live-dot { width:7px; height:7px; border-radius:999px; background:#22c55e; box-shadow:0 0 0 4px rgba(34,197,94,0.12); animation:pulse-dot 1.6s ease-in-out infinite; }
+        .infra-strip { padding:0.85rem 1rem; display:flex; align-items:center; justify-content:center; gap:0.55rem; flex-wrap:wrap; }
+        .infra-label { color:#71717a; font-size:0.53rem; text-transform:uppercase; letter-spacing:0.14em; font-weight:800; width:100%; text-align:center; }
+        .infra-chip { display:inline-flex; align-items:center; gap:0.35rem; padding:0.42rem 0.65rem; border:1px solid rgba(255,255,255,0.08); border-radius:999px; background:rgba(255,255,255,0.035); color:#d4d4d8; font-size:0.58rem; font-weight:700; }
+        .infra-chip i { color:#facc15; }
+        .feature-panel { padding:1rem; }
+        .feature-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.65rem; }
+        .feature-card { padding:0.85rem; min-height:8.2rem; border-radius:0.8rem; background:rgba(0,0,0,0.23); border:1px solid rgba(255,255,255,0.055); transition:transform 0.2s cubic-bezier(0.23,1,0.32,1),border-color 0.2s ease,background 0.2s ease; }
+        .feature-card:hover { transform:translateY(-3px); border-color:rgba(250,204,21,0.36); background:rgba(250,204,21,0.065); }
+        .feature-card i { color:#facc15; font-size:1rem; }
+        .feature-card h3 { color:#fafafa; font:600 0.78rem/1.2 'Playfair Display',serif; font-style:italic; margin-top:0.45rem; }
+        .feature-card p { color:#a1a1aa; font-size:0.58rem; line-height:1.4; margin-top:0.3rem; }
+        .feature-card .feature-tag { display:inline-block; color:#86efac; font-size:0.5rem; margin-top:0.45rem; text-transform:uppercase; letter-spacing:0.08em; font-weight:800; }
+        .pricing-panel { padding:1rem; }
+        .pricing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.65rem; align-items:stretch; }
+        .price-card { display:flex; flex-direction:column; padding:1rem 0.85rem; border:1px solid rgba(255,255,255,0.08); background:rgba(0,0,0,0.23); border-radius:0.85rem; position:relative; }
+        .price-card.featured { border-color:rgba(250,204,21,0.7); box-shadow:0 0 28px rgba(250,204,21,0.08); transform:translateY(-3px); }
+        .price-card .popular { position:absolute; top:-0.55rem; right:0.65rem; padding:0.18rem 0.45rem; border-radius:999px; background:#facc15; color:#422006; font-size:0.46rem; font-weight:900; letter-spacing:0.08em; }
+        .price-card h3 { color:#facc15; font:600 0.9rem 'Playfair Display',serif; font-style:italic; }
+        .price-card .price { color:#fafafa; font:700 1.45rem 'Playfair Display',serif; font-style:italic; margin:0.35rem 0; }
+        .price-card .price small { color:#a1a1aa; font:500 0.55rem 'Inter',sans-serif; font-style:normal; }
+        .price-card p { color:#a1a1aa; min-height:2.2rem; font-size:0.58rem; line-height:1.35; }
+        .price-card ul { list-style:none; display:grid; gap:0.32rem; margin:0.7rem 0; flex:1; }
+        .price-card li { color:#d4d4d8; font-size:0.58rem; line-height:1.25; }
+        .price-card li::before { content:'✓'; color:#22c55e; font-weight:900; margin-right:0.35rem; }
+        .price-card .price-cta { display:inline-flex; align-items:center; justify-content:center; gap:0.3rem; width:100%; padding:0.55rem; border-radius:0.55rem; border:1px solid rgba(250,204,21,0.38); color:#facc15; background:rgba(250,204,21,0.06); cursor:pointer; font-size:0.62rem; font-weight:800; text-decoration:none; transition:all 0.18s ease; }
+        .price-card .price-cta:hover { background:#facc15; color:#422006; transform:translateY(-1px); }
+        .market-panel, .developer-panel, .newsletter-panel, .activity-panel, .leaderboard-panel, .affiliate-panel { padding:1rem; }
+        .market-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.6rem; }
+        .market-card { padding:0.75rem; border-radius:0.75rem; border:1px solid rgba(255,255,255,0.06); background:rgba(0,0,0,0.2); }
+        .market-card .market-icon { width:2rem; height:2rem; display:grid; place-items:center; color:#facc15; border-radius:0.55rem; background:rgba(250,204,21,0.09); margin-bottom:0.45rem; }
+        .market-card strong { display:block; color:#fafafa; font-size:0.67rem; }
+        .market-card small { display:block; color:#a1a1aa; font-size:0.55rem; line-height:1.35; margin-top:0.25rem; }
+        .market-card .market-price { display:block; color:#facc15; font:600 0.68rem 'Playfair Display',serif; font-style:italic; margin-top:0.45rem; }
+        .market-footer { display:flex; justify-content:center; margin-top:0.8rem; }
+        .outline-cta { display:inline-flex; align-items:center; gap:0.4rem; padding:0.58rem 0.85rem; border:1px solid rgba(250,204,21,0.35); border-radius:0.55rem; color:#facc15; background:rgba(250,204,21,0.05); text-decoration:none; font-size:0.62rem; font-weight:800; transition:all 0.18s ease; }
+        .outline-cta:hover { background:rgba(250,204,21,0.15); transform:translateY(-1px); }
+        .split-grid { display:grid; grid-template-columns:1.15fr 0.85fr; gap:0.65rem; }
+        .developer-panel .code-window { margin-top:0.75rem; border:1px solid rgba(250,204,21,0.14); border-radius:0.7rem; background:#050507; overflow:hidden; }
+        .code-window .code-top { padding:0.38rem 0.55rem; border-bottom:1px solid rgba(255,255,255,0.06); color:#71717a; font-size:0.5rem; }
+        .code-window pre { margin:0; padding:0.7rem; color:#bbf7d0; overflow:auto; font:500 0.55rem/1.55 ui-monospace,SFMono-Regular,Menlo,monospace; }
+        .developer-copy { color:#a1a1aa; font-size:0.62rem; line-height:1.45; margin-top:0.4rem; }
+        .developer-pills { display:flex; gap:0.35rem; flex-wrap:wrap; margin-top:0.65rem; }
+        .developer-pill { color:#facc15; background:rgba(250,204,21,0.08); border:1px solid rgba(250,204,21,0.17); border-radius:999px; padding:0.28rem 0.45rem; font:500 0.5rem ui-monospace,monospace; }
+        .affiliate-copy { color:#d4d4d8; font-size:0.68rem; line-height:1.45; }
+        .affiliate-copy strong { color:#facc15; }
+        .activity-list, .landing-leaderboard { display:grid; gap:0.45rem; margin-top:0.7rem; }
+        .activity-row, .rank-row { display:flex; align-items:center; justify-content:space-between; gap:0.7rem; padding:0.55rem 0.65rem; border-radius:0.6rem; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.04); }
+        .activity-row .activity-main, .rank-row .rank-main { min-width:0; }
+        .activity-row strong, .rank-row strong { display:block; color:#f4f4f5; font-size:0.6rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .activity-row small, .rank-row small { display:block; color:#71717a; font-size:0.52rem; margin-top:0.15rem; }
+        .activity-row .activity-time, .rank-row .rank-value { color:#facc15; font-size:0.54rem; white-space:nowrap; }
+        .newsletter-panel { display:flex; align-items:center; justify-content:space-between; gap:0.9rem; }
+        .newsletter-copy { flex:1; }
+        .newsletter-copy h3 { color:#facc15; font:600 0.95rem 'Playfair Display',serif; font-style:italic; }
+        .newsletter-copy p { color:#a1a1aa; font-size:0.58rem; line-height:1.4; margin-top:0.25rem; }
+        .newsletter-form { display:flex; gap:0.4rem; flex:1; max-width:18rem; }
+        .newsletter-form input { min-width:0; flex:1; padding:0.58rem 0.65rem; border:1px solid rgba(250,204,21,0.2); border-radius:0.55rem; color:#fff; background:rgba(0,0,0,0.3); font-size:0.62rem; }
+        .newsletter-form button { padding:0.58rem 0.7rem; border:0; border-radius:0.55rem; background:#facc15; color:#422006; cursor:pointer; font-size:0.62rem; font-weight:900; }
+        .newsletter-form input:focus { outline:none; border-color:#facc15; }
+        .landing-muted { color:#71717a; font-size:0.56rem; text-align:center; padding:0.55rem 0; }
+        @media (prefers-reduced-motion: no-preference) { .trust-panel, .infra-strip, .feature-panel, .pricing-panel, .market-panel, .developer-panel, .newsletter-panel, .activity-panel, .leaderboard-panel, .affiliate-panel { animation:landingRise 0.55s cubic-bezier(0.23,1,0.32,1) both; } @keyframes landingRise { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} } }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 480px) {
+            .user-container { padding: 1rem; }
+            .hero-section h1 { font-size: 1.6rem; }
+            .generator-card { padding: 1.2rem; }
+            .steps { grid-template-columns: 1fr; gap: 0.3rem; }
+            .step { display: flex; align-items: center; gap: 0.5rem; text-align: left; }
+            .step .num { font-size: 1rem; min-width: 24px; }
+            .step .text { font-size: 0.6rem; }
+            .quick-stats { grid-template-columns: repeat(3, 1fr); }
+            .connect-bot-btn { font-size: 0.85rem; padding: 0.7rem; }
+            .brand-name { font-size: 0.85rem; }
+            .service-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.58rem; }
+            .service-card { min-height: 166px; padding: 0.72rem; }
+            .service-card .icon { width: 2.45rem; height: 2.45rem; margin-bottom: 0.62rem; font-size: 0.95rem; }
+            .service-card .name { font-size: 0.91rem; }
+            .service-card .company { font-size: 0.72rem; }
+            .service-card .desc { font-size: 0.67rem; line-height: 1.35; }
+            .service-card .price-tag, .service-card.panel .price-tag { font-size: 1rem; padding: 0.35rem 0.45rem; }
+            .service-card .action-btn { padding: 0.52rem 0.35rem; font-size: 0.68rem; }
+            .testimonial-grid { grid-template-columns: 1fr; }
+            .live-toast { font-size: 0.55rem; padding: 0.3rem 0.8rem; bottom: 0.5rem; }
+            .trust-grid { grid-template-columns:repeat(2,1fr); }
+            .feature-grid, .pricing-grid, .market-grid { grid-template-columns:1fr; }
+            .price-card.featured { transform:none; }
+            .split-grid { grid-template-columns:1fr; }
+            .newsletter-panel { display:block; }
+            .newsletter-form { max-width:none; margin-top:0.7rem; }
+        }
+        @media (max-width: 380px) {
+            .radio-group { grid-template-columns: 1fr; }
+            .quick-stats { grid-template-columns: 1fr; }
+            .service-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; }
+            .trust-stat .value { font-size:1rem; }
+            .infra-chip { font-size:0.52rem; }
+            .activity-row, .rank-row { padding:0.48rem; }
+        }
+        .spinner {
+            display: inline-block;
+            width: 1.2rem;
+            height: 1.2rem;
+            border: 2px solid rgba(66, 32, 6, 0.3);
+            border-top-color: #422006;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Mobile input reliability */
+        input, textarea, select {
+            pointer-events: auto;
+            user-select: text;
+            -webkit-user-select: text;
+            -webkit-touch-callout: default;
+        }
+        input:not([readonly]), textarea:not([readonly]), select {
+            cursor: text;
+        }
+        @media (max-width: 480px) {
+            input, textarea, select { font-size: 16px !important; }
+        }
+        #registrationModal, #loginModal { pointer-events: auto; }
+        #registrationModal > div, #loginModal > div { position: relative; z-index: 1; pointer-events: auto; }
+        #registrationModal input, #loginModal input { pointer-events: auto !important; user-select: text; -webkit-user-select: text; touch-action: manipulation; -webkit-appearance: none; }
+        #registrationModal input:focus, #loginModal input:focus { outline: 2px solid #facc15; outline-offset: 1px; }
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            animation: fadeIn 0.2s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .modal-card {
+            animation: slideUp 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            background: #18181b;
+            border: 1px solid rgba(250, 204, 21, 0.3);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .modal-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid rgba(39, 39, 42, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .modal-title {
+            color: #fafafa;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: #71717a;
+            font-size: 1.5rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .modal-close:hover { color: #facc15; }
+        .modal-body { padding: 1.25rem; }
+    </style>
+</head>
+<body>
+    <div id="globalBroadcast" style="display:none;position:sticky;top:0;z-index:50;padding:0.7rem 1rem;text-align:center;font-size:0.75rem;color:#18181b;background:linear-gradient(90deg,#facc15,#fde68a);box-shadow:0 4px 18px rgba(0,0,0,0.25);"></div>
+    <div class="user-container">
+        <!-- ===== HEADER ===== -->
+        <header class="user-header">
+            <div class="user-logo">
+                <button class="user-logo-icon menu-toggle" type="button" title="Open menu" aria-label="Open navigation menu" aria-controls="quickMenu" aria-expanded="false" onclick="toggleQuickMenu(true)"><i class="fas fa-crown"></i><span class="menu-hamburger" aria-hidden="true"><span></span><span></span><span></span></span></button>
+                <div class="brand-text">
+                    <span class="brand-name text-gradient-gold">BLACKLORD TECH INC</span>
+                    <span class="brand-sub">⚡ <span>BLACKLORD TECH INC</span> ⚡</span>
+                </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:0.6rem;">
+                <div class="notification-wrapper">
+                    <div class="notification-bell" onclick="toggleNotifications()">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
+                    <div class="notification-dropdown" id="notifications">
+                        <h4 style="color: #facc15; font-size: 0.8rem; margin-bottom: 0.5rem; font-family: 'Playfair Display', serif; font-style: italic;">Notifications</h4>
+                        <div class="notification-item">
+                            <div class="icon"><i class="fas fa-exclamation-circle"></i></div>
+                            <div class="content">
+                                <div class="title">Key <strong>BLACKLORD-8F3A</strong> expires in 3 days</div>
+                                <div class="time">2 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="icon"><i class="fas fa-check-circle" style="color: #22c55e;"></i></div>
+                            <div class="content">
+                                <div class="title">Premium key activated</div>
+                                <div class="time">1 day ago</div>
+                            </div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="icon"><i class="fas fa-gift" style="color: #facc15;"></i></div>
+                            <div class="content">
+                                <div class="title">50% off Premium upgrade</div>
+                                <div class="time">3 days ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="menu-backdrop" id="menuBackdrop" aria-hidden="true" onclick="toggleQuickMenu(false)"></div>
+        <aside class="quick-menu" id="quickMenu" aria-label="Quick navigation" aria-hidden="true">
+            <div class="quick-menu-header">
+                <span class="quick-menu-title">Quick Menu</span>
+                <button class="quick-menu-close" type="button" aria-label="Close navigation menu" onclick="toggleQuickMenu(false)"><i class="fas fa-times"></i></button>
+            </div>
+            <nav class="quick-menu-links">
+                <a class="quick-menu-link" href="#panels-section" onclick="toggleQuickMenu(false)"><i class="fas fa-server"></i><span>Panels</span><span class="menu-arrow">›</span></a>
+                <a class="quick-menu-link" href="#bots-section" onclick="toggleQuickMenu(false)"><i class="fas fa-robot"></i><span>Bots</span><span class="menu-arrow">›</span></a>
+                <a class="quick-menu-link" href="#features-section" onclick="toggleQuickMenu(false)"><i class="fas fa-wand-magic-sparkles"></i><span>Features</span><span class="menu-arrow">›</span></a>
+                <a class="quick-menu-link" href="#pricing-section" onclick="toggleQuickMenu(false)"><i class="fas fa-tags"></i><span>Plans</span><span class="menu-arrow">›</span></a>
+                <a class="quick-menu-link" href="#marketplace-section" onclick="toggleQuickMenu(false)"><i class="fas fa-store"></i><span>Marketplace</span><span class="menu-arrow">›</span></a>
+                
+                <div style="height: 1px; background: rgba(250, 204, 21, 0.1); margin: 0.5rem 0.85rem;"></div>
+
+                <button class="quick-menu-link" type="button" onclick="openWalletFromMenu()"><i class="fas fa-wallet"></i><span>Wallet <small style="color:#22c55e;">(<span id="userBalanceDisplay">0.00 SD</span>)</small></span><span class="menu-arrow">›</span></button>
+                <a class="quick-menu-link" href="dashboard.html" onclick="toggleQuickMenu(false)"><i class="fas fa-chart-line"></i><span>Dashboard</span><span class="menu-arrow">›</span></a>
+                <button class="quick-menu-link" type="button" onclick="hasPasswordReady() ? showToast('This account is already registered.', 'success') : openRegistrationModal('Complete your account with an email and password.')"><i class="fas fa-user-plus"></i><span>Register <small style="color:#86efac;">(+10 KSH)</small></span><span class="menu-arrow">›</span></button>
+                <button class="quick-menu-link" type="button" onclick="openLoginModal()"><i class="fas fa-right-to-bracket"></i><span>Log in</span><span class="menu-arrow">›</span></button>
+                <button class="quick-menu-link" type="button" onclick="adminLoginFromMenu()"><i class="fas fa-user-shield"></i><span>Admin</span><span class="menu-arrow">›</span></button>
+                <button class="quick-menu-link" type="button" onclick="shareFromMenu()"><i class="fas fa-share-alt"></i><span>Share</span><span class="menu-arrow">›</span></button>
+                <a class="quick-menu-link" href="support.html" onclick="toggleQuickMenu(false)"><i class="fas fa-headset"></i><span>Support</span><span class="menu-arrow">›</span></a>
+                <a class="quick-menu-link" href="status.html" onclick="toggleQuickMenu(false)"><i class="fas fa-heartbeat"></i><span>Status</span><span class="menu-arrow">›</span></a>
+                <button class="quick-menu-link" type="button" onclick="openProtectedPage('affiliate.html'); toggleQuickMenu(false)"><i class="fas fa-users"></i><span>Affiliate</span><span class="menu-arrow">›</span></button>
+                <button class="quick-menu-link" type="button" onclick="openProtectedPage('auto-renew.html'); toggleQuickMenu(false)"><i class="fas fa-rotate"></i><span>Auto-Renew</span><span class="menu-arrow">›</span></button>
+                <a class="quick-menu-link" href="activity.html" onclick="toggleQuickMenu(false)"><i class="fas fa-bolt"></i><span>Live Activity</span><span class="menu-arrow">›</span></a>
+                <a class="quick-menu-link" href="developer-api.html" onclick="toggleQuickMenu(false)"><i class="fas fa-code"></i><span>Developer API</span><span class="menu-arrow">›</span></a>
+                <a class="quick-menu-link" href="docs.html" onclick="toggleQuickMenu(false)"><i class="fas fa-book-open"></i><span>Docs</span><span class="menu-arrow">›</span></a>
+                <a class="quick-menu-link" href="community.html" onclick="toggleQuickMenu(false)"><i class="fas fa-gift"></i><span>Community</span><span class="menu-arrow">›</span></a>
+                <a class="quick-menu-link" href="next-level.html" onclick="toggleQuickMenu(false)"><i class="fas fa-wand-magic-sparkles"></i><span>Next Level</span><span class="menu-arrow">›</span></a>
+                <a class="quick-menu-link" href="trial.html" onclick="toggleQuickMenu(false)"><i class="fas fa-hourglass-half"></i><span>3-Hour Trial</span><span class="menu-arrow">›</span></a>
+                <a class="quick-menu-link" href="leaderboard.html" onclick="toggleQuickMenu(false)"><i class="fas fa-trophy"></i><span>Leaderboard</span><span class="menu-arrow">›</span></a>
+            </nav>
+        </aside>
+
+        <!-- Quick actions are available from the crown menu in the header. -->
+
+        <!-- ===== WELCOME HERO ===== -->
+        <div class="hero-section">
+            <div class="badge"><i class="fas fa-bolt"></i> WELCOME TO BLACKLORD TECH INC</div>
+            <h1>Build, Host &amp; <span class="text-gradient-gold">Grow</span> With Us</h1>
+            <p>Reliable WhatsApp bot hosting, powerful server plans, and a developer-first community built for your next project.</p>
+            <div class="hero-actions">
+                <a class="hero-action primary" href="dashboard.html"><i class="fas fa-rocket"></i> Get Started</a>
+                <button class="hero-action secondary" type="button" onclick="openRegistrationModal('Create your account to unlock panels, hosting, and premium tools.')"><i class="fas fa-user-plus"></i> Register</button>
+            </div>
+            <div class="welcome-note">New here? Register fast to receive the welcome bonus, then use your dashboard to manage your wallet, panels, bots, pairing, keys, and support in one place.</div>
+        </div>
+
+        <!-- ===== QUICK STATS ===== -->
+        <div class="quick-stats">
+            <div class="stat-mini">
+                <div class="number" id="totalBotsStat">7</div>
+                <div class="label">Active Bots</div>
+            </div>
+            <div class="stat-mini">
+                <div class="number" id="pairingSpeedStat">Fast</div>
+                <div class="label">Fast Setup</div>
+            </div>
+            <div class="stat-mini">
+                <div class="number">Unlimited</div>
+                <div class="label">Connections</div>
+            </div>
+        </div>
+
+
+
+        <!-- ===== LIVE TRUST & SOCIAL PROOF ===== -->
+        <section class="landing-section" id="trust-section" aria-labelledby="trustTitle">
+            <div class="landing-section-heading"><div class="eyebrow">Live platform pulse</div><h2 id="trustTitle">Built for builders who move fast</h2><p>Transparent platform signals, reliable infrastructure, and tools that stay close to your workflow.</p></div>
+            <div class="trust-panel">
+                <div class="trust-grid">
+                    <div class="trust-stat"><div class="value" id="publicActiveBots">—</div><div class="label">Bots online</div></div>
+                    <div class="trust-stat"><div class="value" id="publicMonitoredBots">—</div><div class="label">Monitored services</div></div>
+                    <div class="trust-stat"><div class="value" id="publicMessages">—</div><div class="label">Messages today</div></div>
+                    <div class="trust-stat"><div class="value" id="publicUptime">—</div><div class="label">Average uptime</div></div>
+                </div>
+                <div class="trust-status"><span class="live-dot"></span><span id="publicStatusText">Checking platform status…</span></div>
+            </div>
+        </section>
+        <section class="landing-section" aria-label="Platform infrastructure">
+            <div class="infra-strip">
+                <div class="infra-label">Powered by infrastructure you can trust</div>
+                <span class="infra-chip"><i class="fas fa-server"></i> Pterodactyl Hosting</span>
+                <span class="infra-chip"><i class="fas fa-mobile-screen-button"></i> WhatsApp Pairing</span>
+                <span class="infra-chip"><i class="fas fa-money-bill-wave"></i> M-Pesa C2B + STK</span>
+                <span class="infra-chip"><i class="fas fa-credit-card"></i> Paystack Checkout</span>
+                <span class="infra-chip"><i class="fas fa-lock"></i> Signed Webhooks</span>
+            </div>
+        </section>
+
+        <!-- ===== SHARE ===== -->
+        <div class="share-section" style="display:flex; justify-content:center; gap:0.6rem; margin:0.8rem 0;">
+            <button class="share-btn" onclick="sharePage()"><i class="fas fa-share-alt"></i> Share this page</button>
+            <button class="share-btn" onclick="copyPageLink()"><i class="fas fa-link"></i> Copy link</button>
+        </div>
+
+
+
+
+
+        <!-- ===== SCROLL HINT ===== -->
+        <div class="scroll-hint">
+            <i class="fas fa-chevron-down"></i> scroll to explore our panels and bots <i class="fas fa-chevron-down"></i>
+        </div>
+
+                <!-- ============================================================
+             SERVICE SECTIONS: Panels + WhatsApp Bots
+             ============================================================
+ -->
+
+        <!-- ===== SECTION 1: PANELS ===== -->
+        <section class="services-section" id="panels-section">
+            <div class="section-title">🖥️ Panel Plans</div>
+            <div class="section-sub"><i class="fas fa-server"></i> Pterodactyl hosting – Pay with <b>SD Balance</b></div>
+
+            <div class="service-grid">
+                <!-- 10GB Panel -->
+                <div class="service-card panel">
+                    <div class="icon"><i class="fas fa-database"></i></div>
+                    <div class="name">10GB Storage</div>
+                    <div class="company">User Panel</div>
+                    <div class="desc">1GB RAM, 10GB Disk, 40% CPU. Ideal for small bots.</div>
+                    <div id="price_10gb" class="price-tag">10 SD</div>
+                    <a href="#panelForm" class="action-btn" onclick="return requireRegistration(event, () => selectPanelTier('10gb'))">
+                        <i class="fas fa-shopping-cart"></i> Get Panel
+                    </a>
+                </div>
+
+                <!-- Bulky 2 -->
+                <div class="service-card panel">
+                    <div class="icon"><i class="fas fa-boxes"></i></div>
+                    <div class="name">Bulky 2</div>
+                    <div class="company">Power User</div>
+                    <div class="desc">Unlimited RAM, Disk, and CPU. Multi‑bot support.</div>
+                    <div id="price_bulky2" class="price-tag">20 SD</div>
+                    <a href="#panelForm" class="action-btn" onclick="return requireRegistration(event, () => selectPanelTier('bulky2'))">
+                        <i class="fas fa-shopping-cart"></i> Get Panel
+                    </a>
+                </div>
+
+                <!-- Bulky 3 -->
+                <div class="service-card panel">
+                    <div class="icon"><i class="fas fa-server"></i></div>
+                    <div class="name">Bulky 3</div>
+                    <div class="company">Enterprise</div>
+                    <div class="desc">Unlimited RAM, Disk, and CPU. High performance.</div>
+                    <div id="price_bulky3" class="price-tag">40 SD</div>
+                    <a href="#panelForm" class="action-btn" onclick="return requireRegistration(event, () => selectPanelTier('bulky3'))">
+                        <i class="fas fa-shopping-cart"></i> Get Panel
+                    </a>
+                </div>
+
+                <!-- Bulky 4 -->
+                <div class="service-card panel">
+                    <div class="icon"><i class="fas fa-microchip"></i></div>
+                    <div class="name">Bulky 4</div>
+                    <div class="company">Extreme</div>
+                    <div class="desc">Unlimited RAM, Disk, and CPU. Professional use.</div>
+                    <div id="price_bulky4" class="price-tag">60 SD</div>
+                    <a href="#panelForm" class="action-btn" onclick="return requireRegistration(event, () => selectPanelTier('bulky4'))">
+                        <i class="fas fa-shopping-cart"></i> Get Panel
+                    </a>
+                </div>
+
+                <!-- Unlimited Admin -->
+                <div class="service-card panel" style="border-color:rgba(250,204,21,0.4);">
+                    <div class="icon"><i class="fas fa-infinity"></i></div>
+                    <div class="name">Unlimited Admin</div>
+                    <div class="company">Full Control</div>
+                    <div class="desc">Unlimited RAM/Disk + Full Panel Admin access.</div>
+                    <div id="price_unlimited" class="price-tag">100 SD</div>
+                    <a href="#panelForm" class="action-btn" onclick="return requireRegistration(event, () => selectPanelTier('unlimited'))">
+                        <i class="fas fa-shopping-cart"></i> Get Panel
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pairing and Telegram key generation are available inside the dashboard. -->
+
+        <!-- ===== SECTION 2: WHATSAPP BOTS ===== -->
+        <section class="services-section" id="bots-section">
+            <div class="section-title">🤖 WhatsApp Bots</div>
+            <div class="section-sub"><i class="fas fa-robot"></i> powered by <span class="text-gradient-gold">BLACKLORD TECH INC</span></div>
+
+
+            <div class="service-grid">
+                <!-- BLACKLORD XMD -->
+                <div class="service-card">
+                    <div class="status-badge"><span class="dot"></span> Online</div>
+                    <div class="icon bot-icon">BL</div>
+                    <div class="name">Blacklord XMD</div>
+                    <div class="company">Power User</div>
+                    <div class="desc">Fast all-round WhatsApp automation with advanced commands.</div>
+                    <button onclick="goToDashboardPairing('blacklord')" class="action-btn" id="link-blacklord"><i class="fab fa-whatsapp"></i> Connect</button>
+                </div>
+
+                <!-- SAMSUNG XMD -->
+                <div class="service-card">
+                    <div class="status-badge"><span class="dot"></span> Online</div>
+                    <div class="icon bot-icon">SX</div>
+                    <div class="name">Samsung XMD</div>
+                    <div class="company">Premium</div>
+                    <div class="desc">Reliable multi-purpose bot for daily use and groups.</div>
+                    <button onclick="goToDashboardPairing('samsung')" class="action-btn" id="link-samsung"><i class="fab fa-whatsapp"></i> Connect</button>
+                </div>
+
+                <!-- TALKLESS ULTRA -->
+                <div class="service-card">
+                    <div class="status-badge"><span class="dot"></span> Online</div>
+                    <div class="icon bot-icon">TU</div>
+                    <div class="name">Talkless Ultra</div>
+                    <div class="company">Automation</div>
+                    <div class="desc">Streamlined tools, utilities, and group management features.</div>
+                    <button onclick="goToDashboardPairing('talkless')" class="action-btn" id="link-talkless"><i class="fab fa-whatsapp"></i> Connect</button>
+                </div>
+
+                <!-- SKYLAR XMD -->
+                <div class="service-card">
+                    <div class="status-badge"><span class="dot"></span> Online</div>
+                    <div class="icon bot-icon">SK</div>
+                    <div class="name">Skylar XMD</div>
+                    <div class="company">Smart Bot</div>
+                    <div class="desc">A flexible assistant with social, media, and AI commands.</div>
+                    <button onclick="goToDashboardPairing('skylar')" class="action-btn" id="link-skylar"><i class="fab fa-whatsapp"></i> Connect</button>
+                </div>
+
+                <!-- RITA XMD -->
+                <div class="service-card">
+                    <div class="status-badge"><span class="dot"></span> Online</div>
+                    <div class="icon bot-icon">RT</div>
+                    <div class="name">Rita XMD</div>
+                    <div class="company">Essential</div>
+                    <div class="desc">A clean, lightweight bot for essential WhatsApp commands.</div>
+                    <button onclick="goToDashboardPairing('rita')" class="action-btn" id="link-rita"><i class="fab fa-whatsapp"></i> Connect</button>
+                </div>
+
+            </div>
+        </section>
+
+
+
+        <!-- ===== PRODUCT SHOWCASE ===== -->
+        <section class="landing-section" id="features-section" aria-labelledby="featuresTitle">
+            <div class="landing-section-heading"><div class="eyebrow">Everything in one command center</div><h2 id="featuresTitle">More than hosting</h2><p>Operate your bot, grow your audience, and ship integrations from a platform designed around real builders.</p></div>
+            <div class="feature-panel">
+                <div class="feature-grid">
+                    <article class="feature-card"><i class="fas fa-heartbeat"></i><h3>Live bot health</h3><p>See uptime, latency, memory, messages, and active groups from the dashboard.</p><span class="feature-tag">Always visible</span></article>
+                    <article class="feature-card"><i class="fas fa-sliders"></i><h3>Live configuration</h3><p>Update bot name, prefix, mode, and welcome message without editing server files.</p><span class="feature-tag">Sync bridge</span></article>
+                    <article class="feature-card"><i class="fas fa-puzzle-piece"></i><h3>Plugin marketplace</h3><p>Extend your bot with moderation, welcome, auto-reply, and community tools.</p><span class="feature-tag">Build faster</span></article>
+                    <article class="feature-card"><i class="fas fa-link"></i><h3>Webhooks &amp; API</h3><p>Connect your own services with signed HMAC events, delivery logs, and a safe API Sandbox.</p><span class="feature-tag">Developer ready</span></article>
+                    <article class="feature-card"><i class="fas fa-globe"></i><h3>Custom subdomains</h3><p>Give your bot a memorable home with subdomain management and eligible branding controls.</p><span class="feature-tag">Own your brand</span></article>
+                    <article class="feature-card"><i class="fas fa-users"></i><h3>Referral growth</h3><p>Invite builders, unlock referral tiers, and earn SD rewards as your community grows.</p><span class="feature-tag">Grow together</span></article>
+                </div>
+            </div>
+        </section>
+
+        <section class="landing-section" id="pricing-section" aria-labelledby="pricingTitle">
+            <div class="landing-section-heading"><div class="eyebrow">Simple, transparent plans</div><h2 id="pricingTitle">Choose your next level</h2><p>Start free, upgrade when your bot needs more capacity, and keep every payment inside your Blacklord wallet.</p></div>
+            <div class="pricing-panel">
+                <div class="pricing-grid">
+                    <article class="price-card"><h3>Free</h3><div class="price">0 <small>SD / forever</small></div><p>Explore the platform with the essential tools.</p><ul><li>Basic pairing</li><li>Community support</li><li>1 active service</li></ul><button class="price-cta" type="button" onclick="openRegistrationModal('Create your free Blacklord account.')">Start free <i class="fas fa-arrow-right"></i></button></article>
+                    <article class="price-card featured"><span class="popular">MOST POPULAR</span><h3>Blacklord Pro</h3><div class="price">25 <small>SD / month</small></div><p>More capacity and premium automation for growing bots.</p><ul><li>Up to 3 active services</li><li>Priority support</li><li>Advanced analytics</li><li>Custom subdomain styling</li></ul><button class="price-cta" type="button" onclick="openDashboardForPlan('pro')">Choose Pro <i class="fas fa-crown"></i></button></article>
+                    <article class="price-card"><h3>Blacklord Elite</h3><div class="price">60 <small>SD / month</small></div><p>Maximum creator and developer tooling.</p><ul><li>Up to 10 active services</li><li>Marketplace discounts</li><li>API Sandbox access</li><li>Priority developer review</li></ul><button class="price-cta" type="button" onclick="openDashboardForPlan('elite')">Go Elite <i class="fas fa-gem"></i></button></article>
+                </div>
+                <div class="landing-muted">Payments supported: Paystack, M-Pesa C2B Till, and M-Pesa STK Push.</div>
+            </div>
+        </section>
+
+        <section class="landing-section" id="marketplace-section" aria-labelledby="marketplaceTitle">
+            <div class="landing-section-heading"><div class="eyebrow">Trending tools</div><h2 id="marketplaceTitle">Marketplace preview</h2><p>Install ready-made bot upgrades from the dashboard and configure them around your community.</p></div>
+            <div class="market-panel"><div class="market-grid" id="landingMarketplaceGrid"><div class="landing-muted">Loading marketplace tools…</div></div><div class="market-footer"><a class="outline-cta" href="dashboard.html#marketplace-section"><i class="fas fa-store"></i> Explore the full marketplace</a></div></div>
+        </section>
+
+        <section class="landing-section" aria-label="Community momentum">
+            <div class="split-grid">
+                <div class="activity-panel"><div class="landing-section-heading" style="margin-bottom:0;text-align:left"><div class="eyebrow">Live community pulse</div><h2>Builders are moving</h2><p>Recent platform activity, shown with privacy-safe summaries.</p></div><div class="activity-list" id="landingActivityList"><div class="landing-muted">Loading recent activity…</div></div><div class="market-footer"><a class="outline-cta" href="activity.html"><i class="fas fa-bolt"></i> View live activity</a></div></div>
+                <div class="leaderboard-panel"><div class="landing-section-heading" style="margin-bottom:0;text-align:left"><div class="eyebrow">Community leaderboard</div><h2>Top referrers</h2><p>Celebrate builders who bring more people into the ecosystem.</p></div><div class="landing-leaderboard" id="landingLeaderboard"><div class="landing-muted">Loading leaderboard…</div></div><div class="market-footer"><a class="outline-cta" href="leaderboard.html"><i class="fas fa-trophy"></i> See all builders</a></div></div>
+            </div>
+        </section>
+
+        <section class="landing-section" id="developer-showcase" aria-label="Developer and affiliate tools">
+            <div class="split-grid">
+                <div class="developer-panel"><div class="landing-section-heading" style="margin-bottom:0;text-align:left"><div class="eyebrow">Built for developers</div><h2>Connect your stack</h2></div><p class="developer-copy">Use signed webhooks and the <strong style="color:#facc15">blacklord_</strong> API key system to connect your tools without exposing secrets in the browser.</p><div class="developer-pills"><span class="developer-pill">HMAC-SHA256</span><span class="developer-pill">Delivery logs</span><span class="developer-pill">API Sandbox</span><span class="developer-pill">Live analytics</span></div><div class="code-window"><div class="code-top"><i class="fas fa-circle" style="color:#ef4444"></i> <i class="fas fa-circle" style="color:#facc15"></i> <i class="fas fa-circle" style="color:#22c55e"></i> webhook-event.json</div><pre>{
+  "event": "server.status",
+  "status": "running",
+  "signature": "sha256=..."
+}</pre></div><div class="market-footer"><a class="outline-cta" href="developer-api.html"><i class="fas fa-code"></i> Read developer docs</a></div></div>
+                <div class="affiliate-panel"><div class="landing-section-heading" style="margin-bottom:0;text-align:left"><div class="eyebrow">Grow with us</div><h2>Earn as you refer</h2></div><p class="affiliate-copy">Share Blacklord with your community and earn <strong>SD rewards</strong> as verified users join and build. Your referral dashboard tracks every reward.</p><div style="margin-top:0.8rem;padding:0.75rem;border-radius:0.7rem;background:rgba(250,204,21,0.06);border:1px solid rgba(250,204,21,0.15);color:#d4d4d8;font-size:0.6rem;line-height:1.45"><i class="fas fa-gift" style="color:#facc15;margin-right:0.3rem"></i> Starter → Bronze → Silver → Gold tiers with increasing rewards.</div><div class="market-footer"><button class="outline-cta" type="button" onclick="openRegistrationModal('Register to unlock your referral link and affiliate assets.')"><i class="fas fa-users"></i> Join the affiliate program</button></div></div>
+            </div>
+        </section>
+
+        <section class="landing-section" id="newsletter-section" aria-label="Newsletter signup">
+            <div class="newsletter-panel"><div class="newsletter-copy"><h3><i class="fas fa-satellite-dish"></i> Stay ahead of the next release</h3><p>Get occasional updates about new bots, plugins, platform improvements, and community events. No spam.</p></div><form class="newsletter-form" onsubmit="subscribeLanding(event)"><input id="landingNewsletterEmail" type="email" placeholder="you@example.com" aria-label="Email address" required /><button type="submit">Notify me</button></form></div><div id="landingNewsletterMsg" class="landing-muted" style="display:none"></div>
+        </section>
+
+                <!-- ===== PANEL CREATOR FORM (hidden by default, shown when user clicks a panel) ===== -->
+        <div class="panel-card" id="panelForm" style="margin-top:1.5rem; display:none; background:#18181b; border:1px solid rgba(250,204,21,0.3); border-radius:1rem; padding:1.5rem;">
+            <div class="panel-title" style="color:#facc15; font-family:'Playfair Display',serif; font-style:italic; font-size:1.3rem; margin-bottom:1.2rem; text-align:center;">Configure Your Server</div>
+            <form id="panelFormSubmit">
+                <input type="hidden" id="panelTier" value="10gb" />
+                
+                <div class="form-group" style="margin-bottom:0.9rem;">
+                    <label style="font-size:0.75rem; color:#a1a1aa; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.3rem; display:block;">First Name</label>
+                    <input type="text" id="panelFirstName" placeholder="John" required style="width:100%; padding:0.8rem; background:rgba(39,39,42,0.8); border:1px solid #27272a; border-radius:0.5rem; color:white; font-size:0.9rem;" />
+                </div>
+
+                <div class="form-group" style="margin-bottom:0.9rem;">
+                    <label style="font-size:0.75rem; color:#a1a1aa; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.3rem; display:block;">Last Name</label>
+                    <input type="text" id="panelLastName" placeholder="Doe" required style="width:100%; padding:0.8rem; background:rgba(39,39,42,0.8); border:1px solid #27272a; border-radius:0.5rem; color:white; font-size:0.9rem;" />
+                </div>
+
+                <div class="form-group" style="margin-bottom:0.9rem;">
+                    <label style="font-size:0.75rem; color:#a1a1aa; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.3rem; display:block;">Panel Username</label>
+                    <input type="text" id="panelUsername" placeholder="Your Pterodactyl username" required minlength="3" style="width:100%; padding:0.8rem; background:rgba(39,39,42,0.8); border:1px solid #27272a; border-radius:0.5rem; color:white; font-size:0.9rem;" />
+                </div>
+
+                <div class="form-group" style="margin-bottom:0.9rem;">
+                    <label style="font-size:0.75rem; color:#a1a1aa; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.3rem; display:block;">Number of Servers</label>
+                    <select id="panelQuantity" style="width:100%; padding:0.8rem; background:rgba(39,39,42,0.8); border:1px solid #27272a; border-radius:0.5rem; color:white; font-size:0.9rem;">
+                        <option value="1">1 server</option>
+                        <option value="2">2 servers</option>
+                        <option value="3">3 servers</option>
+                        <option value="4">4 servers</option>
+                    </select>
+                    <small style="display:block; margin-top:0.35rem; color:#71717a;">Enter one base username. Additional usernames are generated automatically with -2, -3, and -4 suffixes.</small>
+                </div>
+
+                <div class="form-group" style="margin-bottom:0.9rem;">
+                    <label style="font-size:0.75rem; color:#a1a1aa; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.3rem; display:block;">Panel Password</label>
+                    <input type="password" id="panelPassword" placeholder="Min. 8 characters" required minlength="8" style="width:100%; padding:0.8rem; background:rgba(39,39,42,0.8); border:1px solid #27272a; border-radius:0.5rem; color:white; font-size:0.9rem;" />
+                </div>
+
+                <div class="form-group" style="margin-bottom:0.9rem;">
+                    <label style="font-size:0.75rem; color:#a1a1aa; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.3rem; display:block;">Server Type (Nest)</label>
+                    <select id="panelNestSelect" style="width:100%; padding:0.8rem; background:rgba(39,39,42,0.8); border:1px solid #27272a; border-radius:0.5rem; color:white; font-size:0.9rem;">
+                        <option value="5">— SKY_BOTS (Default) —</option>
+                        <option value="1">Minecraft / General</option>
+                        <option value="2">NodeJS / Python</option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="margin-bottom:1.2rem;">
+                    <label style="font-size:0.75rem; color:#a1a1aa; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.3rem; display:block;">Server Software (Egg)</label>
+                    <select id="panelBot" style="width:100%; padding:0.8rem; background:rgba(39,39,42,0.8); border:1px solid #27272a; border-radius:0.5rem; color:white; font-size:0.9rem;">
+                        <option value="samsung_xmd">Samsung XMD Bot</option>
+                        <option value="talkless_ultra">Talkless Ultra Bot</option>
+                        <option value="skylar_xmd">Skylar XMD Bot</option>
+                        <option value="rita_xmd">Rita XMD Bot</option>
+                        <option value="none">Blank NodeJS Panel</option>
+                    </select>
+                </div>
+
+                <div id="tierLimitsDisplay" style="font-size:0.75rem; color:#facc15; margin-bottom:0.65rem; padding:0.6rem; background:rgba(250,204,21,0.05); border:1px solid rgba(250,204,21,0.2); border-radius:0.5rem; text-align:center;">
+                    Resources: <span id="limitRam">1024</span>MB RAM | <span id="limitDisk">5120</span>MB Disk | <span id="limitCpu">40</span>% CPU
+                </div>
+                <div id="panelOrderSummary" style="font-size:0.78rem; color:#d4d4d8; margin-bottom:1rem; padding:0.65rem; background:rgba(37,99,235,0.08); border:1px solid rgba(37,99,235,0.3); border-radius:0.5rem; text-align:center;">
+                    1 server · Total: <strong id="panelTotalPrice">10 SD</strong>
+                </div>
+
+                <div style="display:flex; gap:0.6rem;">
+                    <button type="button" onclick="document.getElementById('panelForm').style.display='none'" style="flex:1; padding:0.9rem; background:rgba(39,39,42,0.8); color:white; border:1px solid #27272a; border-radius:0.5rem; font-weight:700; cursor:pointer; font-size:0.9rem;">
+                        &larr; Back
+                    </button>
+                    <button type="submit" class="create-panel-btn" id="createPanelBtn" style="flex:2; padding:0.9rem; background:#2563eb; color:white; border:none; border-radius:0.5rem; font-weight:800; cursor:pointer; font-size:0.9rem; text-transform:uppercase; letter-spacing:0.05em;">
+                        <i class="fas fa-server"></i> Create Panel
+                    </button>
+                </div>
+            </form>
+            <div class="panel-result" id="panelResult" style="margin-top:1rem;" aria-live="polite"></div>
+        </div>
+
+        <!-- ===== THANKING DEVELOPERS ===== -->
+        <div class="thanks-section" id="developers-section">
+            <h3><i class="fas fa-code"></i> Thanking Developers</h3>
+            <p>
+                We appreciate every developer, contributor, and open-source creator whose ideas and hard work help make these hosting tools better.<br>
+                BLACKLORD TECH INC is built with respect for the builders behind the bots, panels, and communities we serve.<br>
+                <span style="font-size: 0.7rem; color: #facc15;">— Built by developers, strengthened by community —</span>
+            </p>
+        </div>
+
+        <!-- ===== TESTIMONIALS ===== -->
+        <div class="testimonials-section">
+            <h3><i class="fas fa-quote-left"></i> What Our Users Say</h3>
+            <div class="testimonial-grid">
+                <div class="testimonial-item">
+                    <div class="quote">"The dashboard is super fast! I can manage my wallet, hosting, and bot setup from one place."</div>
+                    <div class="author">— James K.</div>
+                </div>
+                <div class="testimonial-item">
+                    <div class="quote">"I love how simple the account setup is. The panels and bots are easy to find on mobile."</div>
+                    <div class="author">— Sarah M.</div>
+                </div>
+                <div class="testimonial-item">
+                    <div class="quote">"The bots are incredible. Especially TALKLESS ULTRA – it handles customer queries like a pro."</div>
+                    <div class="author">— David O.</div>
+                </div>
+                <div class="testimonial-item">
+                    <div class="quote">"Great design and very intuitive. The share feature made it easy to invite my team."</div>
+                    <div class="author">— Grace W.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== FAQ ===== -->
+        <div class="faq-section">
+            <h3><i class="fas fa-question-circle"></i> Frequently Asked Questions</h3>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How do I pair my WhatsApp number?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">Open the dashboard from the Get Started button, select the bot you want to use, enter your WhatsApp number with the country code, and click Get Code. Then use the code in your WhatsApp Linked Devices settings.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Is the pairing permanent?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">Yes. Once paired, your bot remains active while the hosting server is running. The dashboard is the central place to manage pairing, hosting, keys, and account activity.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How do I get a panel?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">Simply tap any panel plan above, fill in the form, and we'll deploy your Pterodactyl panel instantly. Add SD to your wallet through Paystack, M-Pesa C2B Till, or M-Pesa STK Push, then manage your service from the dashboard.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)"><span>Which payment methods are supported?</span><i class="fas fa-chevron-down"></i></div>
+                <div class="faq-answer">You can top up with Paystack hosted checkout, M-Pesa C2B Till, or M-Pesa STK Push. Your wallet balance is credited after the provider confirms the payment.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)"><span>Can I connect my own app?</span><i class="fas fa-chevron-down"></i></div>
+                <div class="faq-answer">Yes. Registered users can generate a blacklord_ API key, configure signed webhooks, inspect delivery logs, and test read-only endpoints in the dashboard API Sandbox.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)"><span>Do you offer a trial?</span><i class="fas fa-chevron-down"></i></div>
+                <div class="faq-answer">Yes. Use the 3-Hour Trial link in the menu to explore the platform before selecting a longer-term hosting plan.</div>
+            </div>
+        </div>
+
+        <!-- ===== HOW IT WORKS ===== -->
+        <div class="how-it-works">
+            <h3>𝑯𝒐𝒘 𝑰𝒕 𝑾𝒐𝒓𝒌𝒔</h3>
+            <div class="steps">
+                <div class="step">
+                    <div class="num">01</div>
+                    <div class="text">Get started or register</div>
+                </div>
+                <div class="step">
+                    <div class="num">02</div>
+                    <div class="text">Choose a panel or bot</div>
+                </div>
+                <div class="step">
+                    <div class="num">03</div>
+                    <div class="text">Manage everything in your dashboard</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <div class="footer">
+            <span class="brand-name-footer">BLACKLORD TECH INC</span> &middot;
+            <span class="unlimited">Unlimited Tech</span> &middot; v2.0
+        </div>
+    </div>
+
+
+
+    <!-- ===== WALLET MODAL ===== -->
+    <div id="walletModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; align-items:center; justify-content:center; padding:1rem;">
+        <div style="background:#18181b; border:1px solid rgba(250,204,21,0.3); border-radius:1rem; padding:1.5rem; max-width:400px; width:100%;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                <h3 style="color:#facc15; font-family:'Playfair Display',serif; font-style:italic;">My Wallet</h3>
+                <button onclick="closeWalletModal()" style="background:none; border:none; color:#a1a1aa; cursor:pointer; font-size:1rem;"><i class="fas fa-times"></i></button>
+            </div>
+            <div style="margin-bottom:1rem; text-align:center; background:rgba(0,0,0,0.3); padding:1rem; border-radius:0.5rem;">
+                <div style="font-size:0.75rem; color:#a1a1aa;">Wallet Username</div>
+                <div id="modalUsername" style="font-size:1rem; font-weight:700; color:#facc15; margin-bottom:0.4rem;">—</div>
+                <div style="font-size:0.75rem; color:#a1a1aa;">Current Balance</div>
+                <div id="modalBalance" style="font-size:1.5rem; font-weight:700; color:#22c55e; font-family:'Playfair Display',serif;">0 SD</div>
+                <div id="modalBalanceKsh" style="font-size:0.7rem; color:#facc15; margin-top:0.2rem;">≈ 0 KSH (@ 5 KSH / 1 SD)</div>
+            </div>
+            
+            <div class="form-group" style="margin-bottom:0.8rem;">
+                <label style="font-size:0.7rem; color:#d4d4d8; margin-bottom:0.3rem; display:block;">Enter WhatsApp/Phone Number</label>
+                <input type="text" id="walletPhone" placeholder="e.g. 254712345678" style="width:100%; padding:0.7rem; background:rgba(39,39,42,0.8); border:1px solid #facc15; border-radius:0.5rem; color:white; font-size:0.9rem;" />
+            </div>
+            <div class="form-group" style="margin-bottom:0.8rem;">
+                <label style="font-size:0.7rem; color:#d4d4d8; margin-bottom:0.3rem; display:block;">Preferred Username (Optional)</label>
+                <input type="text" id="walletUsernameInput" placeholder="e.g. blacklord_123" style="width:100%; padding:0.7rem; background:rgba(39,39,42,0.8); border:1px solid #facc15; border-radius:0.5rem; color:white; font-size:0.9rem;" />
+            </div>
+            
+            <!-- TOP UP SECTION -->
+            <div class="form-group" style="padding:1rem; background:rgba(250,204,21,0.05); border-radius:0.8rem; border:1px solid rgba(250,204,21,0.2); margin-bottom:1rem;">
+                <label style="font-size:0.8rem; color:#facc15; font-weight:700; margin-bottom:0.8rem; display:block; text-align:center;">💳 Wallet Top Up (1 SD = 5 KSH)</label>
+                
+                <div style="margin-bottom:0.8rem;">
+                    <label style="font-size:0.7rem; color:#d4d4d8; margin-bottom:0.3rem; display:block;">Enter Amount in SD</label>
+                    <input type="number" id="topupAmountSD" placeholder="Amount to add (SD)" style="width:100%; padding:0.7rem; background:rgba(39,39,42,0.8); border:1px solid #facc15; border-radius:0.5rem; color:white; font-size:0.9rem;" />
+                </div>
+
+                <div style="margin-bottom:1rem;">
+                    <label style="font-size:0.7rem; color:#d4d4d8; margin-bottom:0.3rem; display:block;">Select Payment Method</label>
+                    <select id="paymentGateway" onchange="togglePaymentMethod()" style="width:100%; padding:0.7rem; background:rgba(39,39,42,0.8); border:1px solid #facc15; border-radius:0.5rem; color:white; font-size:0.9rem;">
+                        <option value="c2b">📱 M-Pesa C2B Till</option>
+                        <option value="mpesa_stk">📲 M-Pesa STK Push</option>
+                        <option value="paystack">💳 Paystack (Card/Online)</option>
+                    </select>
+                    <div id="paymentMethodHelp" style="font-size:0.68rem;color:#a1a1aa;margin-top:0.45rem;line-height:1.4;">Pay your amount to the M-Pesa Till, then enter the transaction code from your M-Pesa message. Your balance is credited after the C2B confirmation reaches the website.</div>
+                    <div id="c2bVerificationBox" style="margin-top:0.75rem;">
+                        <label style="font-size:0.7rem; color:#d4d4d8; margin-bottom:0.3rem; display:block;">M-Pesa transaction code (optional status check)</label>
+                        <input id="c2bTransactionId" placeholder="e.g. QJH7ABC123" style="width:100%; padding:0.7rem; background:rgba(39,39,42,0.8); border:1px solid #facc15; border-radius:0.5rem; color:white; font-size:0.9rem; text-transform:uppercase;" />
+                        <button id="checkC2bBtn" onclick="checkC2BStatus()" style="width:100%; margin-top:0.55rem; padding:0.65rem; background:transparent; color:#facc15; border:1px solid #facc15; border-radius:0.5rem; font-weight:700; cursor:pointer;">Check C2B Status</button>
+                    </div>
+                    <div id="stkPushBox" style="display:none; margin-top:0.75rem; padding:0.75rem; background:rgba(34,197,94,0.08); border:1px solid rgba(34,197,94,0.35); border-radius:0.65rem; color:#bbf7d0; font-size:0.75rem; line-height:1.45;">
+                        <i class="fas fa-mobile-screen-button"></i> STK Push sends a payment prompt to the phone number above. Keep the phone unlocked, enter the M-Pesa PIN, and leave this window open while confirmation is received.
+                    </div>
+                </div>
+
+                <button onclick="initiateTopup()" style="width:100%; padding:0.9rem; background:#facc15; color:#422006; border:none; border-radius:0.5rem; font-weight:800; cursor:pointer; font-size:1rem; text-transform:uppercase; letter-spacing:0.05em;">
+                    <i class="fas fa-paper-plane"></i> Proceed to Pay
+                </button>
+                
+                <button id="verifyTopupBtn" onclick="verifyTopup()" style="display:none; width:100%; padding:0.8rem; background:#2563eb; color:white; border:none; border-radius:0.5rem; font-weight:700; cursor:pointer; font-size:0.85rem; margin-top:0.8rem;">
+                    ✅ Verify Payment
+                </button>
+            </div>
+
+            <div class="form-group" style="margin-bottom:0.8rem;">
+                <label style="font-size:0.7rem; color:#a1a1aa;">Your Referral Link (Earn 2 SD bonus)</label>
+                <div style="display:flex; gap:0.5rem;">
+                    <input type="text" id="referralLinkInput" readonly style="flex:1; padding:0.5rem; background:rgba(39,39,42,0.4); border:1px solid #27272a; border-radius:0.5rem; color:#facc15; font-size:0.7rem;" />
+                    <button onclick="copyReferralLink()" style="padding:0.5rem 0.8rem; background:#3b82f6; color:white; border:none; border-radius:0.5rem; font-weight:600; cursor:pointer; font-size:0.75rem;">Copy</button>
+                </div>
+            </div>
+            
+            <div id="walletMsg" class="msg" style="font-size:0.75rem; text-align:center; margin-top:0.5rem;"></div>
+        </div>
+    </div>
+
+    <!-- ===== REGISTRATION MODAL ===== -->
+    <div id="registrationModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.86); z-index:1100; align-items:center; justify-content:center; padding:1rem;">
+        <div style="background:linear-gradient(160deg,#18181b,#09090b); border:1px solid rgba(250,204,21,0.45); border-radius:1rem; padding:1.5rem; max-width:420px; width:100%; box-shadow:0 20px 70px rgba(0,0,0,0.55);">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.8rem;">
+                <div>
+                    <div style="color:#facc15; font-family:'Playfair Display',serif; font-style:italic; font-size:1.35rem;">Register Fast</div>
+                    <div style="font-size:0.72rem; color:#a1a1aa; margin-top:0.25rem;">Create your account to unlock panels and premium tools.</div>
+                </div>
+                <button onclick="closeRegistrationModal()" style="background:none; border:none; color:#a1a1aa; cursor:pointer; font-size:1rem;"><i class="fas fa-times"></i></button>
+            </div>
+            <div style="display:flex; gap:0.6rem; align-items:center; padding:0.75rem; margin-bottom:1rem; border:1px solid rgba(34,197,94,0.35); background:rgba(34,197,94,0.08); border-radius:0.7rem; color:#86efac; font-size:0.78rem;">
+                <i class="fas fa-gift" style="font-size:1.1rem;"></i><span><strong>Welcome bonus:</strong> 10 KSH = 2 SD wallet credit after registration.</span>
+            </div>
+            <div class="form-group" style="margin-bottom:0.75rem;">
+                <label style="font-size:0.7rem; color:#d4d4d8; margin-bottom:0.3rem; display:block;">Phone Number</label>
+                <input type="text" id="registerPhone" placeholder="254712345678" style="width:100%; padding:0.75rem; background:rgba(39,39,42,0.8); border:1px solid #facc15; border-radius:0.5rem; color:white; font-size:0.9rem;" />
+            </div>
+            <div class="form-group" style="margin-bottom:0.75rem;">
+                <label style="font-size:0.7rem; color:#d4d4d8; margin-bottom:0.3rem; display:block;">Username <span style="color:#71717a;">(letters, spaces, and symbols allowed)</span></label>
+                <input type="text" id="registerUsername" placeholder="e.g. Blacklord 6d." maxlength="80" style="width:100%; padding:0.75rem; background:rgba(39,39,42,0.8); border:1px solid #27272a; border-radius:0.5rem; color:white; font-size:0.9rem;" />
+            </div>
+            <div class="form-group" style="margin-bottom:0.75rem;">
+                <label style="font-size:0.7rem; color:#d4d4d8; margin-bottom:0.3rem; display:block;">Email</label>
+                <input type="email" id="registerEmail" placeholder="you@example.com" autocomplete="email" required style="width:100%; padding:0.75rem; background:rgba(39,39,42,0.8); border:1px solid #27272a; border-radius:0.5rem; color:white; font-size:0.9rem;" />
+            </div>
+            <div class="form-group" style="margin-bottom:0.75rem;">
+                <label style="font-size:0.7rem; color:#d4d4d8; margin-bottom:0.3rem; display:block;">Password</label>
+                <input type="password" id="registerPassword" placeholder="At least 8 characters" autocomplete="new-password" minlength="8" required style="width:100%; padding:0.75rem; background:rgba(39,39,42,0.8); border:1px solid #27272a; border-radius:0.5rem; color:white; font-size:0.9rem;" />
+            </div>
+            <div class="form-group" style="margin-bottom:0.75rem;">
+                <label style="font-size:0.7rem; color:#d4d4d8; margin-bottom:0.3rem; display:block;">Confirm Password</label>
+                <input type="password" id="registerPasswordConfirm" placeholder="Repeat your password" autocomplete="new-password" minlength="8" required style="width:100%; padding:0.75rem; background:rgba(39,39,42,0.8); border:1px solid #27272a; border-radius:0.5rem; color:white; font-size:0.9rem;" />
+            </div>
+            <div class="form-group" style="margin-bottom:0.9rem;">
+                <label style="font-size:0.7rem; color:#d4d4d8; margin-bottom:0.3rem; display:block;">Referral Code <span style="color:#71717a;">(optional)</span></label>
+                <input type="text" id="registerReferralCode" placeholder="e.g. BL-ABC123" maxlength="20" style="width:100%; padding:0.75rem; background:rgba(39,39,42,0.8); border:1px solid #27272a; border-radius:0.5rem; color:white; font-size:0.9rem; text-transform:uppercase;" />
+            </div>
+            <div style="font-size:0.68rem; color:#a1a1aa; margin:-0.25rem 0 0.75rem;">Your browser will remember this account for 30 days after a successful registration or login.</div>
+            <button onclick="registerUser()" id="registerSubmitBtn" style="width:100%; padding:0.85rem; background:#facc15; color:#422006; border:none; border-radius:0.55rem; font-weight:800; cursor:pointer; font-size:0.95rem; text-transform:uppercase; letter-spacing:0.04em;"><i class="fas fa-user-plus"></i> Create Account &amp; Get Bonus</button>
+            <div id="registrationMsg" style="font-size:0.75rem; text-align:center; margin-top:0.65rem; min-height:1rem;"></div>
+            <button type="button" onclick="closeRegistrationModal(); openLoginModal();" style="display:block;width:100%;margin-top:0.75rem;background:none;border:0;color:#facc15;text-decoration:underline;cursor:pointer;font-size:0.72rem;">Already have an account? Log in</button>
+        </div>
+    </div>
+
+    <!-- ===== LOGIN MODAL ===== -->
+    <div id="loginModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.86); z-index:1100; align-items:center; justify-content:center; padding:1rem;">
+        <div style="background:linear-gradient(160deg,#18181b,#09090b); border:1px solid rgba(250,204,21,0.45); border-radius:1rem; padding:1.5rem; max-width:420px; width:100%; box-shadow:0 20px 70px rgba(0,0,0,0.55);">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.8rem;"><div><div style="color:#facc15; font-family:'Playfair Display',serif; font-style:italic; font-size:1.35rem;">Welcome Back</div><div style="font-size:0.72rem; color:#a1a1aa; margin-top:0.25rem;">Log in to continue with your remembered account.</div></div><button onclick="closeLoginModal()" style="background:none; border:none; color:#a1a1aa; cursor:pointer; font-size:1rem;"><i class="fas fa-times"></i></button></div>
+            <div class="form-group" style="margin-bottom:0.75rem;"><label style="font-size:0.7rem;color:#d4d4d8;margin-bottom:0.3rem;display:block;">Email, Username, or Phone</label><input type="text" id="loginIdentifier" placeholder="you@example.com or username" autocomplete="username" style="width:100%;padding:0.75rem;background:rgba(39,39,42,0.8);border:1px solid #facc15;border-radius:0.5rem;color:white;font-size:0.9rem;" /></div>
+            <div class="form-group" style="margin-bottom:0.9rem;"><label style="font-size:0.7rem;color:#d4d4d8;margin-bottom:0.3rem;display:block;">Password</label><input type="password" id="loginPassword" placeholder="Your password" autocomplete="current-password" style="width:100%;padding:0.75rem;background:rgba(39,39,42,0.8);border:1px solid #27272a;border-radius:0.5rem;color:white;font-size:0.9rem;" /></div>
+            <button onclick="loginUser()" id="loginSubmitBtn" style="width:100%;padding:0.85rem;background:#facc15;color:#422006;border:none;border-radius:0.55rem;font-weight:800;cursor:pointer;font-size:0.95rem;text-transform:uppercase;letter-spacing:0.04em;"><i class="fas fa-right-to-bracket"></i> Log In</button>
+            <div id="loginMsg" style="font-size:0.75rem;text-align:center;margin-top:0.65rem;min-height:1rem;"></div>
+            <button type="button" onclick="closeLoginModal(); openRegistrationModal()" style="display:block;width:100%;margin-top:0.75rem;background:none;border:0;color:#facc15;text-decoration:underline;cursor:pointer;font-size:0.72rem;">New here? Create an account and get 10 KSH</button>
+        </div>
+    </div>
+
+    <!-- ===== LIVE TOAST ===== -->
+    <div class="live-toast" id="liveToast">
+        <i class="fas fa-bolt"></i> <span id="toastMessage">Someone just generated a Premium key!</span>
+    </div>
+
+    <script>
+        // ─── All existing JavaScript (key generator, validation, share, etc.) ───
+        let selectedType = 'free';
+        let generatedKey = '';
+        let latestPanelServers = [];
+
+        const escapeHtml = value => String(value ?? '').replace(/[&<>\'\"]/g, character => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+        }[character]));
+
+        function panelLoginUrl(value) {
+            const url = String(value || '').trim().replace(/\/$/, '');
+            return /^https?:\/\//i.test(url) ? url : '';
+        }
+
+        function panelCredentialText(server) {
+            const loginUrl = panelLoginUrl(server?.panelDomain);
+            return [
+                `Panel login: ${loginUrl || 'Unavailable'}`,
+                `Username: ${server?.username || ''}`,
+                `Password: ${server?.password || ''}`,
+                `Server ID: ${server?.serverId || ''}`
+            ].join('\n');
+        }
+
+        async function copyPanelCredentials(index = null) {
+            const selected = index === null ? latestPanelServers : [latestPanelServers[index]].filter(Boolean);
+            if (!selected.length) return;
+            const text = selected.map((server, itemIndex) => `${selected.length > 1 ? `Server ${index === null ? itemIndex + 1 : index + 1}\n` : ''}${panelCredentialText(server)}`).join('\n\n');
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast(index === null && selected.length > 1 ? 'All login credentials copied.' : 'Login credentials copied.', 'success');
+            } catch (_) {
+                const helper = document.createElement('textarea');
+                helper.value = text;
+                helper.style.position = 'fixed';
+                helper.style.opacity = '0';
+                document.body.appendChild(helper);
+                helper.select();
+                document.execCommand('copy');
+                helper.remove();
+                showToast('Login credentials copied.', 'success');
+            }
+        }
+
+        function selectType(type) {
+            selectedType = type;
+            document.getElementById('type-free').classList.toggle('active', type === 'free');
+            document.getElementById('type-premium').classList.toggle('active', type === 'premium');
+        }
+
+        function typeWriter(text, element, speed = 60) {
+            element.innerHTML = '';
+            let i = 0;
+            const cursor = document.createElement('span');
+            cursor.className = 'cursor-blink';
+            element.appendChild(cursor);
+            const interval = setInterval(() => {
+                if (i < text.length) {
+                    const char = document.createTextNode(text[i]);
+                    element.insertBefore(char, cursor);
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(() => { if (cursor.parentNode) cursor.parentNode.removeChild(cursor); }, 600);
+                }
+            }, speed);
+        }
+
+        let telegramLinks = {
+            TELEGRAM_PRIMARY_BOT: 'https://t.me/blacklordProjects_bot',
+            TELEGRAM_TALKLESS_BOT: 'https://t.me/talklessultraxmd_bot',
+            TELEGRAM_MZAZI_BOT: 'https://t.me/mzazitechquartzbot',
+            TELEGRAM_SKYLAR_BOT: 'https://t.me/Skylarbotv1_bot',
+            TELEGRAM_RITA_BOT: 'https://t.me/ritabotv1_bot',
+            TELEGRAM_NXRA_BOT: 'https://t.me/NXRA_6_bot?start=_tgr_JK7qTLw2MTRk'
+        };
+
+        function telegramStartLink(baseUrl, key = '') {
+            const separator = baseUrl.includes('?') ? '&' : '?';
+            return baseUrl + separator + 'start=' + encodeURIComponent(key);
+        }
+
+        async function loadTelegramLinks() {
+            try {
+                const res = await fetch('/api/user/settings');
+                const data = await res.json();
+                if (data.success && data.settings) {
+                    telegramLinks = { ...telegramLinks, ...data.settings };
+                    // Apply to static links
+                    const setHref = (id, href) => {
+                        const link = document.getElementById(id);
+                        if (link) link.href = href;
+                    };
+                    setHref('send-bot-link', telegramStartLink(telegramLinks.TELEGRAM_PRIMARY_BOT));
+                    setHref('immediateConnectBtn', telegramLinks.TELEGRAM_PRIMARY_BOT);
+                    setHref('link-talkless', telegramLinks.TELEGRAM_TALKLESS_BOT);
+                    setHref('link-mzazi', telegramLinks.TELEGRAM_MZAZI_BOT);
+                    setHref('link-skylar', telegramLinks.TELEGRAM_SKYLAR_BOT);
+                    setHref('link-rita', telegramLinks.TELEGRAM_RITA_BOT);
+                    setHref('link-nxra', telegramLinks.TELEGRAM_NXRA_BOT);
+                }
+            } catch (e) { console.error('Failed to load dynamic links', e); }
+        }
+        loadTelegramLinks();
+
+        async function generateKey() {
+            const phone = document.getElementById('phone').value.trim();
+            if (!phone) { showToast('Please enter your WhatsApp number', 'error'); return; }
+
+            const btn = document.getElementById('gen-btn');
+            const btnText = document.getElementById('btn-text');
+            btn.disabled = true;
+            btnText.innerHTML = '<span class="spinner"></span> Generating...';
+
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: selectedType, phone })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    generatedKey = data.key;
+                    const keyEl = document.getElementById('key-result');
+                    typeWriter(data.key, keyEl, 50);
+                    document.getElementById('bound-text').innerText = 'Bound to +' + phone;
+                    document.getElementById('expiry-text').innerText = data.type === 'premium' ? 'Never expires' : 'Valid 30 days';
+                    document.getElementById('result-card').style.display = 'block';
+                    const baseBot = telegramLinks.TELEGRAM_PRIMARY_BOT;
+                    document.getElementById('send-bot-link').href = telegramStartLink(baseBot, data.key);
+                    document.getElementById('immediateConnectBtn').href = telegramStartLink(baseBot, data.key);
+                    await navigator.clipboard.writeText(data.key);
+                    showToast('Key copied to clipboard!', 'success');
+                    triggerLiveActivity(data.type === 'premium' ? 'Premium' : 'Free');
+                    updateStats();
+                    document.getElementById('result-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                } else {
+                    showToast('Error: ' + (data.error || 'Failed to generate key'), 'error');
+                }
+            } catch (error) {
+                showToast('Connection error. Please try again later.', 'error');
+            } finally {
+                btn.disabled = false;
+                btnText.innerHTML = '𝑮𝑬𝑵𝑬𝑹𝑨𝑻𝑬 𝑲𝑬𝒀';
+            }
+        }
+
+        function copyKey() {
+            if (!generatedKey) return;
+            navigator.clipboard.writeText(generatedKey);
+            const btn = document.getElementById('copy-btn');
+            btn.innerText = 'Copied!';
+            setTimeout(() => { btn.innerText = 'Copy'; }, 2000);
+            showToast('Key copied!', 'success');
+        }
+
+        function validateKey() {
+            const input = document.getElementById('validate-key-input').value.trim();
+            const result = document.getElementById('validation-result');
+            if (!input) { result.innerHTML = '<span class="invalid">Please enter a key to validate.</span>'; return; }
+            if (input.startsWith('SAMSUNG-') && input.length >= 6) {
+                const expiry = input.length > 8 ? 'Premium (never expires)' : 'Free (30 days)';
+                result.innerHTML = `<span class="valid">✅ Valid key! Type: ${expiry}</span>`;
+                showToast('Key is valid!', 'success');
+            } else {
+                result.innerHTML = '<span class="invalid">❌ Invalid key. Please check and try again.</span>';
+                showToast('Invalid key', 'error');
+            }
+        }
+
+        function sharePage() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'SAMSUNG TECH INC',
+                    text: 'Generate your WhatsApp pairing key for SAMSUNG XMD and SAMSUNG XMD bots.',
+                    url: window.location.href
+                }).catch(() => {});
+            } else { copyPageLink(); }
+        }
+        function copyPageLink() {
+            navigator.clipboard.writeText(window.location.href);
+            showToast('Page link copied!', 'success');
+        }
+
+        function toggleQuickMenu(isOpen) {
+            const menu = document.getElementById('quickMenu');
+            const backdrop = document.getElementById('menuBackdrop');
+            const toggle = document.querySelector('.menu-toggle');
+            const open = Boolean(isOpen);
+            menu.classList.toggle('open', open);
+            backdrop.classList.toggle('open', open);
+            menu.setAttribute('aria-hidden', String(!open));
+            backdrop.setAttribute('aria-hidden', String(!open));
+            if (toggle) toggle.setAttribute('aria-expanded', String(open));
+            document.body.classList.toggle('menu-open', open);
+        }
+
+        function openWalletFromMenu() {
+            toggleQuickMenu(false);
+            openWalletModal();
+        }
+
+        function adminLoginFromMenu() {
+            toggleQuickMenu(false);
+            adminLoginPrompt();
+        }
+
+        function shareFromMenu() {
+            toggleQuickMenu(false);
+            sharePage();
+        }
+
+        function toggleNotifications() {
+            document.getElementById('notifications').classList.toggle('active');
+        }
+        document.addEventListener('click', function(e) {
+            const wrapper = document.querySelector('.notification-wrapper');
+            if (wrapper && !wrapper.contains(e.target)) {
+                document.getElementById('notifications').classList.remove('active');
+            }
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.getElementById('notifications').classList.remove('active');
+                toggleQuickMenu(false);
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') generateKey();
+        });
+        const legacyPhoneInput = document.getElementById('phone');
+        if (legacyPhoneInput) {
+            legacyPhoneInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') generateKey();
+            });
+        }
+
+        // Keep touch and pointer focus reliable on mobile browsers and embedded webviews.
+        document.addEventListener('pointerdown', function(event) {
+            const field = event.target.closest?.('input, textarea, select');
+            if (field && !field.disabled && !field.readOnly) field.focus({ preventScroll: true });
+        }, { passive: true });
+
+        const inlinePairingPhoneInput = document.getElementById('landingPairingPhoneInline');
+        if (inlinePairingPhoneInput) {
+            inlinePairingPhoneInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') requestLandingPairingInline();
+            });
+        }
+
+        const modalPairingPhoneInput = document.getElementById('landingPairingPhone');
+        if (modalPairingPhoneInput) {
+            modalPairingPhoneInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') requestLandingPairing();
+            });
+        }
+
+        function toggleFaq(element) {
+            const answer = element.nextElementSibling;
+            const icon = element.querySelector('i');
+            answer.classList.toggle('open');
+            element.classList.toggle('open');
+            icon.classList.toggle('fa-chevron-down');
+            icon.classList.toggle('fa-chevron-up');
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('liveToast');
+            const msgEl = document.getElementById('toastMessage');
+            msgEl.textContent = message;
+            toast.className = 'live-toast show';
+            toast.style.borderColor = type === 'error' ? '#ef4444' : 'rgba(250,204,21,0.2)';
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function triggerLiveActivity(type = 'Premium') {
+            const messages = [
+                `Someone in Nairobi just generated a ${type} key! 🔥`,
+                `A user from Mombasa activated a ${type} key! ⚡`,
+                `New ${type} key generated in Kisumu! 🚀`,
+                `${type} key claimed from Eldoret! 💪`,
+                `Another ${type} key generated — total now ${getTotalKeys()}! 🎉`
+            ];
+            const msg = messages[Math.floor(Math.random() * messages.length)];
+            showToast(msg, 'info');
+        }
+        function getTotalKeys() {
+            let count = parseInt(localStorage.getItem('totalKeys') || '0');
+            count++;
+            localStorage.setItem('totalKeys', count);
+            return count;
+        }
+        function updateStats() {
+            const total = getTotalKeys();
+            document.getElementById('totalKeysStat').textContent = total;
+            const active = Math.floor(total * 0.6) + 1;
+            document.getElementById('activeKeysStat').textContent = active;
+        }
+
+        setInterval(() => {
+            if (Math.random() > 0.6) {
+                triggerLiveActivity(Math.random() > 0.5 ? 'Premium' : 'Free');
+            }
+        }, 25000);
+
+        // ─── Registration & Premium Access ───
+        let pendingRegistrationAction = null;
+        let sessionRestorePromise = null;
+
+        function isRegistered() {
+            return Boolean(localStorage.getItem('blacklord_registered_phone'));
+        }
+
+        function hasPasswordReady() {
+            return Boolean(localStorage.getItem('blacklord_password_ready'));
+        }
+
+        function openLoginModal() {
+            const modal = document.getElementById('loginModal');
+            const identifier = document.getElementById('loginIdentifier');
+            if (!identifier.value) identifier.value = localStorage.getItem('blacklord_email') || localStorage.getItem('blacklord_username') || localStorage.getItem('samsung_user_phone') || '';
+            document.getElementById('loginMsg').textContent = '';
+            modal.style.display = 'flex';
+            setTimeout(() => (identifier.value ? document.getElementById('loginPassword') : identifier)?.focus(), 80);
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        async function loginUser() {
+            const button = document.getElementById('loginSubmitBtn');
+            const message = document.getElementById('loginMsg');
+            const identifier = document.getElementById('loginIdentifier').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            if (!identifier || !password) { message.style.color = '#fca5a5'; message.textContent = 'Enter your login details.'; return; }
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+            try {
+                const response = await fetch('/api/user/login', { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier, password }) });
+                const data = await response.json();
+                if (!response.ok || !data.success) throw new Error(data.error || 'Login failed.');
+                rememberUser(data.user);
+                message.style.color = '#86efac';
+                message.textContent = 'Login successful. Your account is remembered for 30 days.';
+                showToast(`Welcome back, ${data.user.username || 'member'}!`, 'success');
+                setTimeout(() => { closeLoginModal(); window.location.href = 'dashboard.html'; }, 700);
+            } catch (error) {
+                message.style.color = '#fca5a5';
+                message.textContent = error.message;
+            } finally {
+                button.disabled = false;
+                button.innerHTML = '<i class="fas fa-right-to-bracket"></i> Log In';
+            }
+        }
+
+        function rememberUser(user) {
+            if (!user?.phone) return;
+            localStorage.setItem('samsung_user_phone', user.phone);
+            localStorage.setItem('blacklord_registered_phone', user.phone);
+            localStorage.setItem('blacklord_username', user.username || '');
+            localStorage.setItem('blacklord_email', user.email || '');
+            localStorage.setItem('blacklord_referral_code', user.referral_code || '');
+            localStorage.setItem('blacklord_password_ready', '1');
+            const phoneField = document.getElementById('phone');
+            if (phoneField) phoneField.value = user.phone;
+            const walletPhoneField = document.getElementById('walletPhone');
+            if (walletPhoneField) walletPhoneField.value = user.phone;
+        }
+
+        async function restoreRememberedSession() {
+            if (sessionRestorePromise) return sessionRestorePromise;
+            sessionRestorePromise = fetch('/api/user/session', { credentials: 'include' }).then(async response => {
+                const data = await response.json().catch(() => ({}));
+                if (response.ok && data.success) rememberUser(data.user);
+                return data;
+            }).catch(() => null);
+            return sessionRestorePromise;
+        }
+
+        async function logoutUser() {
+            await fetch('/api/user/logout', { method: 'POST', credentials: 'include' }).catch(() => {});
+            localStorage.removeItem('blacklord_password_ready');
+            showToast('You have been logged out.', 'success');
+        }
+
+        function openRegistrationModal(reason = 'Register first to unlock this feature.', action = null) {
+            pendingRegistrationAction = action;
+            const modal = document.getElementById('registrationModal');
+            const savedPhone = localStorage.getItem('samsung_user_phone') || document.getElementById('phone')?.value || '';
+            document.getElementById('registerPhone').value = savedPhone;
+            document.getElementById('registerUsername').value = localStorage.getItem('blacklord_username') || '';
+            document.getElementById('registerEmail').value = localStorage.getItem('blacklord_email') || '';
+            const urlRef = new URLSearchParams(window.location.search).get('ref');
+            if (urlRef) document.getElementById('registerReferralCode').value = urlRef.toUpperCase();
+            document.getElementById('registrationMsg').textContent = reason;
+            document.getElementById('registrationMsg').style.color = '#facc15';
+            modal.style.display = 'flex';
+            setTimeout(() => document.getElementById('registerUsername')?.focus(), 80);
+        }
+
+        function closeRegistrationModal() {
+            document.getElementById('registrationModal').style.display = 'none';
+            pendingRegistrationAction = null;
+        }
+
+        function requireRegistration(event, action) {
+            if (isRegistered()) {
+                if (typeof action === 'function') action();
+                return true;
+            }
+            if (event) event.preventDefault();
+            openRegistrationModal('Register fast to get 10 KSH free and unlock panel purchases.', action);
+            return false;
+        }
+
+        function openProtectedPage(url) {
+            if (isRegistered()) {
+                window.location.href = url;
+                return;
+            }
+            openRegistrationModal('Register fast to access this member feature.', () => { window.location.href = url; });
+        }
+
+        async function registerUser() {
+            const button = document.getElementById('registerSubmitBtn');
+            const message = document.getElementById('registrationMsg');
+            const password = document.getElementById('registerPassword').value;
+            const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
+            if (password !== passwordConfirm) { message.style.color = '#fca5a5'; message.textContent = 'Passwords do not match.'; return; }
+            const payload = {
+                phone: document.getElementById('registerPhone').value.trim(),
+                username: document.getElementById('registerUsername').value.trim(),
+                email: document.getElementById('registerEmail').value.trim(),
+                password,
+                referralCode: document.getElementById('registerReferralCode').value.trim().toUpperCase()
+            };
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
+            try {
+                const response = await fetch('/api/user/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                const data = await response.json();
+                if (!response.ok || !data.success) throw new Error(data.error || 'Registration failed.');
+                rememberUser(data.user);
+                localStorage.setItem('blacklord_referral_code', data.referralCode || data.user.referral_code || '');
+                message.style.color = '#86efac';
+                message.textContent = data.bonus.ksh ? `Registered! ${data.bonus.ksh} KSH (${data.bonus.sd} SD) was added to your wallet.` : 'Account security updated. You can now log in with your password.';
+                showToast('Registration complete — welcome bonus added!', 'success');
+                const nextAction = pendingRegistrationAction;
+                pendingRegistrationAction = null;
+                setTimeout(() => {
+                    closeRegistrationModal();
+                    if (typeof nextAction === 'function') nextAction();
+                    else window.location.href = 'dashboard.html';
+                }, 850);
+            } catch (error) {
+                message.style.color = '#fca5a5';
+                message.textContent = error.message;
+            } finally {
+                button.disabled = false;
+                button.innerHTML = '<i class="fas fa-user-plus"></i> Create Account &amp; Get Bonus';
+            }
+        }
+
+        restoreRememberedSession();
+        togglePaymentMethod();
+
+        // ─── Wallet & Voucher System ───
+        function openWalletModal() {
+            document.getElementById('walletModal').style.display = 'flex';
+            if (!isRegistered()) {
+                const walletMessage = document.getElementById('walletMsg');
+                if (walletMessage) {
+                    walletMessage.innerHTML = 'New here? <button type="button" onclick="closeWalletModal(); openRegistrationModal()" style="background:none;border:0;color:#facc15;text-decoration:underline;cursor:pointer;">Register fast and get 10 KSH free</button>';
+                }
+            }
+            const savedPhone = localStorage.getItem('samsung_user_phone');
+            if (savedPhone) {
+                document.getElementById('walletPhone').value = savedPhone;
+                fetchBalance(savedPhone);
+            }
+        }
+
+        function closeWalletModal() {
+            document.getElementById('walletModal').style.display = 'none';
+        }
+
+        document.getElementById('walletPhone')?.addEventListener('input', function() {
+            const phone = this.value.trim();
+            if (phone.length >= 9) {
+                localStorage.setItem('samsung_user_phone', phone);
+                fetchBalance(phone);
+            }
+        });
+
+        let activeCheckoutRequestId = '';
+        let activePaymentMethod = 'c2b';
+        let paymentPollTimer = null;
+        let paymentPollAttempts = 0;
+        let paymentPolling = false;
+
+        function stopPaymentPolling() {
+            paymentPolling = false;
+            paymentPollAttempts = 0;
+            if (paymentPollTimer) {
+                clearTimeout(paymentPollTimer);
+                paymentPollTimer = null;
+            }
+        }
+
+        async function fetchBalance(phone) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refCode = urlParams.get('ref') || null;
+
+            try {
+                const res = await fetch('/api/user/wallet', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'get', phone, refCode })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    const bal = parseFloat(data.balance).toFixed(2);
+                    document.getElementById('userBalanceDisplay').textContent = bal + ' SD';
+                    document.getElementById('modalBalance').textContent = bal + ' SD';
+                    if (data.username) {
+                        document.getElementById('modalUsername').textContent = data.username;
+                    }
+                    const ksh = (bal * 5).toFixed(0);
+                    document.getElementById('modalBalanceKsh').textContent = '≈ ' + ksh + ' KSH (@ 5 KSH / 1 SD)';
+                    
+                    const refLink = window.location.origin + window.location.pathname + '?ref=' + phone;
+                    document.getElementById('referralLinkInput').value = refLink;
+                }
+            } catch (e) {}
+        }
+
+        function copyReferralLink() {
+            const input = document.getElementById('referralLinkInput');
+            input.select();
+            navigator.clipboard.writeText(input.value);
+            showToast('Referral link copied!', 'success');
+        }
+
+        async function loadC2BConfig() {
+            const help = document.getElementById('paymentMethodHelp');
+            try {
+                const res = await fetch('/api/c2b/config', { cache: 'no-store' });
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.error || 'C2B is not configured.');
+                const till = data.tillNumber || 'Not configured';
+                const amountRate = Number(data.kesPerSd || 5);
+                help.textContent = `Pay KES amount to Till ${till}. Conversion: 1 SD = ${amountRate} KES. After payment, enter the M-Pesa transaction code below; the balance is credited when Safaricom confirms the C2B payment.`;
+                return data;
+            } catch (error) {
+                help.textContent = error.message;
+                return null;
+            }
+        }
+
+        async function loadMpesaStkConfig() {
+            const help = document.getElementById('paymentMethodHelp');
+            try {
+                const res = await fetch('/api/mpesa/stk/config', { cache: 'no-store' });
+                const data = await res.json();
+                if (!res.ok || !data.success || !data.configured) throw new Error(data.error || 'M-Pesa STK Push is not configured yet.');
+                help.textContent = `An M-Pesa payment prompt will be sent to the phone above. ${data.transactionType === 'CustomerBuyGoodsOnline' ? `Till ${data.shortCode || 'configured Till'}` : `Paybill ${data.shortCode || 'configured shortcode'}`} is configured.`;
+                return data;
+            } catch (error) {
+                help.textContent = error.message;
+                return null;
+            }
+        }
+
+        function togglePaymentMethod() {
+            const method = document.getElementById('paymentGateway').value;
+            activePaymentMethod = method;
+            const c2bBox = document.getElementById('c2bVerificationBox');
+            const stkBox = document.getElementById('stkPushBox');
+            const amount = Number(document.getElementById('topupAmountSD').value || 0);
+            c2bBox.style.display = method === 'c2b' ? 'block' : 'none';
+            stkBox.style.display = method === 'mpesa_stk' ? 'block' : 'none';
+            if (method === 'c2b') {
+                loadC2BConfig();
+            } else if (method === 'mpesa_stk') {
+                loadMpesaStkConfig();
+                if (amount > 0) document.getElementById('paymentMethodHelp').textContent += ` Amount: ${amount.toFixed(2)} SD (${Math.round(amount * 5)} KES).`;
+            } else {
+                document.getElementById('paymentMethodHelp').textContent = `Paystack opens a secure hosted checkout. The wallet is credited after Paystack confirms the successful payment.`;
+                if (amount > 0) document.getElementById('paymentMethodHelp').textContent += ` Current amount: ${amount.toFixed(2)} SD (${Math.round(amount * 5)} KES).`;
+            }
+        }
+
+        async function checkC2BStatus() {
+            const phone = document.getElementById('walletPhone').value.trim();
+            const transactionId = document.getElementById('c2bTransactionId').value.trim().toUpperCase();
+            const msg = document.getElementById('walletMsg');
+            if (!phone || !transactionId) { msg.className = 'msg error'; msg.textContent = 'Enter the payment phone number and M-Pesa transaction code.'; return; }
+            msg.className = 'msg';
+            msg.style.color = '#facc15';
+            msg.textContent = 'Checking C2B confirmation…';
+            try {
+                const res = await fetch('/api/c2b/status', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone, transactionId }) });
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.error || 'Transaction has not been received yet.');
+                if (data.status === 'success') {
+                    msg.className = 'msg success';
+                    msg.textContent = `C2B payment confirmed. Added ${Number(data.amountSd || 0).toFixed(2)} SD.`;
+                    fetchBalance(phone);
+                } else {
+                    msg.className = 'msg';
+                    msg.style.color = '#facc15';
+                    msg.textContent = `Transaction received with status: ${data.status}. Check again shortly.`;
+                }
+            } catch (error) { msg.className = 'msg error'; msg.textContent = error.message; }
+        }
+
+        async function pollPaymentStatus() {
+            const phone = document.getElementById('walletPhone').value.trim();
+            const msg = document.getElementById('walletMsg');
+            if (!activeCheckoutRequestId || !paymentPolling) return;
+            try {
+                const statusUrl = activePaymentMethod === 'mpesa_stk' ? '/api/mpesa/stk/status' : '/api/user/topup';
+                const statusBody = activePaymentMethod === 'mpesa_stk'
+                    ? { phone, checkoutRequestId: activeCheckoutRequestId }
+                    : { action: 'verify', checkoutRequestId: activeCheckoutRequestId, gateway: activePaymentMethod, paymentMethod: activePaymentMethod };
+                const res = await fetch(statusUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(statusBody)
+                });
+                const data = await res.json();
+                if (data.success && data.status === 'success') {
+                    stopPaymentPolling();
+                    msg.className = 'msg success';
+                    msg.textContent = 'Payment confirmed! Added ' + data.balanceAdded + ' SD.';
+                    document.getElementById('verifyTopupBtn').style.display = 'none';
+                    fetchBalance(phone);
+                    return;
+                }
+                if (data.status === 'failed' || data.status === 'cancelled') {
+                    stopPaymentPolling();
+                    msg.className = 'msg error';
+                    msg.textContent = data.status === 'cancelled' ? 'Payment cancelled.' : 'Payment failed. No funds were added.';
+                    document.getElementById('verifyTopupBtn').style.display = 'none';
+                    return;
+                }
+                paymentPollAttempts += 1;
+                if (paymentPollAttempts >= 24) {
+                    stopPaymentPolling();
+                    msg.className = 'msg error';
+                    msg.textContent = activePaymentMethod === 'mpesa_stk' ? 'STK Push is still pending. Confirm the prompt on your phone and try checking again.' : 'Payment is still pending. Check Paystack and try again later.';
+                    document.getElementById('verifyTopupBtn').style.display = 'block';
+                    return;
+                }
+                msg.className = 'msg';
+                msg.style.color = '#facc15';
+                msg.textContent = 'Waiting for M-Pesa confirmation… (' + (paymentPollAttempts * 5) + 's)';
+                paymentPollTimer = setTimeout(pollPaymentStatus, 5000);
+            } catch (e) {
+                paymentPollAttempts += 1;
+                if (paymentPollAttempts < 24) {
+                    msg.className = 'msg';
+                    msg.style.color = '#facc15';
+                    msg.textContent = 'Checking payment status…';
+                    paymentPollTimer = setTimeout(pollPaymentStatus, 5000);
+                } else {
+                    stopPaymentPolling();
+                    msg.className = 'msg error';
+                    msg.textContent = 'Could not confirm payment automatically. Please try again later.';
+                    document.getElementById('verifyTopupBtn').style.display = 'block';
+                }
+            }
+        }
+
+        async function initiateTopup() {
+            stopPaymentPolling();
+            const phone = document.getElementById('walletPhone').value.trim();
+            const username = document.getElementById('walletUsernameInput').value.trim();
+            const amountSD = parseFloat(document.getElementById('topupAmountSD').value);
+            const paymentMethod = document.getElementById('paymentGateway').value;
+            activePaymentMethod = paymentMethod;
+            const msg = document.getElementById('walletMsg');
+            if (!phone || phone.length < 9) {
+                msg.style.color = '#ef4444';
+                msg.textContent = 'Please enter valid phone number';
+                return;
+            }
+            if (isNaN(amountSD) || amountSD <= 0) {
+                msg.style.color = '#ef4444';
+                msg.textContent = 'Please enter valid SD amount';
+                return;
+            }
+            msg.style.color = '#facc15';
+            if (paymentMethod === 'c2b') {
+                const c2b = await loadC2BConfig();
+                const amountKsh = Math.round(amountSD * Number(c2b?.kesPerSd || 5));
+                msg.className = 'msg';
+                msg.textContent = c2b?.tillNumber ? `Pay KES ${amountKsh} to Till ${c2b.tillNumber}, then enter the M-Pesa transaction code below.` : 'C2B Till is not configured yet.';
+                return;
+            }
+            if (paymentMethod === 'mpesa_stk') {
+                const amountKsh = Math.round(amountSD * 5);
+                msg.className = 'msg';
+                msg.style.color = '#facc15';
+                msg.textContent = `Sending an M-Pesa STK Push for KES ${amountKsh}…`;
+                try {
+                    const res = await fetch('/api/mpesa/stk/initiate', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ phone, username, amountSD })
+                    });
+                    const data = await res.json();
+                    if (!res.ok || !data.success) throw new Error(data.error || 'Could not send the STK Push.');
+                    activeCheckoutRequestId = data.checkoutRequestId;
+                    msg.textContent = `STK Push sent to ${phone}. Enter your M-Pesa PIN on the phone, then wait for confirmation…`;
+                    paymentPolling = true;
+                    paymentPollAttempts = 0;
+                    paymentPollTimer = setTimeout(pollPaymentStatus, 3000);
+                } catch (error) {
+                    msg.className = 'msg error';
+                    msg.textContent = error.message;
+                }
+                return;
+            }
+            msg.textContent = 'Initializing Paystack secure checkout…';
+            document.getElementById('verifyTopupBtn').style.display = 'none';
+            try {
+                const res = await fetch('/api/user/topup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'initiate', phone, username, email: phone + '@blacklord.tech', amountSD, gateway: paymentMethod, paymentMethod })
+                });
+                const data = await res.json();
+                if (!data.success) {
+                    msg.style.color = '#ef4444';
+                    msg.textContent = data.error || 'Payment failed';
+                    return;
+                }
+                activeCheckoutRequestId = data.checkoutRequestId;
+                if (data.authorizationUrl) {
+                    window.open(data.authorizationUrl, '_blank');
+                    msg.style.color = '#facc15';
+                    msg.textContent = 'Payment window opened. Waiting for confirmation…';
+                    document.getElementById('verifyTopupBtn').style.display = 'block';
+                    return;
+                }
+                if (!activeCheckoutRequestId) {
+                    msg.style.color = '#ef4444';
+                    msg.textContent = 'Payment provider did not return a checkout ID.';
+                    return;
+                }
+                msg.style.color = '#facc15';
+                msg.textContent = 'Paystack checkout opened. Waiting for confirmation…';
+                paymentPolling = true;
+                paymentPollAttempts = 0;
+                paymentPollTimer = setTimeout(pollPaymentStatus, 5000);
+            } catch (e) {
+                msg.style.color = '#ef4444';
+                msg.textContent = 'Connection error';
+            }
+        }
+
+        async function verifyTopup() {
+            if (!activeCheckoutRequestId) return;
+            stopPaymentPolling();
+            paymentPolling = true;
+            paymentPollAttempts = 0;
+            const msg = document.getElementById('walletMsg');
+            msg.className = 'msg';
+            msg.style.color = '#facc15';
+            msg.textContent = 'Checking payment status…';
+            await pollPaymentStatus();
+        }
+
+        function adminLoginPrompt() {
+            const pass = prompt("Enter Admin Password:");
+            if (pass === "blacklorddev") {
+                localStorage.setItem('samsung-admin-token', 'samsung-admin-token-' + Date.now());
+                window.location.href = 'admin.html';
+            } else if (pass !== null) {
+                alert("Incorrect password!");
+            }
+        }
+
+        // ─── Panel Creator ───
+        const tierSpecs = {
+            '10gb': { ram: 1024, disk: 10240, cpu: 40, price: 10 },
+            'bulky2': { ram: 0, disk: 0, cpu: 0, price: 20 },
+            'bulky3': { ram: 0, disk: 0, cpu: 0, price: 40 },
+            'bulky4': { ram: 0, disk: 0, cpu: 0, price: 60 },
+            'unlimited': { ram: 0, disk: 0, cpu: 0, price: 100 }
+        };
+
+        function selectPanelTier(tier) {
+            const form = document.getElementById('panelForm');
+            form.style.display = 'block';
+            document.getElementById('panelTier').value = tier;
+            updateTierLimits();
+            form.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function updatePanelOrderSummary() {
+            const tier = document.getElementById('panelTier')?.value || '10gb';
+            const quantity = Math.max(1, Math.min(4, Number(document.getElementById('panelQuantity')?.value || 1)));
+            const spec = tierSpecs[tier];
+            if (!spec) return;
+            const total = Number(spec.price || 0) * quantity;
+            const serverLabel = quantity === 1 ? 'server' : 'servers';
+            const totalEl = document.getElementById('panelTotalPrice');
+            const summaryEl = document.getElementById('panelOrderSummary');
+            if (totalEl) totalEl.textContent = `${total} SD`;
+            if (summaryEl) summaryEl.firstChild.textContent = `${quantity} ${serverLabel} · Total: `;
+        }
+
+        function updateTierLimits() {
+            const tier = document.getElementById('panelTier').value;
+            const spec = tierSpecs[tier];
+            if (spec) {
+                document.getElementById('limitRam').textContent = spec.ram === 0 ? 'Unlimited' : spec.ram;
+                document.getElementById('limitDisk').textContent = spec.disk === 0 ? 'Unlimited' : spec.disk;
+                document.getElementById('limitCpu').textContent = spec.cpu === 0 ? 'Unlimited' : spec.cpu;
+            }
+            updatePanelOrderSummary();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('panelFormSubmit');
+            const resultDiv = document.getElementById('panelResult');
+            const createBtn = document.getElementById('createPanelBtn');
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await restoreRememberedSession();
+                if (!isRegistered()) {
+                    resultDiv.style.display = 'block';
+                    resultDiv.innerHTML = '<span class="error">Registration is required before creating a panel.</span><span class="status-copy">Register or log in first, then submit Create Panel again.</span>';
+                    openRegistrationModal('Register fast before creating a panel.', () => form.requestSubmit());
+                    return;
+                }
+
+                const walletPhoneField = document.getElementById('walletPhone');
+                const phone = String(walletPhoneField?.value || localStorage.getItem('samsung_user_phone') || localStorage.getItem('blacklord_registered_phone') || '').trim();
+                if (walletPhoneField && phone && !walletPhoneField.value) walletPhoneField.value = phone;
+                if (!phone || phone.length < 9) {
+                    resultDiv.style.display = 'block';
+                    resultDiv.innerHTML = '<span class="error">Panel was not created yet.</span><span class="status-copy">We could not find your registered phone number. Log in again or enter your phone number in Wallet, then try again.</span>';
+                    showToast('Your registered phone number is required before creating a panel.', 'error');
+                    openWalletModal();
+                    return;
+                }
+
+                const firstName = document.getElementById('panelFirstName').value.trim();
+                const lastName = document.getElementById('panelLastName').value.trim();
+                const username = document.getElementById('panelUsername').value.trim();
+                const password = document.getElementById('panelPassword').value.trim();
+                const quantity = Math.max(1, Math.min(4, Number(document.getElementById('panelQuantity').value || 1)));
+                const nestId = document.getElementById('panelNestSelect').value;
+                const bot = document.getElementById('panelBot').value;
+                const tier = document.getElementById('panelTier').value;
+                const spec = tierSpecs[tier];
+
+                if (!username || username.length < 3) {
+                    showToast('Username must be at least 3 characters.', 'error');
+                    return;
+                }
+                if (password.length < 8) {
+                    showToast('Password must be at least 8 characters.', 'error');
+                    return;
+                }
+
+                createBtn.disabled = true;
+                createBtn.innerHTML = `<span class="spinner"></span> Creating Panel...`;
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = '<span class="progress"><i class="fas fa-spinner fa-spin"></i> Creating your panel...</span><span class="status-copy">Pterodactyl is provisioning the server. Please wait for the result.</span>';
+                resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+                try {
+                    const response = await fetch('/api/create-panel', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            phone,
+                            firstName,
+                            lastName,
+                            username, 
+                            password,
+                            nestId,
+                            tier,
+                            bot,
+                            ram: spec.ram, 
+                            disk: spec.disk, 
+                            cpu: spec.cpu, 
+                            isAdmin: (tier === 'unlimited'),
+                            price: spec.price,
+                            quantity
+                        })
+                    });
+                    let data = {};
+                    try {
+                        data = await response.json();
+                    } catch (_) {
+                        throw new Error(`Panel request returned an invalid response (HTTP ${response.status}).`);
+                    }
+
+                    if (!response.ok || !data.success) throw new Error(data.error || `Panel creation failed (HTTP ${response.status}).`);
+
+                    const createdServers = Array.isArray(data.servers) ? data.servers : [{
+                        username: data.username,
+                        password: data.password,
+                        ram: data.ram,
+                        disk: data.disk,
+                        cpu: data.cpu,
+                        panelDomain: data.panelDomain,
+                        serverId: data.serverId,
+                    }];
+                    latestPanelServers = createdServers;
+                    resultDiv.style.display = 'block';
+                    resultDiv.innerHTML = `
+                        <div class="panel-result-heading">
+                            <span class="success">✅ ${(data.quantity || createdServers.length) === 1 ? 'Panel' : 'Panels'} created successfully!</span>
+                            <button type="button" class="credential-copy-btn" onclick="copyPanelCredentials()"><i class="fas fa-copy"></i> Copy all login details</button>
+                        </div>
+                        <div class="credential-notice"><i class="fas fa-key" style="color:#facc15;margin-right:0.3rem;"></i> <strong>Your panel is ready.</strong> Use the domain, username, and password below to log in to Pterodactyl. The password is shown only in this creation result and is not stored in your dashboard.</div>
+                        <div style="margin-bottom:0.55rem;color:#d4d4d8;font-size:0.72rem;"><span class="label">💰 Total charged:</span> ${escapeHtml(data.totalPrice ?? spec.price * quantity)} SD</div>
+                        ${createdServers.map((server, index) => {
+                            const loginUrl = panelLoginUrl(server.panelDomain);
+                            const safeLoginUrl = escapeHtml(loginUrl);
+                            return `
+                            <div class="credential-card">
+                                <div class="credential-card-title"><span><i class="fas fa-server" style="color:#facc15;margin-right:0.35rem;"></i> Server ${index + 1}</span><span style="color:#86efac;font-size:0.66rem;">Created</span></div>
+                                <div class="credential-grid">
+                                    <div class="credential-row"><span class="credential-label">Panel login</span><span class="credential-value"><a class="panel-login-link" href="${safeLoginUrl || '#'}" ${safeLoginUrl ? 'target="_blank" rel="noopener noreferrer"' : 'aria-disabled="true"'}>${escapeHtml(loginUrl || 'Unavailable')}</a></span></div>
+                                    <div class="credential-row"><span class="credential-label">Username</span><span class="credential-value mono">${escapeHtml(server.username)}</span></div>
+                                    <div class="credential-row"><span class="credential-label">Password</span><span class="credential-value mono">${escapeHtml(server.password)}</span></div>
+                                    <div class="credential-row"><span class="credential-label">Server ID</span><span class="credential-value mono">${escapeHtml(server.serverId)}</span></div>
+                                </div>
+                                <div class="credential-actions">
+                                    ${safeLoginUrl ? `<a class="panel-login-link panel-open-btn" href="${safeLoginUrl}" target="_blank" rel="noopener noreferrer"><i class="fas fa-right-to-bracket"></i> Login to Panel</a>` : ''}
+                                    <button type="button" class="credential-copy-btn" onclick="copyPanelCredentials(${index})"><i class="fas fa-copy"></i> Copy login</button>
+                                    <span style="color:#a1a1aa;font-size:0.65rem;align-self:center;">${server.ram === 0 ? 'Unlimited' : `${escapeHtml(server.ram)} MB`} RAM · ${server.disk === 0 ? 'Unlimited' : `${escapeHtml(server.disk)} MB`} Disk · ${server.cpu === 0 ? 'Unlimited' : `${escapeHtml(server.cpu)}%`} CPU</span>
+                                </div>
+                            </div>`;
+                        }).join('')}
+                        <button type="button" class="create-panel-btn" style="margin-top:0.8rem;width:100%;padding:0.75rem;background:#16a34a;color:white;border:none;border-radius:0.5rem;font-weight:800;cursor:pointer;" onclick="latestPanelServers=[]; document.getElementById('panelResult').style.display='none'; document.getElementById('panelFormSubmit').reset(); document.getElementById('panelQuantity').value='1'; updateTierLimits();"><i class="fas fa-plus"></i> Create Another Panel</button>
+                    `;
+                    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    showToast(`${(data.quantity || createdServers.length) === 1 ? 'Panel' : 'Panels'} created successfully!`, 'success');
+                } catch (error) {
+                    resultDiv.style.display = 'block';
+                    resultDiv.innerHTML = `<span class="error">❌ Panel was not created.</span><span class="status-copy">${escapeHtml(error.message || 'The panel service returned an error. Please try again.')}</span>`;
+                    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    showToast(error.message || 'Panel creation failed.', 'error');
+                } finally {
+                    createBtn.disabled = false;
+                    createBtn.innerHTML = '<i class="fas fa-rocket"></i> Create Panel';
+                }
+            });
+
+            document.getElementById('panelQuantity').addEventListener('change', updatePanelOrderSummary);
+            updateTierLimits();
+        });
+
+        let selectedLandingBotType = 'blacklord';
+        let landingPairingTimer;
+
+        async function loadGlobalBroadcast() {
+            try {
+                const res = await fetch('/api/user/broadcast');
+                const data = await res.json();
+                if (data.success && data.broadcast) {
+                    const banner = document.getElementById('globalBroadcast');
+                    banner.textContent = data.broadcast.message;
+                    banner.style.display = 'block';
+                    banner.style.background = data.broadcast.kind === 'maintenance' ? 'linear-gradient(90deg,#fb7185,#fecdd3)' : data.broadcast.kind === 'success' ? 'linear-gradient(90deg,#4ade80,#bbf7d0)' : 'linear-gradient(90deg,#facc15,#fde68a)';
+                }
+            } catch (_) {}
+        }
+
+        function setLandingPairingNotice(text, good = false) { const el = document.getElementById('landingPairingNotice'); el.textContent = text; el.style.color = good ? '#86efac' : '#fca5a5'; }
+        function renderLandingPairing(pairing) {
+            if (!pairing) return;
+            const status = String(pairing.status || 'pending').toLowerCase();
+            setLandingPairingNotice(pairing.message || `Pairing status: ${status}`, ['paired','connected','completed'].includes(status));
+            const codeBox = document.getElementById('landingPairingCode');
+            if (pairing.pairing_code) { codeBox.style.display = 'block'; codeBox.textContent = `PAIRING CODE: ${pairing.pairing_code}`; } else codeBox.style.display = 'none';
+            if (pairing.request_id && !['paired','connected','completed','failed','expired','cancelled'].includes(status)) { clearTimeout(landingPairingTimer); landingPairingTimer = setTimeout(() => pollLandingPairing(pairing.request_id), 3000); }
+        }
+        async function pollLandingPairing(requestId) {
+            try { const response = await fetch(`/api/user/pairing/status?requestId=${encodeURIComponent(requestId)}`, { credentials: 'include' }); const data = await response.json(); if (response.ok && data.pairing) renderLandingPairing(data.pairing); } catch (_) { landingPairingTimer = setTimeout(() => pollLandingPairing(requestId), 5000); }
+        }
+        function selectLandingBotType(type, element) {
+            selectedLandingBotType = type;
+            console.log('Selected bot:', type);
+            
+            // Highlight active button in all grids
+            document.querySelectorAll('.bot-select-btn').forEach(btn => {
+                const btnOnclick = btn.getAttribute('onclick') || '';
+                if (btnOnclick.includes("'" + type + "'")) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Sync phone numbers
+            const p1 = document.getElementById('landingPairingPhoneInline');
+            const p2 = document.getElementById('landingPairingPhone');
+            if (p1 && p2) {
+                if (element && element.id && element.id.includes('Inline')) {
+                   if (p1.value) p2.value = p1.value;
+                } else if (p2.value) {
+                   p1.value = p2.value;
+                }
+            }
+
+            // Update modal title
+            const title = document.getElementById('selectedBotName');
+            if (title) {
+                const names = { 'blacklord': 'BLACKLORD XMD', 'samsung': 'SAMSUNG XMD', 'talkless': 'TALKLESS ULTRA', 'skylar': 'SKYLAR XMD', 'rita': 'RITA XMD' };
+                title.textContent = names[type] || type.toUpperCase();
+            }
+        }
+        function goToDashboardPairing(type) {
+            const allowed = ['blacklord', 'samsung', 'talkless', 'skylar', 'rita'];
+            const bot = allowed.includes(type) ? type : 'blacklord';
+            window.location.href = `dashboard.html?bot=${encodeURIComponent(bot)}#pairingCard`;
+        }
+        // Backwards-compatible alias for any cached links or older markup.
+        function initiatePairing(type) { goToDashboardPairing(type); }
+        async function requestLandingPairing() {
+            const button = document.getElementById('landingPairingButton');
+            const whatsappPhone = document.getElementById('landingPairingPhone').value.trim();
+            const notice = document.getElementById('landingPairingNotice');
+            const codeBox = document.getElementById('landingPairingCode');
+            
+            if (!whatsappPhone) { 
+                setLandingPairingNotice('Enter the WhatsApp number you want to pair.'); 
+                return; 
+            }
+            
+            clearTimeout(landingPairingTimer); 
+            button.disabled = true; 
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> REQUESTING...';
+            setLandingPairingNotice('Sending pairing request to Pterodactyl...', true);
+            codeBox.style.display = 'none';
+            
+            try { 
+                const response = await fetch('/api/user/pairing/start', { 
+                    method: 'POST', 
+                    credentials: 'include', 
+                    headers: {'Content-Type': 'application/json'}, 
+                    body: JSON.stringify({ whatsappPhone, botType: selectedLandingBotType }) 
+                }); 
+                
+                let data;
+                try {
+                    data = await response.json();
+                } catch (e) {
+                    throw new Error('Server returned an invalid response. Please try again.');
+                }
+                
+                if (!response.ok) throw new Error(data.error || 'Pairing request failed.'); 
+                
+                if (data.pairing) {
+                    renderLandingPairing(data.pairing);
+                    if (data.pairing.pairing_code) {
+                        showToast('Pairing code generated!', 'success');
+                    } else {
+                        setLandingPairingNotice('Request sent! Waiting for code...', true);
+                    }
+                } else {
+                    throw new Error('No pairing data received.');
+                }
+            } catch (error) { 
+                console.error('Pairing error:', error);
+                setLandingPairingNotice(error.message || 'Pairing request failed.'); 
+            } finally { 
+                button.disabled = false; 
+                button.innerHTML = 'GET PAIRING CODE';
+            }
+        }
+
+        async function requestLandingPairingInline() {
+            const button = document.getElementById('landingPairingButtonInline');
+            const whatsappPhone = document.getElementById('landingPairingPhoneInline').value.trim();
+            const notice = document.getElementById('landingPairingNoticeInline');
+            const codeBox = document.getElementById('landingPairingCodeInline');
+            
+            const setNotice = (text, good = false) => {
+                notice.textContent = text;
+                notice.style.color = good ? '#86efac' : '#fca5a5';
+            };
+            
+            const render = (pairing) => {
+                if (!pairing) return;
+                const status = String(pairing.status || 'pending').toLowerCase();
+                setNotice(pairing.message || `Status: ${status}`, ['paired','connected','completed'].includes(status));
+                if (pairing.pairing_code) {
+                    codeBox.style.display = 'block';
+                    codeBox.textContent = pairing.pairing_code;
+                } else codeBox.style.display = 'none';
+                if (pairing.request_id && !['paired','connected','completed','failed','expired','cancelled'].includes(status)) {
+                    clearTimeout(landingPairingTimer);
+                    landingPairingTimer = setTimeout(() => pollLandingPairingInline(pairing.request_id), 3000);
+                }
+            };
+
+            if (!whatsappPhone) { 
+                setNotice('Enter your WhatsApp number.'); 
+                return; 
+            }
+            
+            localStorage.setItem('samsung_user_phone', whatsappPhone);
+            clearTimeout(landingPairingTimer); 
+            button.disabled = true; 
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SENDING...';
+            setNotice('Connecting to Pterodactyl...', true);
+            codeBox.style.display = 'none';
+            
+            try { 
+                const response = await fetch('/api/user/pairing/start', { 
+                    method: 'POST', 
+                    credentials: 'include', 
+                    headers: {'Content-Type': 'application/json'}, 
+                    body: JSON.stringify({ whatsappPhone, botType: selectedLandingBotType }) 
+                }); 
+                const data = await response.json(); 
+                if (!response.ok) throw new Error(data.error || 'Pairing request failed.'); 
+                render(data.pairing); 
+            } catch (error) { 
+                setNotice(error.message); 
+            } finally { 
+                button.disabled = false; 
+                button.innerHTML = 'GET PAIRING CODE';
+            }
+        }
+
+        async function pollLandingPairingInline(requestId) {
+            try {
+                const response = await fetch(`/api/user/pairing/status?requestId=${encodeURIComponent(requestId)}`, { credentials: 'include' });
+                const data = await response.json();
+                if (response.ok && data.pairing) {
+                    const notice = document.getElementById('landingPairingNoticeInline');
+                    const codeBox = document.getElementById('landingPairingCodeInline');
+                    const status = String(data.pairing.status || 'pending').toLowerCase();
+                    notice.textContent = data.pairing.message || `Status: ${status}`;
+                    notice.style.color = ['paired','connected','completed'].includes(status) ? '#86efac' : '#fca5a5';
+                    if (data.pairing.pairing_code) {
+                        codeBox.style.display = 'block';
+                        codeBox.textContent = data.pairing.pairing_code;
+                    }
+                    if (!['paired','connected','completed','failed','expired','cancelled'].includes(status)) {
+                        landingPairingTimer = setTimeout(() => pollLandingPairingInline(requestId), 3000);
+                    }
+                }
+            } catch (_) {
+                landingPairingTimer = setTimeout(() => pollLandingPairingInline(requestId), 5000);
+            }
+        }
+
+        async function generateLandingTelegramKey() {
+            const button = document.getElementById('landingGenerateKeyBtn');
+            const phone = document.getElementById('landingKeyPhone').value.trim() || localStorage.getItem('samsung_user_phone') || '';
+            const botType = document.getElementById('landingKeyBotType').value;
+            const durationDays = Number(document.getElementById('landingKeyDuration').value || 30);
+            const telegramUser = document.getElementById('landingTelegramUser').value.trim();
+            const notice = document.getElementById('landingKeyNotice');
+            const box = document.getElementById('landingGeneratedKeyBox');
+            if (!phone) { notice.textContent = 'Enter your phone number first.'; notice.style.color = '#fca5a5'; return; }
+            localStorage.setItem('samsung_user_phone', phone);
+            button.disabled = true;
+            button.textContent = 'GENERATING...';
+            notice.textContent = 'Generating your Telegram key...';
+            notice.style.color = '#86efac';
+            try {
+                const response = await fetch('/api/user/keys', { method: 'POST', cache: 'no-store', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ phone, botType, durationDays, telegramUser }) });
+                const data = await response.json();
+                if (!response.ok || !data.success) throw new Error(data.error || 'Key generation failed.');
+                const key = typeof data.key === 'string' ? data.key : data.key?.key;
+                if (!key) throw new Error('The server returned no key.');
+                document.getElementById('landingGeneratedKey').textContent = key;
+                const telegramButton = document.getElementById('landingTelegramButton');
+                telegramButton.href = telegramStartLink(telegramLinks.TELEGRAM_PRIMARY_BOT || 'https://t.me/blacklordProjects_bot', key);
+                telegramButton.style.display = 'inline-flex';
+                box.style.display = 'block';
+                notice.textContent = 'Key generated. Tap Open Telegram Bot to continue.';
+                notice.style.color = '#86efac';
+            } catch (error) {
+                notice.textContent = error.message || 'Key generation failed.';
+                notice.style.color = '#fca5a5';
+            } finally {
+                button.disabled = false;
+                button.textContent = 'GENERATE KEY';
+            }
+        }
+
+        function copyLandingGeneratedKey() {
+            const key = document.getElementById('landingGeneratedKey').textContent.trim();
+            if (!key) return;
+            if (navigator.clipboard) navigator.clipboard.writeText(key);
+            const notice = document.getElementById('landingKeyNotice');
+            notice.textContent = 'Key copied.';
+            notice.style.color = '#86efac';
+        }
+
+        // ─── Public landing experience ───
+        const landingEscape = value => String(value ?? '').replace(/[&<>'"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[c]));
+        const landingCount = value => Number(value || 0).toLocaleString();
+        const landingDate = value => value ? new Date(value).toLocaleString([], { dateStyle:'medium', timeStyle:'short' }) : 'Recently';
+
+        function openDashboardForPlan(plan) {
+            localStorage.setItem('blacklord_pending_plan', plan);
+            window.location.href = `dashboard.html#subscription-section`;
+        }
+
+        function renderLandingStatus(data) {
+            const bots = (data?.bots || []).filter(bot => !['mzazi', 'nxra'].includes(String(bot.slug || '').toLowerCase()));
+            const online = bots.filter(bot => ['online','running','active'].includes(String(bot.status || '').toLowerCase())).length;
+            const uptime = bots.length ? bots.reduce((sum, bot) => sum + Number(bot.uptime || 0), 0) / bots.length : 0;
+            const set = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
+            set('publicActiveBots', online.toLocaleString());
+            set('publicMonitoredBots', bots.length.toLocaleString());
+            set('publicUptime', bots.length ? uptime.toFixed(1) + '%' : '—');
+            set('publicMessages', data.metrics?.messagesToday ? `${landingCount(data.metrics.messagesToday)}+` : '0');
+            set('totalBotsStat', online.toLocaleString());
+            set('publicStatusText', bots.length && online === bots.length ? 'All monitored systems operational' : `${online} of ${bots.length} monitored services online`);
+        }
+
+        async function loadLandingStatus() {
+            try {
+                const response = await fetch('/api/user/status', { cache:'no-store' });
+                const data = await response.json();
+                if (!response.ok || !data.success) throw new Error('Status unavailable');
+                renderLandingStatus(data);
+            } catch (_) {
+                const el = document.getElementById('publicStatusText');
+                if (el) el.textContent = 'Status checks are temporarily unavailable';
+            }
+        }
+
+        async function loadLandingStats() {
+            try {
+                const response = await fetch('/api/user/activity', { cache:'no-store' });
+                const data = await response.json();
+                const activities = Array.isArray(data.activities) ? data.activities : [];
+                const list = document.getElementById('landingActivityList');
+                if (list) list.innerHTML = activities.slice(0, 5).map(item => `<div class="activity-row"><div class="activity-main"><strong>${landingEscape(String(item.action || 'Platform activity').replaceAll('_', ' '))}</strong><small>${landingEscape(item.details || 'A verified builder made progress on Blacklord.')}</small></div><span class="activity-time">${landingEscape(landingDate(item.created_at))}</span></div>`).join('') || '<div class="landing-muted">Platform activity will appear here as builders get started.</div>';
+            } catch (_) {
+                const list = document.getElementById('landingActivityList');
+                if (list) list.innerHTML = '<div class="landing-muted">Activity feed is updating. Check back shortly.</div>';
+            }
+        }
+
+        async function loadLandingLeaderboard() {
+            try {
+                const response = await fetch('/api/user/leaderboard', { cache:'no-store' });
+                const data = await response.json();
+                const rows = Array.isArray(data.leaderboard) ? data.leaderboard : [];
+                const list = document.getElementById('landingLeaderboard');
+                if (list) list.innerHTML = rows.slice(0, 5).map((row, index) => `<div class="rank-row"><div class="rank-main"><strong><span style="color:#facc15;margin-right:0.3rem">#${index + 1}</span>${landingEscape(row.username || 'Blacklord builder')}</strong><small>${Number(row.referrals || 0)} verified referrals</small></div><span class="rank-value">${Number(row.rewards_sd || 0).toFixed(2)} SD</span></div>`).join('') || '<div class="landing-muted">The leaderboard is waiting for its first builders.</div>';
+            } catch (_) {
+                const list = document.getElementById('landingLeaderboard');
+                if (list) list.innerHTML = '<div class="landing-muted">Leaderboard updates are temporarily unavailable.</div>';
+            }
+        }
+
+        async function loadLandingMarketplace() {
+            try {
+                const response = await fetch('/api/user/marketplace/plugins', { cache:'no-store' });
+                const data = await response.json();
+                const plugins = Array.isArray(data.plugins) ? data.plugins : [];
+                const icons = ['fa-reply-all','fa-hand-sparkles','fa-shield-halved','fa-gamepad','fa-wand-magic-sparkles'];
+                const list = document.getElementById('landingMarketplaceGrid');
+                if (list) list.innerHTML = plugins.slice(0, 6).map((plugin, index) => `<article class="market-card"><div class="market-icon"><i class="fas ${icons[index % icons.length]}"></i></div><strong>${landingEscape(plugin.name || 'Bot plugin')}</strong><small>${landingEscape(plugin.description || 'Extend your bot with a ready-made tool.')}</small><span class="market-price">${Number(plugin.price_sd || 0).toFixed(2)} SD · ${landingEscape(plugin.category || 'Bot Tools')}</span></article>`).join('') || '<div class="landing-muted">Marketplace tools are being prepared.</div>';
+            } catch (_) {
+                const list = document.getElementById('landingMarketplaceGrid');
+                if (list) list.innerHTML = '<div class="landing-muted">Marketplace preview is temporarily unavailable.</div>';
+            }
+        }
+
+        async function subscribeLanding(event) {
+            event.preventDefault();
+            const email = document.getElementById('landingNewsletterEmail')?.value.trim();
+            const message = document.getElementById('landingNewsletterMsg');
+            if (!email || !message) return;
+            message.style.display = 'block';
+            message.textContent = 'Saving your preference…';
+            try {
+                const response = await fetch('/api/user/newsletter', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ email }) });
+                const data = await response.json();
+                if (!response.ok || !data.success) throw new Error(data.error || 'Unable to save your subscription.');
+                message.textContent = data.message || 'You are subscribed to Blacklord updates.';
+                message.style.color = '#86efac';
+                document.getElementById('landingNewsletterEmail').value = '';
+            } catch (error) {
+                message.textContent = error.message;
+                message.style.color = '#fca5a5';
+            }
+        }
+
+        // ─── Init ───
+        document.addEventListener('DOMContentLoaded', function() {
+            loadGlobalBroadcast();
+            loadLandingStatus();
+            loadLandingStats();
+            loadLandingLeaderboard();
+            loadLandingMarketplace();
+            setInterval(loadLandingStatus, 30000);
+            setInterval(loadLandingStats, 45000);
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('openWallet') === '1') {
+                setTimeout(() => openWalletModal(), 250);
+            }
+            if (params.get('register') === '1' && !isRegistered()) {
+                setTimeout(() => openRegistrationModal('Register fast to get your 10 KSH welcome credit.'), 300);
+            }
+            setTimeout(() => showToast('Welcome to BLACKLORD TECH INC', 'info'), 1500);
+        });
+    </script>
+</body>
+</html>

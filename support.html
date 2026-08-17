@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Support Center | BLACKLORD TECH INC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="index.html">
+      <div class="brand-mark">♛</div>
+      <div>
+        <div class="brand-name">BLACKLORD</div>
+        <div class="brand-sub">TECH INC.</div>
+      </div>
+    </a>
+    <nav class="nav">
+      <a href="dashboard.html"><span class="nav-icon"><i class="fas fa-chart-line"></i></span>Dashboard</a>
+      <a href="index.html"><span class="nav-icon"><i class="fas fa-home"></i></span>Main Site</a>
+      <a class="active" href="support.html"><span class="nav-icon"><i class="fas fa-headset"></i></span>Support Center</a>
+      <a href="status.html"><span class="nav-icon"><i class="fas fa-heartbeat"></i></span>System Status</a>
+      <a href="affiliate.html"><span class="nav-icon"><i class="fas fa-users"></i></span>Affiliate</a>
+      <a href="admin.html"><span class="nav-icon"><i class="fas fa-user-shield"></i></span>Admin</a>
+    </nav>
+    <div class="sidebar-footer">
+      <strong>We are here to help</strong>
+      Track your requests in one place.
+    </div>
+  </aside>
+
+  <main class="content">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">Customer care</div>
+        <h1 class="title">Support Center</h1>
+        <p class="subtitle">Ask for help with payments, keys, hosting, or any BLACKLORD service.</p>
+      </div>
+      <div class="user-box">
+        <span id="userLabel">Guest user</span>
+        <span class="avatar"><i class="fas fa-user-circle"></i></span>
+      </div>
+    </header>
+
+    <div class="grid grid-2">
+      <section class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+          <h2 style="color:var(--gold); font-family:'Playfair Display',serif; font-style:italic;">Your Tickets</h2>
+          <button class="btn green" onclick="newTicket()"><i class="fas fa-plus"></i> New Ticket</button>
+        </div>
+        <div id="ticketList" class="list">
+          <div class="empty">Enter your phone number to load tickets.</div>
+        </div>
+        <div class="field" style="margin-top:1.5rem">
+          <label for="phone">Phone Number</label>
+          <input id="phone" placeholder="e.g. 254712345678">
+        </div>
+        <button class="btn gold" style="margin-top:1rem; width:100%" onclick="loadTickets()"><i class="fas fa-search"></i> Load Tickets</button>
+      </section>
+
+      <section class="card" id="newTicketCard">
+        <h2 style="color:var(--gold); font-family:'Playfair Display',serif; font-style:italic; margin-bottom:0.5rem;">New Support Ticket</h2>
+        <p class="stat-note" style="margin-bottom:1.5rem">Tell us what happened and our team will reply shortly.</p>
+        <div id="notice" class="notice"></div>
+        <div class="grid" style="gap:1rem">
+          <div class="field">
+            <label for="username">Username (Optional)</label>
+            <input id="username" placeholder="Your username">
+          </div>
+          <div class="field">
+            <label for="category">Category</label>
+            <select id="category">
+              <option>General</option>
+              <option>Wallet / Payment</option>
+              <option>Activation Key</option>
+              <option>Hosting / Server</option>
+              <option>Feature Request</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="subject">Subject</label>
+            <input id="subject" maxlength="120" placeholder="What do you need help with?">
+          </div>
+          <div class="field">
+            <label for="message">Message</label>
+            <textarea id="message" maxlength="4000" placeholder="Describe the issue clearly..."></textarea>
+          </div>
+        </div>
+        <button class="btn green" style="margin-top:1.5rem; width:100%" onclick="createTicket()"><i class="fas fa-paper-plane"></i> Submit Ticket</button>
+      </section>
+    </div>
+
+    <section class="card" style="margin-top:2rem">
+      <div style="margin-bottom:1.5rem">
+        <h2 id="threadTitle" style="color:var(--gold); font-family:'Playfair Display',serif; font-style:italic;">Conversation</h2>
+        <span class="stat-note">Select a ticket to view the message history</span>
+      </div>
+      <div id="thread" class="thread">
+        <div class="empty">No ticket selected.</div>
+      </div>
+      <div class="field" style="margin-top:1.5rem">
+        <label for="reply">Reply to selected ticket</label>
+        <textarea id="reply" maxlength="4000" placeholder="Write your reply here..."></textarea>
+      </div>
+      <button class="btn gold" style="margin-top:1rem" onclick="sendReply()"><i class="fas fa-reply"></i> Send Reply</button>
+    </section>
+
+    <div class="footer-note" style="margin-top: 3rem; color: #71717a; font-size: 0.8rem; text-align: center;">
+      BLACKLORD TECH INC. · Support requests are linked to your phone number for account privacy.
+    </div>
+  </main>
+</div>
+
+<script>
+const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const date = value => value ? new Date(value).toLocaleString([], {dateStyle:'medium',timeStyle:'short'}) : '—';
+let selectedTicket = null;
+
+const savedPhone = localStorage.getItem('samsung_user_phone') || '';
+document.getElementById('phone').value = savedPhone;
+document.getElementById('username').value = localStorage.getItem('samsung_user_username') || '';
+if (savedPhone) loadTickets();
+
+function notice(text, type = 'error') {
+  const el = document.getElementById('notice');
+  el.textContent = text;
+  el.className = 'notice show ' + type;
+}
+
+function phone() { return document.getElementById('phone').value.trim(); }
+
+function newTicket() {
+  document.getElementById('newTicketCard').scrollIntoView({ behavior: 'smooth' });
+  document.getElementById('subject').focus();
+}
+
+async function loadTickets() {
+  if (!phone()) { notice('Enter the phone number used on your account.'); return; }
+  localStorage.setItem('samsung_user_phone', phone());
+  try {
+    const res = await fetch('/api/user/support?phone=' + encodeURIComponent(phone()));
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Unable to load tickets');
+    
+    document.getElementById('userLabel').textContent = document.getElementById('username').value || phone();
+    document.getElementById('ticketList').innerHTML = (data.tickets || []).length ? data.tickets.map(t => `
+      <button class="row" onclick="openTicket(${t.id})">
+        <span>
+          <span class="row-title">#${t.id}: ${escapeHtml(t.subject)}</span>
+          <span class="row-meta">${escapeHtml(t.category)} · ${date(t.updated_at)}</span>
+        </span>
+        <span class="pill ${escapeHtml(t.status)}">${escapeHtml(t.status)}</span>
+      </button>
+    `).join('') : '<div class="empty">No tickets yet. Create one when you need help.</div>';
+    notice('Tickets loaded.', 'success');
+  } catch (e) {
+    notice(e.message || 'Unable to load tickets.');
+  }
+}
+
+async function openTicket(id) {
+  if (!phone()) return;
+  try {
+    const res = await fetch('/api/user/support?phone=' + encodeURIComponent(phone()) + '&ticketId=' + id);
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Unable to open ticket');
+    
+    selectedTicket = data.ticket;
+    document.getElementById('threadTitle').textContent = 'Ticket #' + data.ticket.id + ': ' + data.ticket.subject;
+    document.getElementById('thread').innerHTML = (data.messages || []).map(m => `
+      <div class="bubble ${m.sender_type === 'user' ? 'user' : ''}">
+        ${escapeHtml(m.body)}
+        <small>${escapeHtml(m.sender_name || m.sender_type)} · ${date(m.created_at)}</small>
+      </div>
+    `).join('');
+    document.getElementById('thread').scrollTop = document.getElementById('thread').scrollHeight;
+  } catch (e) {
+    notice(e.message || 'Unable to open ticket.');
+  }
+}
+
+async function createTicket() {
+  if (!phone()) { notice('Enter your phone number first.'); return; }
+  const subject = document.getElementById('subject').value.trim();
+  const message = document.getElementById('message').value.trim();
+  if (subject.length < 3 || !message) { notice('Add a subject and message before submitting.'); return; }
+  
+  try {
+    const res = await fetch('/api/user/support', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        phone: phone(),
+        username: document.getElementById('username').value.trim(),
+        category: document.getElementById('category').value,
+        subject,
+        message
+      })
+    });
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Unable to create ticket');
+    
+    document.getElementById('subject').value = '';
+    document.getElementById('message').value = '';
+    notice('Ticket #' + data.ticket.id + ' created successfully.', 'success');
+    await loadTickets();
+    openTicket(data.ticket.id);
+  } catch (e) {
+    notice(e.message || 'Unable to create ticket.');
+  }
+}
+
+async function sendReply() {
+  if (!selectedTicket) { notice('Select a ticket first.'); return; }
+  const message = document.getElementById('reply').value.trim();
+  if (!message) { notice('Write a reply first.'); return; }
+  
+  try {
+    const res = await fetch('/api/user/support', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'message',
+        ticketId: selectedTicket.id,
+        phone: phone(),
+        username: document.getElementById('username').value.trim(),
+        message
+      })
+    });
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Unable to send reply');
+    
+    document.getElementById('reply').value = '';
+    await openTicket(selectedTicket.id);
+    await loadTickets();
+    notice('Reply sent.', 'success');
+  } catch (e) {
+    notice(e.message || 'Unable to send reply.');
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Community Features | BLACKLORD TECH INC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="index.html">
+      <div class="brand-mark">♛</div>
+      <div>
+        <div class="brand-name">BLACKLORD</div>
+        <div class="brand-sub">TECH INC.</div>
+      </div>
+    </a>
+    <nav class="nav">
+      <a href="dashboard.html"><span class="nav-icon"><i class="fas fa-chart-line"></i></span>Dashboard</a>
+      <a href="index.html"><span class="nav-icon"><i class="fas fa-home"></i></span>Main Site</a>
+      <a href="support.html"><span class="nav-icon"><i class="fas fa-headset"></i></span>Support Center</a>
+      <a href="status.html"><span class="nav-icon"><i class="fas fa-heartbeat"></i></span>System Status</a>
+      <a href="affiliate.html"><span class="nav-icon"><i class="fas fa-users"></i></span>Affiliate</a>
+      <a href="admin.html"><span class="nav-icon"><i class="fas fa-user-shield"></i></span>Admin</a>
+    </nav>
+    <div class="sidebar-footer">
+      <strong>Elite Community</strong>
+      Rewards, transfers & add-ons.
+    </div>
+  </aside>
+
+  <main class="content">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">Community tools</div>
+        <h1 class="title">Rewards & Transfers</h1>
+        <p class="subtitle">Manage your SD balance, reward your community, and upgrade your services.</p>
+      </div>
+      <div class="user-box">
+        <span id="userLabel">Guest user</span>
+        <span class="avatar"><i class="fas fa-users"></i></span>
+      </div>
+    </header>
+
+    <div class="grid grid-2">
+      <!-- RESELLER CARD -->
+      <section class="card">
+        <h2 style="color:var(--gold); font-family:'Playfair Display',serif; font-style:italic; margin-bottom:1rem;">Reseller Program</h2>
+        <div id="resellerSummary" class="stat-note" style="margin-bottom:1rem;">Enter your phone number to load reseller status.</div>
+        <div class="field">
+          <label>Phone Number</label>
+          <div class="form-grid">
+            <input id="phone" placeholder="e.g. 254712345678" />
+            <button class="btn gold" onclick="loadCommunity()"><i class="fas fa-search"></i> Load</button>
+          </div>
+        </div>
+        <div id="resellerStats" class="grid grid-3" style="display:none; margin-top:1.5rem;">
+          <div class="stat">
+            <div class="stat-label">Tier</div>
+            <div class="stat-number" id="tier" style="font-size:1.2rem;">Standard</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Total Top-ups</div>
+            <div class="stat-number" id="topupTotal" style="font-size:1.2rem;">0 SD</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Bonus</div>
+            <div class="stat-number" id="bonusPercent" style="font-size:1.2rem;">0%</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEND SD CARD -->
+      <section class="card">
+        <h2 style="color:var(--gold); font-family:'Playfair Display',serif; font-style:italic; margin-bottom:1rem;">Send SD</h2>
+        <p class="stat-note" style="margin-bottom:1rem;">Transfer SD instantly to another phone number.</p>
+        <div class="grid" style="gap:1rem">
+          <div class="field">
+            <label>Recipient Phone</label>
+            <input id="recipientPhone" placeholder="Recipient phone" />
+          </div>
+          <div class="field">
+            <label>Amount (SD)</label>
+            <input id="transferAmount" type="number" min="0.01" step="0.01" placeholder="0.00" />
+          </div>
+        </div>
+        <button class="btn green" style="margin-top:1.5rem; width:100%" onclick="sendTransfer()"><i class="fas fa-paper-plane"></i> Send Balance</button>
+        <div id="transferMsg" class="notice"></div>
+      </section>
+    </div>
+
+    <div class="grid grid-2" style="margin-top:2rem;">
+      <!-- GIFT CARDS -->
+      <section class="card">
+        <h2 style="color:var(--gold); font-family:'Playfair Display',serif; font-style:italic; margin-bottom:1rem;">Gift Cards</h2>
+        <p class="stat-note" style="margin-bottom:1rem;">Redeem a gift card code to credit your wallet.</p>
+        <div class="form-grid">
+          <div class="field">
+            <label>Gift Code</label>
+            <input id="giftCode" placeholder="BL-GIFT-XXXXXX" />
+          </div>
+          <div style="display:flex; align-items:end">
+            <button class="btn gold" onclick="redeemGiftCard()">Redeem</button>
+          </div>
+        </div>
+        <div id="giftMsg" class="notice"></div>
+      </section>
+
+      <!-- TRIAL CARD -->
+      <section class="card">
+        <h2 style="color:var(--gold); font-family:'Playfair Display',serif; font-style:italic; margin-bottom:1rem;">3-Hour Trial</h2>
+        <p class="stat-note" style="margin-bottom:1.5rem;">Registered users can claim one small hosting panel for three hours.</p>
+        <a class="btn outline" style="width:100%" href="trial.html"><i class="fas fa-clock"></i> Claim Trial Now</a>
+      </section>
+    </div>
+
+    <!-- ADD-ONS MARKETPLACE -->
+    <section class="card" style="margin-top:2rem;" id="addons-section">
+      <h2 style="color:var(--gold); font-family:'Playfair Display',serif; font-style:italic; margin-bottom:1.5rem;">Add-ons Marketplace</h2>
+      <div id="addons" class="grid grid-3">
+        <div class="empty"><i class="fas fa-spinner fa-spin"></i> Loading add-ons...</div>
+      </div>
+      <div id="addonMsg" class="notice"></div>
+    </section>
+
+    <div class="footer-note" style="margin-top: 5rem; color: #71717a; font-size: 0.8rem; text-align: center;">
+      BLACKLORD TECH INC. · Community features are English-only.
+    </div>
+  </main>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+  const phoneValue = () => $('phone').value.trim();
+  const showNotice = (id, message, type = 'success') => { 
+    const el = $(id);
+    el.textContent = message;
+    el.className = 'notice show ' + type;
+  };
+
+  async function loadCommunity() {
+    const phone = phoneValue();
+    if (!phone) return showNotice('transferMsg', 'Enter your phone number first.', 'error');
+    localStorage.setItem('samsung_user_phone', phone);
+    try {
+      const res = await fetch('/api/user/dashboard?phone=' + encodeURIComponent(phone));
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || 'Could not load account');
+      const user = data.user || {};
+      $('resellerStats').style.display = 'grid';
+      $('tier').textContent = user.reseller_tier || 'Standard';
+      $('topupTotal').textContent = Number(user.total_topup_sd || 0).toFixed(2) + ' SD';
+      $('bonusPercent').textContent = Number(user.reseller_bonus_percent || 0).toFixed(1) + '%';
+      $('userLabel').textContent = user.username || phone;
+      $('resellerSummary').textContent = 'Account loaded for ' + (user.username || phone);
+    } catch (e) { showNotice('transferMsg', e.message, 'error'); }
+  }
+
+  async function sendTransfer() {
+    try {
+      const res = await fetch('/api/user/transfer', { 
+        method:'POST', 
+        headers:{'Content-Type':'application/json'}, 
+        body:JSON.stringify({ 
+          phone:phoneValue(), 
+          recipientPhone:$('recipientPhone').value.trim(), 
+          amountSD:Number($('transferAmount').value) 
+        }) 
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || 'Transfer failed');
+      showNotice('transferMsg', 'Transfer complete. Ref: ' + data.reference);
+      $('transferAmount').value = ''; 
+    } catch (e) { showNotice('transferMsg', e.message, 'error'); }
+  }
+
+  async function redeemGiftCard() {
+    try {
+      const res = await fetch('/api/user/gift-card', { 
+        method:'POST', 
+        headers:{'Content-Type':'application/json'}, 
+        body:JSON.stringify({ 
+          action:'redeem', 
+          phone:phoneValue(), 
+          code:$('giftCode').value.trim() 
+        }) 
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || 'Redemption failed');
+      showNotice('giftMsg', 'Gift card redeemed: +' + Number(data.amountSD).toFixed(2) + ' SD.');
+      $('giftCode').value = '';
+    } catch (e) { showNotice('giftMsg', e.message, 'error'); }
+  }
+
+  async function loadAddons() {
+    const res = await fetch('/api/user/addons'); 
+    const data = await res.json();
+    $('addons').innerHTML = data.addons?.length ? data.addons.map(addon => `
+      <article class="card stat">
+        <div class="stat-label">${escapeHtml(addon.name)}</div>
+        <p class="stat-note" style="margin:0.5rem 0;">${escapeHtml(addon.description || '')}</p>
+        <div class="stat-number" style="font-size:1.2rem; margin-bottom:1rem;">${Number(addon.price_sd).toFixed(2)} <small>SD</small></div>
+        <button class="btn green" style="width:100%" onclick="buyAddon(${addon.id})">Buy Add-on</button>
+      </article>
+    `).join('') : '<div class="empty">No add-ons available.</div>';
+  }
+
+  async function buyAddon(addonId) {
+    try { 
+      const res = await fetch('/api/user/addons', { 
+        method:'POST', 
+        headers:{'Content-Type':'application/json'}, 
+        body:JSON.stringify({ phone:phoneValue(), addonId }) 
+      }); 
+      const data = await res.json(); 
+      if (!res.ok || !data.success) throw new Error(data.error || 'Purchase failed'); 
+      showNotice('addonMsg', data.addon + ' purchased successfully!'); 
+    } catch (e) { showNotice('addonMsg', e.message, 'error'); }
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  }
+
+  document.addEventListener('DOMContentLoaded', () => { 
+    $('phone').value = localStorage.getItem('samsung_user_phone') || ''; 
+    loadAddons(); 
+    if ($('phone').value) loadCommunity(); 
+  });
+</script>
+</body>
+</html>

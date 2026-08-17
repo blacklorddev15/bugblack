@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Auto-Renew | BLACKLORD TECH INC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="index.html">
+      <div class="brand-mark">♛</div>
+      <div>
+        <div class="brand-name">BLACKLORD</div>
+        <div class="brand-sub">TECH INC.</div>
+      </div>
+    </a>
+    <nav class="nav">
+      <a href="dashboard.html"><span class="nav-icon"><i class="fas fa-chart-line"></i></span>Dashboard</a>
+      <a href="index.html"><span class="nav-icon"><i class="fas fa-home"></i></span>Main Site</a>
+      <a href="support.html"><span class="nav-icon"><i class="fas fa-headset"></i></span>Support Center</a>
+      <a href="status.html"><span class="nav-icon"><i class="fas fa-heartbeat"></i></span>System Status</a>
+      <a href="affiliate.html"><span class="nav-icon"><i class="fas fa-users"></i></span>Affiliate</a>
+      <a href="admin.html"><span class="nav-icon"><i class="fas fa-user-shield"></i></span>Admin</a>
+    </nav>
+    <div class="sidebar-footer">
+      <strong>Peace of mind</strong>
+      Keep your bots running 24/7.
+    </div>
+  </aside>
+
+  <main class="content">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">Service continuity</div>
+        <h1 class="title">Auto-Renew Settings</h1>
+        <p class="subtitle">Manage automatic billing for your bot hosting and premium services.</p>
+      </div>
+      <div class="user-box">
+        <span id="balanceLabel">0.00 SD</span>
+        <span class="avatar"><i class="fas fa-sync-alt"></i></span>
+      </div>
+    </header>
+
+    <section class="card">
+      <div id="gate" class="notice show info" style="background:rgba(250,204,21,0.05); border-color:rgba(250,204,21,0.2); color:var(--gold-soft);">
+        <i class="fas fa-spinner fa-spin"></i> Loading your renewal settings...
+      </div>
+      
+      <div id="content" style="display:none;">
+        <div class="grid grid-2">
+          <article class="card stat">
+            <div class="stat-label">Global Status</div>
+            <div class="stat-number" id="globalStatus">DISABLED</div>
+            <div style="margin-top:1rem;">
+              <button class="btn green" id="toggleGlobalBtn" onclick="toggleGlobal()">Enable Global</button>
+            </div>
+          </article>
+          <article class="card stat">
+            <div class="stat-label">Active Servers</div>
+            <div class="stat-number" id="serverCount">0</div>
+            <div class="stat-note">Servers with auto-renew active</div>
+          </article>
+        </div>
+
+        <div style="margin-top:2rem;">
+          <h2 style="color:var(--gold); font-family:'Playfair Display',serif; font-style:italic; margin-bottom:1rem;">Managed Services</h2>
+          <div id="serverList" class="list">
+            <div class="empty">No active servers found.</div>
+          </div>
+        </div>
+
+        <div class="notice show success" style="margin-top:2rem;">
+          <i class="fas fa-info-circle"></i> Auto-renew will automatically deduct the renewal price from your SD balance 24 hours before your service expires.
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-note" style="margin-top: 3rem; color: #71717a; font-size: 0.8rem; text-align: center;">
+      BLACKLORD TECH INC. · You can cancel auto-renewal at any time without losing your service.
+    </div>
+  </main>
+</div>
+
+<script>
+function phone() { return localStorage.getItem('blacklord_registered_phone') || localStorage.getItem('samsung_user_phone'); }
+function showGate(message) { 
+  const gate = document.getElementById('gate');
+  gate.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+  gate.style.display = 'block';
+}
+
+async function loadSettings() {
+  const p = phone();
+  if (!p) { showGate('Register or log in first to manage auto-renewal.'); return; }
+  try {
+    const r = await fetch('/api/user/auto-renew?phone=' + encodeURIComponent(p));
+    const d = await r.json();
+    if (!r.ok || !d.success) throw new Error(d.error || 'Unable to load settings.');
+    
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('content').style.display = 'block';
+    document.getElementById('balanceLabel').textContent = Number(d.balance || 0).toFixed(2) + ' SD';
+    
+    const globalStatus = document.getElementById('globalStatus');
+    const toggleBtn = document.getElementById('toggleGlobalBtn');
+    if (d.enabled) {
+      globalStatus.textContent = 'ENABLED';
+      globalStatus.style.color = 'var(--green)';
+      toggleBtn.textContent = 'Disable Global';
+      toggleBtn.className = 'btn outline';
+    } else {
+      globalStatus.textContent = 'DISABLED';
+      globalStatus.style.color = 'var(--muted)';
+      toggleBtn.textContent = 'Enable Global';
+      toggleBtn.className = 'btn green';
+    }
+    
+    const servers = d.servers || [];
+    document.getElementById('serverCount').textContent = servers.filter(s => s.auto_renew_enabled).length;
+    document.getElementById('serverList').innerHTML = servers.length ? servers.map(s => `
+      <div class="list-item">
+        <div>
+          <strong style="display:block; color:#fff;">${s.bot_type || 'Server'}</strong>
+          <small style="color:var(--muted); font-size:0.7rem;">${s.subdomain || 'no-subdomain'} · Renews at ${Number(s.renewal_price_sd).toFixed(2)} SD</small>
+        </div>
+        <button class="btn ${s.auto_renew_enabled ? 'outline' : 'green'}" style="padding:0.4rem 0.8rem; font-size:0.75rem;" onclick="toggleServer(${s.id}, ${!s.auto_renew_enabled})">
+          ${s.auto_renew_enabled ? 'Disable' : 'Enable'}
+        </button>
+      </div>
+    `).join('') : '<div class="empty">No active servers found.</div>';
+  } catch (e) { showGate(e.message); }
+}
+
+async function toggleGlobal() {
+  const p = phone();
+  const current = document.getElementById('globalStatus').textContent === 'ENABLED';
+  try {
+    const r = await fetch('/api/user/auto-renew', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: p, enabled: !current })
+    });
+    if (!r.ok) throw new Error('Toggle failed');
+    loadSettings();
+  } catch (e) { alert(e.message); }
+}
+
+async function toggleServer(id, enabled) {
+  const p = phone();
+  try {
+    const r = await fetch('/api/user/auto-renew', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: p, serverId: id, enabled: enabled })
+    });
+    if (!r.ok) throw new Error('Toggle failed');
+    loadSettings();
+  } catch (e) { alert(e.message); }
+}
+
+loadSettings();
+</script>
+</body>
+</html>

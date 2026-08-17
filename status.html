@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>System Status | BLACKLORD TECH INC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="index.html">
+      <div class="brand-mark">♛</div>
+      <div>
+        <div class="brand-name">BLACKLORD</div>
+        <div class="brand-sub">TECH INC.</div>
+      </div>
+    </a>
+    <nav class="nav">
+      <a href="dashboard.html"><span class="nav-icon"><i class="fas fa-chart-line"></i></span>Dashboard</a>
+      <a href="index.html"><span class="nav-icon"><i class="fas fa-home"></i></span>Main Site</a>
+      <a href="support.html"><span class="nav-icon"><i class="fas fa-headset"></i></span>Support Center</a>
+      <a class="active" href="status.html"><span class="nav-icon"><i class="fas fa-heartbeat"></i></span>System Status</a>
+      <a href="affiliate.html"><span class="nav-icon"><i class="fas fa-users"></i></span>Affiliate</a>
+      <a href="admin.html"><span class="nav-icon"><i class="fas fa-user-shield"></i></span>Admin</a>
+    </nav>
+    <div class="sidebar-footer">
+      <strong>Monitoring 24/7</strong>
+      Real-time service health tracking.
+    </div>
+  </aside>
+
+  <main class="content">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">Infrastructure monitor</div>
+        <h1 class="title">System Status</h1>
+        <p class="subtitle">A transparent view of the WhatsApp bot services and their latest reported health.</p>
+      </div>
+      <div class="user-box">
+        <span id="checkedAt">Checking now</span>
+        <span class="avatar"><i class="fas fa-circle-check"></i></span>
+      </div>
+    </header>
+
+    <section class="card status-header">
+      <div>
+        <h2><span class="status-dot" id="overallDot"></span><span id="overallText">Checking systems</span></h2>
+        <p id="overallNote" class="stat-note">Loading the latest status report…</p>
+      </div>
+      <button class="btn green" onclick="loadStatus()"><i class="fas fa-sync"></i> Refresh status</button>
+    </section>
+
+    <section class="grid grid-3" id="botGrid">
+      <div class="empty">Loading bot status…</div>
+    </section>
+
+    <section class="grid grid-4" style="margin-top:2rem">
+      <article class="card stat">
+        <div class="stat-label">Total bots</div>
+        <div class="stat-number" id="totalBots">0</div>
+        <div class="stat-note">Monitored services</div>
+      </article>
+      <article class="card stat">
+        <div class="stat-label">Online bots</div>
+        <div class="stat-number" id="onlineBots">0</div>
+        <div class="stat-note">Accepting connections</div>
+      </article>
+      <article class="card stat">
+        <div class="stat-label">Offline bots</div>
+        <div class="stat-number" id="offlineBots">0</div>
+        <div class="stat-note">Needs attention</div>
+      </article>
+      <article class="card stat">
+        <div class="stat-label">Average uptime</div>
+        <div class="stat-number" id="averageUptime">0%</div>
+        <div class="stat-note">Across reported services</div>
+      </article>
+    </section>
+
+    <div class="footer-note" style="margin-top: 3rem; color: #71717a; font-size: 0.8rem; text-align: center;">
+      BLACKLORD TECH INC. · System status values are updated every 30 seconds.
+    </div>
+  </main>
+</div>
+
+<script>
+const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const date = value => value ? new Date(value).toLocaleString([], {dateStyle:'medium',timeStyle:'short'}) : 'Not reported';
+
+async function loadStatus() {
+  try {
+    const res = await fetch('/api/user/status');
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Status unavailable');
+    
+    // Filter out mzazi and nxra just in case
+    const bots = (data.bots || []).filter(b => !['mzazi', 'nxra'].includes(b.slug));
+    
+    const online = bots.filter(b => b.status === 'online').length;
+    const offline = bots.length - online;
+    const avg = bots.length ? bots.reduce((sum, b) => sum + Number(b.uptime || 0), 0) / bots.length : 0;
+    
+    document.getElementById('totalBots').textContent = bots.length;
+    document.getElementById('onlineBots').textContent = online;
+    document.getElementById('offlineBots').textContent = offline;
+    document.getElementById('averageUptime').textContent = avg.toFixed(1) + '%';
+    
+    const overallText = document.getElementById('overallText');
+    const overallDot = document.getElementById('overallDot');
+    
+    if (offline === 0) {
+      overallText.textContent = 'All systems operational';
+      overallDot.className = 'status-dot';
+    } else if (online === 0) {
+      overallText.textContent = 'Service disruption';
+      overallDot.className = 'status-dot offline';
+    } else {
+      overallText.textContent = 'Some services need attention';
+      overallDot.className = 'status-dot offline';
+    }
+    
+    document.getElementById('overallNote').textContent = `${online} of ${bots.length} monitored bots online · Last checked ${date(data.checkedAt)}`;
+    document.getElementById('checkedAt').textContent = `Updated ${new Date().toLocaleTimeString()}`;
+    
+    document.getElementById('botGrid').innerHTML = bots.map(bot => {
+      const status = String(bot.status || 'offline').toLowerCase();
+      const uptime = Math.max(0, Math.min(100, Number(bot.uptime || 0)));
+      return `
+        <article class="card bot-card ${status === 'online' ? '' : 'offline'}">
+          <div class="bot-top">
+            <div class="bot-icon"><i class="fas fa-robot"></i></div>
+            <span class="pill ${escapeHtml(status)}">${escapeHtml(status)}</span>
+          </div>
+          <div class="bot-name">${escapeHtml(bot.name)}</div>
+          <div class="metric">
+            <span>Uptime</span>
+            <strong>${uptime.toFixed(1)}%</strong>
+          </div>
+          <div class="bar"><i style="width:${uptime}%"></i></div>
+          <div class="bot-meta">
+            <span><i class="fas fa-globe"></i> Region: ${escapeHtml(bot.region || 'Not reported')}</span>
+            <span><i class="fas fa-bolt"></i> Last ping: ${bot.last_ping_ms ? escapeHtml(bot.last_ping_ms) + ' ms' : 'No response'}</span>
+            <span><i class="fas fa-clock"></i> Checked: ${date(bot.last_ping_at || bot.updated_at)}</span>
+          </div>
+          ${bot.notes ? `<p style="font-size:0.7rem; color:#71717a; margin-top:0.5rem;">${escapeHtml(bot.notes)}</p>` : ''}
+        </article>`;
+    }).join('') || '<div class="empty">No bots configured.</div>';
+  } catch (e) {
+    document.getElementById('overallText').textContent = 'Status unavailable';
+    document.getElementById('overallNote').textContent = e.message || 'Unable to load the status report.';
+    document.getElementById('botGrid').innerHTML = '<div class="empty">The status service could not be reached. Try refreshing.</div>';
+  }
+}
+
+loadStatus();
+setInterval(loadStatus, 30000);
+</script>
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mzazi Tech Inc. Botz | HACKER TERMINAL PAIRING</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-deep: #030705;
+      --bg-terminal: #07100c;
+      --panel-bg: rgba(0, 15, 5, 0.85);
+      --neon-green: #0f0;
+      --neon-dim: #0a4a2a;
+      --glow-green: rgba(0, 255, 0, 0.25);
+      --text-primary: #b3ffcf;
+      --text-dim: #5f9e6e;
+      --border-neon: #1f3d2c;
+      --danger: #ff3366;
+      --warning: #f5a623;
+      --success: #0f0;
+      --radius: 12px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg-deep);
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding: 1rem;
+    }
+
+    /* Scanline effect */
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(transparent 50%, rgba(0, 255, 0, 0.02) 50%);
+      background-size: 100% 4px;
+      pointer-events: none;
+      z-index: 100;
+      animation: scan 12s linear infinite;
+    }
+
+    @keyframes scan {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 100%; }
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    header {
+      background: var(--panel-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--neon-dim);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 0 15px rgba(0, 255, 0, 0.1);
+    }
+
+    .logo { font-weight: 800; font-size: 1.4rem; color: var(--neon-green); text-shadow: 0 0 8px #0f0; }
+    
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0, 255, 0, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      border: 1px solid var(--neon-dim);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      background: var(--neon-green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px #0f0;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.5; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.5; }
+    }
+
+    .card {
+      background: var(--bg-terminal);
+      border: 1px solid var(--border-neon);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    h2 { font-size: 1.2rem; margin-bottom: 1.5rem; color: var(--neon-green); border-bottom: 1px solid var(--neon-dim); padding-bottom: 0.5rem; }
+
+    .bot-type-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem; }
+    .bot-type-btn {
+      background: rgba(0, 255, 0, 0.05);
+      border: 1px solid var(--neon-dim);
+      color: var(--text-dim);
+      padding: 0.8rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .bot-type-btn.active { background: var(--neon-dim); color: var(--neon-green); border-color: var(--neon-green); box-shadow: 0 0 10px rgba(0, 255, 0, 0.2); }
+
+    .input-group { margin-bottom: 1.5rem; }
+    label { display: block; font-size: 0.8rem; color: var(--text-dim); margin-bottom: 0.5rem; text-transform: uppercase; }
+    input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--neon-dim);
+      padding: 1rem;
+      color: var(--neon-green);
+      font-family: inherit;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      outline: none;
+    }
+    input:focus { border-color: var(--neon-green); box-shadow: 0 0 10px rgba(0, 255, 0, 0.1); }
+
+    .btn-pair {
+      width: 100%;
+      background: var(--neon-green);
+      color: #000;
+      border: none;
+      padding: 1rem;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: all 0.2s;
+    }
+    .btn-pair:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 0 20px var(--glow-green); }
+    .btn-pair:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .terminal-output {
+      background: #000;
+      border: 1px solid var(--neon-dim);
+      border-radius: 8px;
+      padding: 1rem;
+      height: 200px;
+      overflow-y: auto;
+      font-size: 0.85rem;
+      margin-top: 1.5rem;
+    }
+    .terminal-line { margin-bottom: 0.4rem; display: flex; gap: 8px; }
+    .terminal-time { color: var(--neon-dim); }
+    .terminal-msg { color: var(--text-primary); }
+    .terminal-msg.success { color: var(--neon-green); }
+    .terminal-msg.error { color: var(--danger); }
+
+    .pairing-code-container {
+      margin-top: 2rem;
+      text-align: center;
+      display: none;
+    }
+    .pairing-code {
+      display: inline-block;
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--neon-green);
+      background: rgba(0, 255, 0, 0.1);
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      border: 2px dashed var(--neon-green);
+      text-shadow: 0 0 15px #0f0;
+      letter-spacing: 5px;
+      margin-bottom: 1rem;
+    }
+    .pairing-instruction { color: var(--text-dim); font-size: 0.9rem; }
+
+    footer { text-align: center; color: var(--neon-dim); font-size: 0.7rem; margin-top: 2rem; padding-bottom: 2rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">BLACKLORD TECH<span>.BOTZ</span></div>
+      <div class="status-pill">
+        <div class="status-dot"></div>
+        <span>SYSTEM ONLINE</span>
+      </div>
+    </header>
+
+    <div class="card">
+      <h2>WHATSAPP PAIRING TERMINAL</h2>
+      
+      <div class="bot-type-grid" id="botTypeGrid">
+        <button class="bot-type-btn active" data-type="blacklord">BLACKLORD XMD</button>
+        <button class="bot-type-btn" data-type="samsung">SAMSUNG XMD</button>
+        <button class="bot-type-btn" data-type="talkless">TALKLESS ULTRA</button>
+        <button class="bot-type-btn" data-type="skylar">SKYLAR XMD</button>
+        <button class="bot-type-btn" data-type="rita">RITA XMD</button>
+      </div>
+
+      <div class="input-group">
+        <label>Enter WhatsApp Number (with country code)</label>
+        <input type="tel" id="phoneNumber" placeholder="2547XXXXXXXX" autocomplete="off">
+      </div>
+
+      <button class="btn-pair" id="btnPair">INITIALIZE PAIRING</button>
+
+      <div class="terminal-output" id="terminal">
+        <div class="terminal-line">
+          <span class="terminal-time">[09:44:01]</span>
+          <span class="terminal-msg">Waiting for user input...</span>
+        </div>
+      </div>
+
+      <div class="pairing-code-container" id="codeContainer">
+        <div class="pairing-code" id="codeDisplay">XXXX-XXXX</div>
+        <p class="pairing-instruction">Enter this code in WhatsApp > Linked Devices > Link with phone number</p>
+      </div>
+    </div>
+
+    <footer>BLACKLORD TECH INC © 2026 | SECURE PTERODACTYL BRIDGE</footer>
+  </div>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    let selectedType = 'blacklord';
+    let pollInterval;
+
+    // Bot type selection
+    document.querySelectorAll('.bot-type-btn').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.bot-type-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedType = btn.dataset.type;
+        log(`Switched target to ${selectedType.toUpperCase()} module`);
+      };
+    });
+
+    function log(msg, type = '') {
+      const time = new Date().toLocaleTimeString([], { hour12: false });
+      const line = document.createElement('div');
+      line.className = 'terminal-line';
+      line.innerHTML = `<span class="terminal-time">[${time}]</span><span class="terminal-msg ${type}">${msg}</span>`;
+      $('terminal').appendChild(line);
+      $('terminal').scrollTop = $('terminal').scrollHeight;
+    }
+
+    async function pollStatus(requestId) {
+      try {
+        const res = await fetch(`/api/user/pairing/status?requestId=${requestId}`);
+        const data = await res.json();
+        
+        if (data.success && data.pairing) {
+          const p = data.pairing;
+          const status = p.status.toLowerCase();
+          
+          if (p.message && p.message !== 'Pairing request queued for the Pterodactyl bot.') {
+            log(p.message);
+          }
+
+          if (p.pairing_code) {
+            $('codeContainer').style.display = 'block';
+            $('codeDisplay').textContent = p.pairing_code;
+            log(`PAIRING CODE RECEIVED: ${p.pairing_code}`, 'success');
+            clearInterval(pollInterval);
+            $('btnPair').disabled = false;
+            $('btnPair').textContent = 'PAIR ANOTHER';
+            return;
+          }
+
+          if (['failed', 'expired', 'cancelled'].includes(status)) {
+            log(`Pairing failed: ${status}`, 'error');
+            clearInterval(pollInterval);
+            $('btnPair').disabled = false;
+            return;
+          }
+        }
+      } catch (e) {
+        log(`Poll error: ${e.message}`, 'error');
+      }
+    }
+
+    $('btnPair').onclick = async () => {
+      const phone = $('phoneNumber').value.trim();
+      if (!phone) return log('Error: Phone number required', 'error');
+      
+      $('btnPair').disabled = true;
+      $('btnPair').textContent = 'PROCESSING...';
+      $('codeContainer').style.display = 'none';
+      
+      log(`Initializing connection for +${phone}...`);
+      log(`Requesting handshake from Pterodactyl bridge...`);
+
+      try {
+        const res = await fetch('/api/user/pairing/start', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ whatsappPhone: phone, botType: selectedType })
+        });
+        const data = await res.json();
+        
+        if (data.success) {
+          log(`Request accepted. ID: ${data.pairing.request_id}`, 'success');
+          log(`Waiting for bot to generate code...`);
+          pollInterval = setInterval(() => pollStatus(data.pairing.request_id), 2000);
+        } else {
+          throw new Error(data.error || 'Unknown error');
+        }
+      } catch (e) {
+        log(`System Error: ${e.message}`, 'error');
+        $('btnPair').disabled = false;
+        $('btnPair').textContent = 'INITIALIZE PAIRING';
+      }
+    };
+  </script>
+</body>
+</html>

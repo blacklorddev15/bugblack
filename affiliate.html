@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Affiliate & Referral | BLACKLORD TECH INC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="index.html">
+      <div class="brand-mark">♛</div>
+      <div>
+        <div class="brand-name">BLACKLORD</div>
+        <div class="brand-sub">TECH INC.</div>
+      </div>
+    </a>
+    <nav class="nav">
+      <a href="dashboard.html"><span class="nav-icon"><i class="fas fa-chart-line"></i></span>Dashboard</a>
+      <a href="index.html"><span class="nav-icon"><i class="fas fa-home"></i></span>Main Site</a>
+      <a href="support.html"><span class="nav-icon"><i class="fas fa-headset"></i></span>Support Center</a>
+      <a href="status.html"><span class="nav-icon"><i class="fas fa-heartbeat"></i></span>System Status</a>
+      <a class="active" href="affiliate.html"><span class="nav-icon"><i class="fas fa-users"></i></span>Affiliate</a>
+      <a href="admin.html"><span class="nav-icon"><i class="fas fa-user-shield"></i></span>Admin</a>
+    </nav>
+    <div class="sidebar-footer">
+      <strong>Grow with us</strong>
+      Invite friends and earn rewards.
+    </div>
+  </aside>
+
+  <main class="content">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">Affiliate Center</div>
+        <h1 class="title">Affiliate & Referral</h1>
+        <p class="subtitle">Invite other developers and earn a 5% wallet reward on their first top-up.</p>
+      </div>
+      <div class="user-box">
+        <span id="userLabel">Affiliate dashboard</span>
+        <span class="avatar"><i class="fas fa-gem"></i></span>
+      </div>
+    </header>
+
+    <section class="card">
+      <div id="gate" class="notice show info" style="background:rgba(250,204,21,0.05); border-color:rgba(250,204,21,0.2); color:var(--gold-soft);">
+        <i class="fas fa-spinner fa-spin"></i> Loading your referral dashboard...
+      </div>
+      
+      <div id="content" style="display:none;">
+        <div class="grid grid-3">
+          <article class="card stat">
+            <div class="stat-label">Successful Referrals</div>
+            <div class="stat-number" id="referralCount">0</div>
+            <div class="stat-note">Users who registered with your link</div>
+          </article>
+          <article class="card stat">
+            <div class="stat-label">Referral Rewards</div>
+            <div class="stat-number" id="rewardTotal">0.00 SD</div>
+            <div class="stat-note">Total earnings credited to wallet</div>
+          </article>
+          <article class="card stat">
+            <div class="stat-label">Your Referral Code</div>
+            <div class="stat-number" id="referralCode">—</div>
+            <div class="stat-note">Use this to invite others</div>
+          </article>
+        </div>
+
+        <div style="margin-top:2rem;">
+          <div class="field">
+            <label>Share your unique referral link</label>
+            <div class="form-grid">
+              <input id="shareLink" readonly style="font-family:monospace; font-size:0.85rem;">
+              <button class="btn green" onclick="copyLink()"><i class="fas fa-copy"></i> Copy Link</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="notice show success" style="margin-top:2rem;">
+          <i class="fas fa-info-circle"></i> Your referral link is tied to your account. The referred user still receives the 10 KSH registration bonus upon joining.
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-note" style="margin-top: 3rem; color: #71717a; font-size: 0.8rem; text-align: center;">
+      BLACKLORD TECH INC. · Affiliate rewards are credited automatically after verification.
+    </div>
+  </main>
+</div>
+
+<script>
+function phone() { return localStorage.getItem('blacklord_registered_phone') || localStorage.getItem('samsung_user_phone'); }
+function showGate(message) { 
+  const gate = document.getElementById('gate');
+  gate.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+  gate.style.display = 'block';
+}
+
+async function loadAffiliate() {
+  const p = phone();
+  if (!p) {
+    showGate('Register or log in first to access the Affiliate Center.');
+    return;
+  }
+  try {
+    const r = await fetch('/api/user/affiliate?phone=' + encodeURIComponent(p));
+    const d = await r.json();
+    if (!r.ok || !d.success) throw new Error(d.error || 'Unable to load referral data.');
+    
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('content').style.display = 'block';
+    document.getElementById('referralCount').textContent = d.referrals.referrals || 0;
+    document.getElementById('rewardTotal').textContent = Number(d.referrals.rewards_sd || 0).toFixed(2) + ' SD';
+    document.getElementById('referralCode').textContent = d.user.referral_code || '—';
+    document.getElementById('shareLink').value = location.origin + '/index.html?ref=' + encodeURIComponent(d.user.referral_code || '');
+  } catch (e) {
+    showGate(e.message);
+  }
+}
+
+async function copyLink() {
+  await navigator.clipboard.writeText(document.getElementById('shareLink').value);
+  alert('Referral link copied to clipboard!');
+}
+
+loadAffiliate();
+</script>
+</body>
+</html>

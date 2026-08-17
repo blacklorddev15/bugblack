@@ -1,0 +1,16 @@
+{
+  "crons": [
+    { "path": "/api/cron/auto-renew", "schedule": "0 0 * * *" }
+  ],
+  "rewrites": [
+    { "source": "/api/admin/:path*", "destination": "/api/admin-handler.js" },
+    { "source": "/api/user/:path*", "destination": "/api/user-handler.js" },
+    { "source": "/api/dashboard/:path*", "destination": "/api/dashboard-handler.js" },
+    { "source": "/api/domains/:path*", "destination": "/api/domain-handler.js" },
+    { "source": "/api/c2b/:path*", "destination": "/api/payment-handler.js" },
+    { "source": "/api/paystack/:path*", "destination": "/api/payment-handler.js" },
+    { "source": "/api/mpesa/stk/:path*", "destination": "/api/payment-handler.js" },
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/(.*)", "destination": "/$1" }
+  ]
+}

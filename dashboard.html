@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Dashboard | BLACKLORD TECH INC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Reference rearrangement visual styles matching user screenshot */
+    .dashboard-reorder-wrap { display: flex; flex-direction: column; gap: 1.5rem; }
+    .dash-welcome-card { display: flex; align-items: center; justify-content: space-between; background: rgba(21,21,24,0.92); border: 1px solid var(--line); border-radius: 1rem; padding: 1.25rem 1.5rem; }
+    .dash-welcome-left { display: flex; align-items: center; gap: 1rem; }
+    .dash-welcome-avatar { width: 48px; height: 48px; border-radius: 12px; background: rgba(250,204,21,0.12); color: var(--gold); display: flex; align-items: center; justify-content: font-size: 1.2rem; font-weight: 700; }
+    .dash-action-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+    .dash-action-tile { background: rgba(21,21,24,0.92); border: 1px solid var(--line); border-radius: 1rem; padding: 1.2rem; text-align: left; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; gap: 0.4rem; color: #fff; }
+    .dash-action-tile:hover { border-color: var(--gold); background: rgba(250,204,21,0.04); }
+    .dash-action-tile i { font-size: 1.25rem; color: var(--gold); margin-bottom: 0.2rem; }
+    .dash-balance-card { background: rgba(21,21,24,0.95); border: 1px solid var(--line); border-radius: 1rem; padding: 1.5rem; position: relative; overflow: hidden; }
+    .dash-balance-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+    .dash-balance-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.2rem; }
+    .dash-balance-number { font-size: 2.2rem; font-weight: 800; color: #fff; }
+    .dash-balance-sub { color: var(--muted); font-size: 0.9rem; margin-top: 0.15rem; }
+    .dash-wave-graphic { width: 100%; height: 60px; margin-top: 1rem; background: radial-gradient(circle at center, rgba(239,68,68,0.15) 0%, transparent 70%); position: relative; }
+    .dash-wave-graphic svg { width: 100%; height: 100%; }
+    .dash-stats-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+    .dash-stats-tile { background: rgba(21,21,24,0.92); border: 1px solid var(--line); border-radius: 1rem; padding: 1.25rem; text-align: center; }
+    .dash-stats-tile .val { font-size: 1.8rem; font-weight: 800; color: var(--gold); margin: 0.2rem 0; }
+    .dash-stats-tile .lbl { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  </style>
+</head>
+<body class="dashboard-page">
+<div class="shell">
+  <aside class="sidebar" id="dashboardSidebar">
+    <a class="brand" href="index.html">
+      <div class="brand-mark">♛</div>
+      <div>
+        <div class="brand-name">BLACKLORD</div>
+        <div class="brand-sub">TECH INC.</div>
+      </div>
+    </a>
+    <nav class="nav">
+      <a class="active" href="dashboard.html"><span class="nav-icon"><i class="fas fa-chart-line"></i></span>Dashboard</a>
+      <a href="#panels-section" onclick="toggleDashboardMenu(false)"><span class="nav-icon"><i class="fas fa-server"></i></span>Panels</a>
+      <a href="#bots-section" onclick="toggleDashboardMenu(false)"><span class="nav-icon"><i class="fas fa-robot"></i></span>Bots</a>
+      <a href="#pairingCard" onclick="toggleDashboardMenu(false)"><span class="nav-icon"><i class="fas fa-link"></i></span>Pairing</a>
+      <a href="#analytics-section" onclick="toggleDashboardMenu(false)"><span class="nav-icon"><i class="fas fa-chart-area"></i></span>Analytics</a>
+      <a href="#announcements-section" onclick="toggleDashboardMenu(false)"><span class="nav-icon"><i class="fas fa-bullhorn"></i></span>Announcements</a>
+      <a href="#domain-workspace" onclick="toggleDashboardMenu(false)"><span class="nav-icon"><i class="fas fa-globe"></i></span>Subdomains</a>
+      <a href="#servers-section" onclick="toggleDashboardMenu(false)"><span class="nav-icon"><i class="fas fa-microchip"></i></span>My Servers</a>
+      <a href="#webhooks-section" onclick="toggleDashboardMenu(false)"><span class="nav-icon"><i class="fas fa-plug"></i></span>Webhooks</a>
+      <a href="#marketplace-section" onclick="toggleDashboardMenu(false)"><span class="nav-icon"><i class="fas fa-store"></i></span>Marketplace</a>
+      <a href="#auto-topup-section" onclick="toggleDashboardMenu(false)"><span class="nav-icon"><i class="fas fa-wallet"></i></span>Auto-Topup</a>
+      <a href="#support-section" onclick="toggleDashboardMenu(false)"><span class="nav-icon"><i class="fas fa-headset"></i></span>Support Tickets</a>
+      <a href="#developer-section" onclick="toggleDashboardMenu(false)"><span class="nav-icon"><i class="fas fa-code"></i></span>Developer API</a>
+      <a href="#api-sandbox-section" onclick="toggleDashboardMenu(false)"><span class="nav-icon"><i class="fas fa-terminal"></i></span>API Sandbox</a>
+      <a href="#bot-config-section" onclick="toggleDashboardMenu(false)"><span class="nav-icon"><i class="fas fa-sliders"></i></span>Bot Config</a>
+      <a href="#health-section" onclick="toggleDashboardMenu(false)"><span class="nav-icon"><i class="fas fa-heart-pulse"></i></span>Bot Health</a>
+      <a href="#plugin-manager-section" onclick="toggleDashboardMenu(false)"><span class="nav-icon"><i class="fas fa-puzzle-piece"></i></span>Plugin Manager</a>
+      <a href="#leaderboard-section" onclick="toggleDashboardMenu(false)"><span class="nav-icon"><i class="fas fa-ranking-star"></i></span>Leaderboard</a>
+      <a href="#referrals-section" onclick="toggleDashboardMenu(false)"><span class="nav-icon"><i class="fas fa-users"></i></span>Referrals</a>
+      <a href="index.html"><span class="nav-icon"><i class="fas fa-home"></i></span>Main Site</a>
+      <a href="support.html"><span class="nav-icon"><i class="fas fa-circle-question"></i></span>Support Center</a>
+      <a href="status.html"><span class="nav-icon"><i class="fas fa-heartbeat"></i></span>System Status</a>
+      <a href="admin.html"><span class="nav-icon"><i class="fas fa-user-shield"></i></span>Admin</a>
+    </nav>
+    <div class="sidebar-footer">
+      <strong>BLACKLORD ELITE</strong>
+      Wallet, keys, and support in one place.
+    </div>
+  </aside>
+
+  <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true" onclick="toggleDashboardMenu(false)"></div>
+
+  <main class="content">
+    <header class="topbar">
+      <div class="topbar-heading">
+        <button class="sidebar-menu-toggle" id="sidebarMenuToggle" type="button" title="Open dashboard menu" aria-label="Open dashboard menu" aria-controls="dashboardSidebar" aria-expanded="false" onclick="toggleDashboardMenu()">
+          <i class="fas fa-bars" aria-hidden="true"></i>
+        </button>
+        <div>
+          <div class="eyebrow">BWM XMD SMM</div>
+          <h1 class="title" id="welcomeUserTitle">Welcome back, Guest</h1>
+          <p class="subtitle">See your wallet, active keys, hosting services, and recent activity.</p>
+        </div>
+      </div>
+      <div class="user-box">
+        <span id="userLabel">KE</span>
+        <span class="avatar"><i class="fas fa-crown"></i></span>
+      </div>
+    </header>
+
+    <div class="dashboard-reorder-wrap">
+      <!-- 1. WELCOME CARD -->
+      <section class="dash-welcome-card">
+        <div class="dash-welcome-left">
+          <div class="dash-welcome-avatar"><i class="fas fa-robot"></i></div>
+          <div>
+            <div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em;">Dashboard</div>
+            <div style="font-weight:700; font-size:1.1rem; color:#fff;" id="welcomeBannerName">Welcome back, Guest</div>
+          </div>
+        </div>
+        <div style="font-size:0.85rem; color:var(--gold); font-weight:600; display:flex; align-items:center; gap:0.3rem;">
+          <i class="fas fa-globe"></i> KSH <i class="fas fa-chevron-down" style="font-size:0.7rem;"></i>
+        </div>
+      </section>
+
+      <!-- 2. TWO ACTION TILES -->
+      <div class="dash-action-grid">
+        <button class="dash-action-tile" type="button" onclick="location.href='#panels-section'">
+          <i class="fas fa-cloud"></i>
+          <strong style="font-size:0.95rem">Deploy Bots</strong>
+          <span style="font-size:0.75rem; color:var(--muted)">Watch tutorials</span>
+        </button>
+        <button class="dash-action-tile" type="button" onclick="location.href='#marketplace-section'">
+          <i class="fas fa-bullhorn"></i>
+          <strong style="font-size:0.95rem">SMM Boost</strong>
+          <span style="font-size:0.75rem; color:var(--muted)">Likes, follows &amp; more</span>
+        </button>
+      </div>
+
+      <!-- 3. TOTAL BALANCE CARD WITH WAVE GRAPH -->
+      <section class="dash-balance-card">
+        <div class="dash-balance-header">
+          <span style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em;"><i class="fas fa-wallet"></i> Total Balance</span>
+          <span style="font-size:0.75rem; color:var(--red); font-weight:600;"><i class="fas fa-arrow-trend-down"></i> -16.0%</span>
+        </div>
+        <div class="dash-balance-actions">
+          <button class="btn outline tiny-btn" type="button" onclick="location.href='app.html'"><i class="fas fa-mobile-screen"></i> App</button>
+          <button class="btn outline tiny-btn" type="button" onclick="location.href='#marketplace-section'"><i class="fas fa-right-left"></i> Sell XD</button>
+          <button class="btn green tiny-btn" type="button" onclick="location.href='#phoneCard'"><i class="fas fa-wallet"></i> Top Up</button>
+        </div>
+        <div class="dash-balance-number" id="balance">42 <small style="font-size:1rem; color:var(--gold)">XD</small></div>
+        <div class="dash-balance-sub">58.16 KSH</div>
+        <div class="dash-wave-graphic">
+          <svg viewBox="0 0 500 80" preserveAspectRatio="none">
+            <path d="M0,40 Q62.5,10 125,40 T250,40 T375,40 T500,40 V80 H0 Z" fill="rgba(239, 68, 68, 0.08)"></path>
+            <path d="M0,40 Q62.5,10 125,40 T250,40 T375,40 T500,40" fill="none" stroke="#ef4444" stroke-width="2.5"></path>
+          </svg>
+        </div>
+      </section>
+
+      <!-- 4. TOTAL BOTS & ACTIVE BOTS TILES -->
+      <div class="dash-stats-grid">
+        <article class="dash-stats-tile">
+          <i class="fas fa-microchip" style="color:var(--gold); font-size:1.2rem; margin-bottom:0.2rem;"></i>
+          <div class="val" id="serversCount">0</div>
+          <div class="lbl">Total Bots</div>
+        </article>
+        <article class="dash-stats-tile">
+          <i class="fas fa-cloud-arrow-up" style="color:var(--green); font-size:1.2rem; margin-bottom:0.2rem;"></i>
+          <div class="val" id="activeBotsCount">0</div>
+          <div class="lbl">Active Bots</div>
+        </article>
+      </div>
+
+      <!-- 5. SMM ORDERS & REFERRALS TILES -->
+      <div class="dash-stats-grid">
+        <article class="dash-stats-tile">
+          <i class="fas fa-bag-shopping" style="color:#38bdf8; font-size:1.2rem; margin-bottom:0.2rem;"></i>
+          <div class="val" id="smmOrdersCount">0</div>
+          <div class="lbl">SMM Orders</div>
+        </article>
+        <article class="dash-stats-tile">
+          <i class="fas fa-users" style="color:var(--gold); font-size:1.2rem; margin-bottom:0.2rem;"></i>
+          <div class="val" id="keysCount">0</div>
+          <div class="lbl">Referrals</div>
+        </article>
+      </div>
+
+      <!-- 6. ORDER STACKER -->
+      <section class="card dashboard-section">
+        <div class="card-heading">
+          <div>
+            <div class="eyebrow">Status tracking</div>
+            <h2 class="section-title">Order Stacker</h2>
+          </div>
+        </div>
+        <div class="grid grid-3" style="gap:1rem;">
+          <div class="dash-stats-tile"><i class="fas fa-circle-check" style="color:var(--green)"></i><div class="val" id="orderCompletedCount">0</div><div class="lbl">Completed</div></div>
+          <div class="dash-stats-tile"><i class="fas fa-clock" style="color:var(--gold)"></i><div class="val" id="orderProcessingCount">0</div><div class="lbl">Processing</div></div>
+          <div class="dash-stats-tile"><i class="fas fa-circle-xmark" style="color:var(--red)"></i><div class="val" id="orderFailedCount">0</div><div class="lbl">Failed</div></div>
+        </div>
+      </section>
+
+      <!-- 7. BUY OFFERS & REFER & EARN -->
+      <div class="grid grid-2">
+        <section class="card">
+          <div class="card-heading"><h3>Buy Offers</h3></div>
+          <div style="display:flex; flex-direction:column; gap:0.75rem;">
+            <div style="background:rgba(250,204,21,0.06); border:1px solid var(--line); border-radius:0.75rem; padding:0.9rem; display:flex; justify-content:space-between; align-items:center;">
+              <strong>1,000xds</strong>
+              <span style="color:var(--green); font-weight:700;">+250xds</span>
+            </div>
+            <div style="background:rgba(250,204,21,0.06); border:1px solid var(--line); border-radius:0.75rem; padding:0.9rem; display:flex; justify-content:space-between; align-items:center;">
+              <strong>2,000xds</strong>
+              <span style="color:var(--green); font-weight:700;">+500xds</span>
+            </div>
+          </div>
+          <span class="stat-note" style="display:block; margin-top:0.75rem; text-align:center;">Tap to claim your free coins</span>
+        </section>
+        <section class="card">
+          <div class="card-heading"><h3>Refer &amp; Earn</h3></div>
+          <p class="stat-note" style="margin-bottom:1rem;">Earn 5 XD 6.46 KSH for every deposit your referrals make!</p>
+          <a class="btn green" href="affiliate.html" style="display:inline-flex; align-items:center; justify-content:center; gap:0.5rem;"><i class="fas fa-arrow-right"></i> Start earning</a>
+        </section>
+      </div>
+
+      <!-- 8. PANEL SERVER TUTORIAL -->
+      <section class="card" style="text-align:center; padding:1.5rem;">
+        <i class="fas fa-server" style="font-size:2rem; color:var(--gold); margin-bottom:0.5rem;"></i>
+        <h3 style="font-size:1.1rem; font-weight:700; color:#fff;">Panel Server Tutorial</h3>
+        <p class="stat-note" style="margin:0.25rem 0 1rem 0;">Panel Server Setup &amp; Guide</p>
+        <a class="btn outline small-btn" href="docs.html">View Guide</a>
+      </section>
+
+      <!-- ORIGINAL FUNCTIONAL SECTIONS PRESERVED -->
+      <section class="card dashboard-section pairing-section" id="pairingCard">
+        <div class="card-heading">
+          <div>
+            <div class="eyebrow">Connect your number</div>
+            <h2 class="section-title">Pair WhatsApp Bot</h2>
+            <span class="stat-note">Choose a bot, enter your WhatsApp number, and generate a pairing code.</span>
+          </div>
+        </div>
+        <div class="pairing-layout">
+          <div class="pairing-panel">
+            <div class="field">
+              <label>Select Bot Type</label>
+              <div class="pairing-bot-grid">
+                <button id="dashboardBlacklordBtn" class="btn pairing-bot-option is-selected" type="button" aria-pressed="true" onclick="selectDashboardBotType('blacklord')">
+                  <span class="pairing-bot-icon" aria-hidden="true">BL</span>
+                  <span class="pairing-bot-copy"><strong>BLACKLORD XMD</strong><small>Power User</small><em>Fast all-round WhatsApp automation.</em></span>
+                  <span class="pairing-bot-check" aria-hidden="true"><i class="fas fa-check"></i></span>
+                </button>
+                <button id="dashboardSamsungBtn" class="btn pairing-bot-option" type="button" aria-pressed="false" onclick="selectDashboardBotType('samsung')">
+                  <span class="pairing-bot-icon" aria-hidden="true">SX</span>
+                  <span class="pairing-bot-copy"><strong>SAMSUNG XMD</strong><small>Premium</small><em>Reliable multi-purpose bot for groups.</em></span>
+                  <span class="pairing-bot-check" aria-hidden="true"><i class="fas fa-check"></i></span>
+                </button>
+                <button id="dashboardTalklessBtn" class="btn pairing-bot-option" type="button" aria-pressed="false" onclick="selectDashboardBotType('talkless')">
+                  <span class="pairing-bot-icon" aria-hidden="true">TU</span>
+                  <span class="pairing-bot-copy"><strong>TALKLESS ULTRA</strong><small>Automation</small><em>Streamlined tools and group utilities.</em></span>
+                  <span class="pairing-bot-check" aria-hidden="true"><i class="fas fa-check"></i></span>
+                </button>
+                <button id="dashboardSkylarBtn" class="btn pairing-bot-option" type="button" aria-pressed="false" onclick="selectDashboardBotType('skylar')">
+                  <span class="pairing-bot-icon" aria-hidden="true">SK</span>
+                  <span class="pairing-bot-copy"><strong>SKYLAR XMD</strong><small>Smart Bot</small><em>A flexible assistant with social and AI commands.</em></span>
+                  <span class="pairing-bot-check" aria-hidden="true"><i class="fas fa-check"></i></span>
+                </button>
+                <button id="dashboardRitaBtn" class="btn pairing-bot-option" type="button" aria-pressed="false" onclick="selectDashboardBotType('rita')">
+                  <span class="pairing-bot-icon" aria-hidden="true">RT</span>
+                  <span class="pairing-bot-copy"><strong>RITA XMD</strong><small>Essential</small><em>A clean, lightweight bot for essentials.</em></span>
+                  <span class="pairing-bot-check" aria-hidden="true"><i class="fas fa-check"></i></span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="pairing-panel">
+            <div class="field">
+              <label for="pairingPhone">WhatsApp Number to Pair</label>
+              <input id="pairingPhone" inputmode="numeric" placeholder="e.g. 254712345678" />
+            </div>
+            <div class="pairing-actions">
+              <button id="dashboardPairingButton" class="btn green" type="button" onclick="requestDashboardPairing()"><i class="fas fa-link"></i> Get Code</button>
+              <button class="btn outline" type="button" onclick="checkDashboardPairingHealth()"><i class="fas fa-heartbeat"></i> Health</button>
+            </div>
+          </div>
+        </div>
+        <div id="pairingNotice" class="notice"></div>
+        <div id="pairingCodeBox" class="pairing-code-box" style="display:none"></div>
+      </section>
+
+      <!-- TELEGRAM KEY GENERATOR -->
+      <section class="card dashboard-section" style="border-color: rgba(250,204,21,0.35);" id="telegram-key-generator">
+        <div style="margin-bottom:1rem">
+          <div class="eyebrow">Activate your bot</div>
+          <h2 class="section-title"><i class="fab fa-telegram"></i> Telegram Bot Activation Key</h2>
+          <span class="stat-note">Generate a key after pairing. Enter the same phone number you will pair.</span>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="keyPhone">Phone Number for Pairing</label>
+            <input id="keyPhone" inputmode="numeric" placeholder="e.g. 254712345678" />
+          </div>
+          <div class="field">
+            <label for="keyBotType">Bot Type</label>
+            <select id="keyBotType">
+              <option value="blacklord">BLACKLORD XMD</option>
+              <option value="samsung">SAMSUNG XMD</option>
+              <option value="talkless">TALKLESS ULTRA</option>
+              <option value="skylar">SKYLAR XMD</option>
+              <option value="rita">RITA XMD</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="telegramUser">Telegram username or ID (optional)</label>
+            <input id="telegramUser" placeholder="@username or Telegram ID" maxlength="120" />
+          </div>
+          <div class="field">
+            <label for="keyDuration">Validity</label>
+            <select id="keyDuration">
+              <option value="7">7 days</option>
+              <option value="30" selected>30 days</option>
+              <option value="90">90 days</option>
+              <option value="365">365 days</option>
+            </select>
+          </div>
+        </div>
+        <div class="pairing-actions" style="margin-top:1rem">
+          <button class="btn green" type="button" onclick="generateTelegramKey()"><i class="fas fa-key"></i> Generate Telegram Key</button>
+          <button class="btn outline" type="button" onclick="loadGeneratedKeys()"><i class="fas fa-rotate"></i> Refresh Keys</button>
+        </div>
+        <div id="keyGeneratorNotice" class="notice"></div>
+        <div id="generatedKeyBox" style="display:none;margin-top:1.25rem;padding:1.25rem;border:1px solid var(--gold);border-radius:1rem;background:rgba(250,204,21,0.06);">
+          <div class="stat-note">Copy this key and send it to the Telegram bot exactly as shown.</div>
+          <div id="generatedKeyValue" style="margin-top:0.6rem;color:var(--gold);font-family:monospace;font-size:1.35rem;font-weight:800;letter-spacing:0.05em;word-break:break-all;"></div>
+          <button class="btn outline" type="button" style="margin-top:0.9rem" onclick="copyGeneratedKey()"><i class="fas fa-copy"></i> Copy Key</button>
+        </div>
+        <div id="generatedKeysList" class="list" style="margin-top:1rem"><div class="empty">Enter a phone number to see its generated keys.</div></div>
+      </section>
+
+      <!-- LOAD ACCOUNT & VOUCHER -->
+      <div class="grid grid-2">
+        <section class="card" id="phoneCard">
+          <div style="margin-bottom:1rem">
+            <h2 style="color:var(--gold); font-family:'Playfair Display',serif; font-style:italic;">Load Your Account</h2>
+            <span class="stat-note">Your phone number is only used to retrieve your existing account data.</span>
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="phone">WhatsApp / Phone Number</label>
+              <input id="phone" placeholder="e.g. 254712345678" />
+            </div>
+            <div style="display:flex;align-items:end">
+              <button class="btn green" onclick="loadDashboard()"><i class="fas fa-search"></i> Load Account</button>
+            </div>
+          </div>
+          <div id="notice" class="notice"></div>
+        </section>
+
+        <section class="card" style="border-color: rgba(34,197,94,0.3);">
+          <div style="margin-bottom:1rem">
+            <h2 style="color: #22c55e; font-family:'Playfair Display',serif; font-style:italic;">Redeem Voucher</h2>
+            <span class="stat-note">Enter your code to instantly credit your balance.</span>
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="voucherInput">Voucher Code</label>
+              <input id="voucherInput" placeholder="VOUCHER-XXXX" />
+            </div>
+            <div style="display:flex;align-items:end">
+              <button class="btn green" onclick="redeemVoucher()"><i class="fas fa-check-circle"></i> Redeem</button>
+            </div>
+          </div>
+          <div id="voucherMsg" class="notice"></div>
+        </section>
+      </div>
+
+      <!-- REMAINING SECTIONS -->
+      <section class="card" id="account-insights">
+        <div style="margin-bottom:1rem">
+          <h2 style="color:var(--gold); font-family:'Playfair Display',serif; font-style:italic;"><i class="fas fa-chart-pie"></i> Account Insights</h2>
+          <span class="stat-note">Your wallet activity, hosting usage, and referral rewards in one view.</span>
+        </div>
+        <div class="grid grid-4">
+          <article class="card stat"><div class="stat-label">Successful Top-ups</div><div class="stat-number" id="insightDeposits">0</div><div class="stat-note" id="insightDepositTotal">0.00 SD total</div></article>
+          <article class="card stat"><div class="stat-label">Active Services</div><div class="stat-number" id="insightServers">0</div><div class="stat-note">Pterodactyl services</div></article>
+          <article class="card stat"><div class="stat-label">Referrals</div><div class="stat-number" id="insightReferrals">0</div><div class="stat-note" id="insightReferralRewards">0.00 SD earned</div></article>
+          <article class="card stat"><div class="stat-label">Community Posts</div><div class="stat-number" id="insightChat">0</div><div class="stat-note"><a href="community.html" style="color:var(--green)">Open community →</a></div></article>
+        </div>
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1rem">
+          <a class="btn outline" href="affiliate.html"><i class="fas fa-users"></i> Referral Center</a>
+          <a class="btn outline" href="next-level.html"><i class="fas fa-layer-group"></i> Premium Tools</a>
+          <a class="btn outline" href="auto-renew.html"><i class="fas fa-rotate"></i> Auto-renewal</a>
+        </div>
+        <div id="insightsNotice" class="notice"></div>
+      </section>
+
+      <section class="card" style="border-color:rgba(56,189,248,0.35)" id="domain-workspace">
+        <div style="margin-bottom:1rem">
+          <h2 style="color:#38bdf8; font-family:'Playfair Display',serif; font-style:italic;"><i class="fas fa-globe"></i> Domain Workspace</h2>
+          <span class="stat-note">Search and register a subdomain such as <strong>yourname.blacklord.tech</strong>.</span>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="domainName">Subdomain name</label>
+            <input id="domainName" placeholder="yourname" maxlength="63" />
+          </div>
+          <div style="display:flex;align-items:end;gap:0.6rem;flex-wrap:wrap">
+            <button class="btn outline" type="button" onclick="checkDomainAvailability()"><i class="fas fa-search"></i> Check</button>
+            <button class="btn green" type="button" onclick="registerSubdomain()"><i class="fas fa-cart-plus"></i> Register</button>
+          </div>
+        </div>
+        <div id="domainNotice" class="notice"></div>
+        <div id="domainsList" class="list" style="margin-top:1rem"><div class="empty">Load your account to see your subdomains.</div></div>
+      </section>
+
+      <!-- PANEL PLANS & BOTS -->
+      <section id="panels-section">
+        <div style="margin-bottom:1.5rem">
+          <h2 style="color:var(--gold); font-family:'Playfair Display',serif; font-style:italic;">Panel Plans</h2>
+          <span class="stat-note">Pterodactyl hosting – Pay with SD Balance</span>
+        </div>
+        <div class="dashboard-card-grid panel-card-grid">
+          <article class="card stat dashboard-product-card product-card">
+            <div class="product-copy">
+              <span class="product-icon" aria-hidden="true"><i class="fas fa-database"></i></span>
+              <strong class="product-title">10GB Storage</strong>
+              <small class="product-kicker">User Panel</small>
+              <span class="product-description">1GB RAM, 10GB Disk, 40% CPU. Ideal for small bots.</span>
+            </div>
+            <span class="product-price">10 <small>SD</small></span>
+            <button class="btn green product-cta" onclick="location.href='index.html#panels-section'"><i class="fas fa-cart-shopping"></i> Get Panel</button>
+          </article>
+          <article class="card stat dashboard-product-card product-card">
+            <div class="product-copy">
+              <span class="product-icon" aria-hidden="true"><i class="fas fa-boxes-stacked"></i></span>
+              <strong class="product-title">Bulky 2</strong>
+              <small class="product-kicker">Power User</small>
+              <span class="product-description">Unlimited RAM, Disk, and CPU. Multi-bot support.</span>
+            </div>
+            <span class="product-price">20 <small>SD</small></span>
+            <button class="btn green product-cta" onclick="location.href='index.html#panels-section'"><i class="fas fa-cart-shopping"></i> Get Panel</button>
+          </article>
+          <article class="card stat dashboard-product-card product-card">
+            <div class="product-copy">
+              <span class="product-icon" aria-hidden="true"><i class="fas fa-server"></i></span>
+              <strong class="product-title">Bulky 3</strong>
+              <small class="product-kicker">Enterprise</small>
+              <span class="product-description">Unlimited RAM, Disk, and CPU. High performance.</span>
+            </div>
+            <span class="product-price">40 <small>SD</small></span>
+            <button class="btn green product-cta" onclick="location.href='index.html#panels-section'"><i class="fas fa-cart-shopping"></i> Get Panel</button>
+          </article>
+        </div>
+      </section>
+
+      <section id="bots-section">
+        <div style="margin-bottom:1.5rem">
+          <h2 style="color:var(--gold); font-family:'Playfair Display',serif; font-style:italic;">WhatsApp Bots</h2>
+          <span class="stat-note">Premium bots powered by BLACKLORD TECH INC</span>
+        </div>
+        <div class="dashboard-card-grid bot-card-grid">
+          <article class="card stat dashboard-product-card product-card">
+            <div class="product-copy">
+              <span class="product-icon bot-icon" aria-hidden="true">BL</span>
+              <strong class="product-title">Blacklord XMD</strong>
+              <small class="product-kicker">Power User</small>
+              <span class="product-description">Fast all-round WhatsApp automation with advanced commands.</span>
+            </div>
+            <span class="product-status">Online</span>
+            <button class="btn green product-cta" onclick="initiateDashboardPairing('blacklord')"><i class="fab fa-whatsapp"></i> Connect</button>
+          </article>
+          <article class="card stat dashboard-product-card product-card">
+            <div class="product-copy">
+              <span class="product-icon bot-icon" aria-hidden="true">SX</span>
+              <strong class="product-title">Samsung XMD</strong>
+              <small class="product-kicker">Premium</small>
+              <span class="product-description">Reliable multi-purpose bot for daily use and groups.</span>
+            </div>
+            <span class="product-status">Online</span>
+            <button class="btn green product-cta" onclick="initiateDashboardPairing('samsung')"><i class="fab fa-whatsapp"></i> Connect</button>
+          </article>
+          <article class="card stat dashboard-product-card product-card">
+            <div class="product-copy">
+              <span class="product-icon bot-icon" aria-hidden="true">TU</span>
+              <strong class="product-title">Talkless Ultra</strong>
+              <small class="product-kicker">Automation</small>
+              <span class="product-description">Streamlined tools, utilities, and group management features.</span>
+            </div>
+            <span class="product-status">Online</span>
+            <button class="btn green product-cta" onclick="initiateDashboardPairing('talkless')"><i class="fab fa-whatsapp"></i> Connect</button>
+          </article>
+        </div>
+      </section>
+
+      <!-- SERVERS & OPERATIONS -->
+      <section class="dashboard-section" id="servers-section">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Hosting control room</div>
+            <h2 class="section-title">My Servers</h2>
+            <span class="stat-note">Manage power, inspect resource usage, and review recent server activity.</span>
+          </div>
+          <div class="section-actions" style="flex-wrap:wrap;justify-content:flex-end">
+            <a href="index.html#panels-section" class="btn green small-btn"><i class="fas fa-plus"></i> Create Server</a>
+            <a href="status.html" class="btn outline small-btn">System Status</a>
+            <button class="btn outline small-btn" type="button" onclick="loadServerOperations()"><i class="fas fa-rotate"></i> Refresh</button>
+          </div>
+        </div>
+        <div class="grid grid-2">
+          <article class="card">
+            <div class="card-heading"><h3>Hosted Services</h3><span class="pill online" id="serverConfigStatus">Checking</span></div>
+            <div style="display:flex;gap:0.55rem;flex-wrap:wrap;margin-bottom:0.85rem">
+              <input id="serverSearchInput" type="search" placeholder="Search servers..." oninput="filterDashboardServers()" style="flex:1;min-width:180px;padding:0.65rem 0.75rem;background:rgba(39,39,42,0.8);border:1px solid #27272a;border-radius:0.5rem;color:white;font-size:0.8rem" />
+              <button class="btn outline tiny-btn" type="button" onclick="bulkServerPowerAction('start')">Start all</button>
+            </div>
+            <div id="serversList" class="list"><div class="empty">Load your account to see hosting services.</div></div>
+          </article>
+          <article class="card">
+            <div class="card-heading"><h3>Usage Analytics</h3><span class="stat-note" id="selectedServerLabel">Select a server</span></div>
+            <div class="resource-grid">
+              <div class="resource-tile"><span>CPU</span><strong id="serverCpuValue">—</strong><div class="resource-bar"><i id="serverCpuBar"></i></div></div>
+              <div class="resource-tile"><span>Memory</span><strong id="serverMemoryValue">—</strong><div class="resource-bar"><i id="serverMemoryBar"></i></div></div>
+              <div class="resource-tile"><span>Disk</span><strong id="serverDiskValue">—</strong><div class="resource-bar"><i id="serverDiskBar"></i></div></div>
+              <div class="resource-tile"><span>State</span><strong id="serverStateValue">—</strong><small id="serverMetricsUpdated">Awaiting selection</small></div>
+            </div>
+            <div id="serverMetricsNotice" class="notice"></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- WEBHOOKS & EXTRAS -->
+      <section class="card dashboard-section" id="webhooks-section">
+        <div class="card-heading"><div><div class="eyebrow">Developer automation</div><h2 class="section-title">Webhooks</h2><span class="stat-note">Receive signed events when pairing or server status changes.</span></div><button class="btn outline small-btn" type="button" onclick="loadWebhooks()"><i class="fas fa-rotate"></i> Refresh</button></div>
+        <div class="form-grid">
+          <div class="field"><label for="webhookName">Webhook name</label><input id="webhookName" maxlength="80" placeholder="My control panel" /></div>
+          <div class="field"><label for="webhookUrl">HTTPS endpoint URL</label><input id="webhookUrl" type="url" placeholder="https://example.com/events" /></div>
+        </div>
+        <div class="section-actions"><button class="btn green" type="button" onclick="createWebhook()"><i class="fas fa-plus"></i> Add Webhook</button></div>
+        <div id="webhookNotice" class="notice"></div>
+        <div id="webhooksList" class="list" style="margin-top:1rem"><div class="empty">Load your account to manage webhooks.</div></div>
+      </section>
+    </div>
+
+    <div class="footer-note" style="margin-top: 5rem; color: #71717a; font-size: 0.8rem; text-align: center;">
+      BLACKLORD TECH INC. · Secure, reliable, relentless.
+    </div>
+  </main>
+</div>
+
+<script>
+const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const savedPhone = localStorage.getItem('samsung_user_phone') || '';
+if (document.getElementById('phone')) document.getElementById('phone').value = savedPhone;
+if (document.getElementById('keyPhone')) document.getElementById('keyPhone').value = savedPhone;
+
+function toggleDashboardMenu(forceOpen) {
+  const sidebar = document.getElementById('dashboardSidebar');
+  const backdrop = document.getElementById('sidebarBackdrop');
+  const button = document.getElementById('sidebarMenuToggle');
+  if (!sidebar) return;
+  const isMobile = window.matchMedia('(max-width: 900px)').matches;
+  const currentlyOpen = isMobile ? sidebar.classList.contains('open') : !sidebar.classList.contains('collapsed');
+  const shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : !currentlyOpen;
+  if (isMobile) {
+    sidebar.classList.toggle('open', shouldOpen);
+    backdrop?.classList.toggle('show', shouldOpen);
+  } else {
+    sidebar.classList.toggle('collapsed', !shouldOpen);
+    document.querySelector('.content')?.classList.toggle('full-width', !shouldOpen);
+  }
+  button?.setAttribute('aria-expanded', String(shouldOpen));
+}
+
+let dashboardBotType = 'blacklord';
+function selectDashboardBotType(type) {
+  const allowed = ['blacklord', 'samsung', 'talkless', 'skylar', 'rita'];
+  dashboardBotType = allowed.includes(type) ? type : 'blacklord';
+  ['Blacklord', 'Samsung', 'Talkless', 'Skylar', 'Rita'].forEach(b => {
+    const btn = document.getElementById('dashboard' + b + 'Btn');
+    if (!btn) return;
+    const selected = b.toLowerCase() === dashboardBotType;
+    btn.classList.toggle('is-selected', selected);
+    btn.setAttribute('aria-pressed', String(selected));
+  });
+}
+
+const requestedBot = new URLSearchParams(window.location.search).get('bot');
+if (requestedBot) selectDashboardBotType(requestedBot);
+
+function initiateDashboardPairing(type) {
+  selectDashboardBotType(type);
+  document.getElementById('pairingCard').scrollIntoView({ behavior: 'smooth' });
+  document.getElementById('pairingPhone').focus();
+}
+
+function showNotice(text, type = 'error') {
+  const el = document.getElementById('notice');
+  if (el) { el.textContent = text; el.className = 'notice show ' + type; }
+}
+
+function showPairingNotice(text, type = 'error') {
+  const el = document.getElementById('pairingNotice');
+  if (el) { el.textContent = text; el.className = 'notice show ' + type; }
+}
+
+async function loadDashboard() {
+  const p = document.getElementById('phone').value.trim();
+  if (!p) { showNotice('Enter your phone number.'); return; }
+  localStorage.setItem('samsung_user_phone', p);
+  if (document.getElementById('keyPhone')) document.getElementById('keyPhone').value = p;
+  
+  try {
+    const res = await fetch('/api/dashboard/account?phone=' + encodeURIComponent(p));
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to load account');
+    document.getElementById('balance').innerHTML = Number(data.balance || 42).toFixed(2) + ' <small style="font-size:1rem; color:var(--gold)">XD</small>';
+    document.getElementById('serversCount').textContent = data.serversCount || 0;
+    if (document.getElementById('activeBotsCount')) document.getElementById('activeBotsCount').textContent = data.activeBotsCount || data.serversCount || 0;
+    if (document.getElementById('keysCount')) document.getElementById('keysCount').textContent = data.keysCount || 0;
+    if (document.getElementById('welcomeUserTitle')) document.getElementById('welcomeUserTitle').textContent = 'Welcome back, ' + (data.name || p);
+    if (document.getElementById('welcomeBannerName')) document.getElementById('welcomeBannerName').textContent = 'Welcome back, ' + (data.name || p);
+    showNotice('Account loaded successfully.', 'success');
+  } catch (err) {
+    showNotice(err.message);
+  }
+}
+
+async function requestDashboardPairing() {
+  const phone = document.getElementById('pairingPhone').value.trim();
+  if (!phone) { showPairingNotice('Enter your WhatsApp phone number.'); return; }
+  showPairingNotice('Requesting pairing code from ' + dashboardBotType + '...', 'success');
+  try {
+    const res = await fetch('/api/pairing', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone, bot: dashboardBotType })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Pairing failed');
+    const box = document.getElementById('pairingCodeBox');
+    box.style.display = 'block';
+    box.innerHTML = `<strong>Your Pairing Code:</strong> <span style="font-family:monospace; font-size:1.4rem; color:var(--gold)">${escapeHtml(data.code)}</span>`;
+    showPairingNotice('Pairing code generated successfully!', 'success');
+  } catch (err) {
+    showPairingNotice(err.message);
+  }
+}
+
+async function checkDashboardPairingHealth() {
+  showPairingNotice('Checking ' + dashboardBotType + ' bot status...', 'success');
+  try {
+    const res = await fetch('/api/pairing/health?bot=' + encodeURIComponent(dashboardBotType));
+    const data = await res.json();
+    if (!res.ok || !data.online) {
+      showPairingNotice('⚠️ This bot is currently offline. Please try another bot.', 'error');
+    } else {
+      showPairingNotice('✅ Bot is online and ready for pairing.', 'success');
+    }
+  } catch (err) {
+    showPairingNotice('⚠️ This bot is currently offline. Please try another bot.', 'error');
+  }
+}
+
+if (savedPhone) {
+  document.getElementById('phone').value = savedPhone;
+  loadDashboard();
+}
+</script>
+</body>
+</html>

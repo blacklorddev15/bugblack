@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Live Activity | BLACKLORD TECH INC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="index.html">
+      <div class="brand-mark">♛</div>
+      <div>
+        <div class="brand-name">BLACKLORD</div>
+        <div class="brand-sub">TECH INC.</div>
+      </div>
+    </a>
+    <nav class="nav">
+      <a href="dashboard.html"><span class="nav-icon"><i class="fas fa-chart-line"></i></span>Dashboard</a>
+      <a href="index.html"><span class="nav-icon"><i class="fas fa-home"></i></span>Main Site</a>
+      <a href="support.html"><span class="nav-icon"><i class="fas fa-headset"></i></span>Support Center</a>
+      <a href="status.html"><span class="nav-icon"><i class="fas fa-heartbeat"></i></span>System Status</a>
+      <a href="affiliate.html"><span class="nav-icon"><i class="fas fa-users"></i></span>Affiliate</a>
+      <a href="admin.html"><span class="nav-icon"><i class="fas fa-user-shield"></i></span>Admin</a>
+    </nav>
+    <div class="sidebar-footer">
+      <strong>Live Tracking</strong>
+      Real-time platform events.
+    </div>
+  </aside>
+
+  <main class="content">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">Platform pulse</div>
+        <h1 class="title">Live Activity</h1>
+        <p class="subtitle">A transparent feed of recent platform events and community actions.</p>
+      </div>
+      <div class="user-box">
+        <span id="updateTime">Real-time</span>
+        <span class="avatar"><i class="fas fa-bolt"></i></span>
+      </div>
+    </header>
+
+    <section class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+        <h2 style="color:var(--gold); font-family:'Playfair Display',serif; font-style:italic;">Recent Events</h2>
+        <button class="btn outline" onclick="loadActivity()"><i class="fas fa-sync"></i> Refresh</button>
+      </div>
+      <div id="activityList" class="list">
+        <div class="empty"><i class="fas fa-spinner fa-spin"></i> Loading activity feed...</div>
+      </div>
+    </section>
+
+    <div class="footer-note" style="margin-top: 3rem; color: #71717a; font-size: 0.8rem; text-align: center;">
+      BLACKLORD TECH INC. · Activity logs are anonymized for user privacy.
+    </div>
+  </main>
+</div>
+
+<script>
+const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+
+async function loadActivity() {
+  try {
+    const res = await fetch('/api/user/activity');
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Unable to load activity');
+    
+    document.getElementById('updateTime').textContent = 'Last updated: ' + new Date().toLocaleTimeString();
+    document.getElementById('activityList').innerHTML = data.activities.length ? data.activities.map(a => `
+      <div class="list-item">
+        <div>
+          <strong style="display:block; color:#fff;">${escapeHtml(a.action.replace(/_/g, ' '))}</strong>
+          <small style="color:var(--muted); font-size:0.75rem;">${escapeHtml(a.details)}</small>
+        </div>
+        <div style="text-align:right;">
+          <span style="font-size:0.65rem; color:var(--gold); font-weight:700; text-transform:uppercase;">${new Date(a.created_at).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
+          <small style="display:block; font-size:0.55rem; color:var(--muted);">${new Date(a.created_at).toLocaleDateString()}</small>
+        </div>
+      </div>
+    `).join('') : '<div class="empty">No recent activity.</div>';
+  } catch (e) {
+    document.getElementById('activityList').innerHTML = '<div class="empty">Error: ' + e.message + '</div>';
+  }
+}
+
+loadActivity();
+setInterval(loadActivity, 60000);
+</script>
+</body>
+</html>

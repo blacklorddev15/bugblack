@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>3-Hour Trial | BLACKLORD TECH INC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="portal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="index.html">
+      <div class="brand-mark">♛</div>
+      <div>
+        <div class="brand-name">BLACKLORD</div>
+        <div class="brand-sub">TECH INC.</div>
+      </div>
+    </a>
+    <nav class="nav">
+      <a href="dashboard.html"><span class="nav-icon"><i class="fas fa-chart-line"></i></span>Dashboard</a>
+      <a href="index.html"><span class="nav-icon"><i class="fas fa-home"></i></span>Main Site</a>
+      <a href="support.html"><span class="nav-icon"><i class="fas fa-headset"></i></span>Support Center</a>
+      <a href="status.html"><span class="nav-icon"><i class="fas fa-heartbeat"></i></span>System Status</a>
+      <a href="affiliate.html"><span class="nav-icon"><i class="fas fa-users"></i></span>Affiliate</a>
+      <a href="admin.html"><span class="nav-icon"><i class="fas fa-user-shield"></i></span>Admin</a>
+    </nav>
+    <div class="sidebar-footer">
+      <strong>Trial Mode</strong>
+      Test our elite hosting.
+    </div>
+  </aside>
+
+  <main class="content">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">Free Experience</div>
+        <h1 class="title">3-Hour Trial</h1>
+        <p class="subtitle">Claim a temporary hosting panel to test your bots on our infrastructure.</p>
+      </div>
+      <div class="user-box">
+        <span>Trial Access</span>
+        <span class="avatar"><i class="fas fa-hourglass-start"></i></span>
+      </div>
+    </header>
+
+    <section class="card" style="max-width:600px; margin: 0 auto;">
+      <h2 style="color:var(--gold); font-family:'Playfair Display',serif; font-style:italic; margin-bottom:1rem;">Claim Your Trial</h2>
+      <p class="stat-note" style="margin-bottom:1.5rem;">Each registered user can claim one trial panel. The panel will be automatically suspended after 3 hours.</p>
+      
+      <div class="field">
+        <label>Registered Phone Number</label>
+        <input id="phone" placeholder="e.g. 254712345678" />
+      </div>
+      
+      <button class="btn gold" style="margin-top:1.5rem; width:100%" onclick="claimTrial()"><i class="fas fa-gift"></i> Activate Trial Panel</button>
+      <div id="trialMsg" class="notice"></div>
+    </section>
+
+    <div class="notice show info" style="margin-top:2rem; text-align:center;">
+      <i class="fas fa-info-circle"></i> After the trial expires, you can upgrade to a permanent plan to keep your files.
+    </div>
+
+    <div class="footer-note" style="margin-top: 5rem; color: #71717a; font-size: 0.8rem; text-align: center;">
+      BLACKLORD TECH INC. · Trial panels are subject to availability.
+    </div>
+  </main>
+</div>
+
+<script>
+async function claimTrial() {
+  const p = document.getElementById('phone').value.trim();
+  if (!p) {
+    const msg = document.getElementById('trialMsg');
+    msg.textContent = 'Please enter your phone number.';
+    msg.className = 'notice show error';
+    return;
+  }
+  
+  try {
+    const res = await fetch('/api/user/trial', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: p })
+    });
+    const data = await res.json();
+    const msg = document.getElementById('trialMsg');
+    if (data.success) {
+      msg.textContent = 'Trial activated! Check your dashboard for credentials.';
+      msg.className = 'notice show success';
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (e) {
+    const msg = document.getElementById('trialMsg');
+    msg.textContent = e.message;
+    msg.className = 'notice show error';
+  }
+}
+
+document.getElementById('phone').value = localStorage.getItem('samsung_user_phone') || '';
+</script>
+</body>
+</html>
